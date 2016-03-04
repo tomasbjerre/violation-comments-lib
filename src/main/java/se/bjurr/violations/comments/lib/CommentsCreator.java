@@ -89,12 +89,13 @@ public class CommentsCreator {
  }
 
  private String createSingleFileCommentContent(Violation violation) {
-  String source = violation.getSource().isPresent() ? ("(" + violation.getSource().get() + ")") : "";
+  String source = violation.getSource().isPresent() ? ("Source: " + violation.getSource().get() + "\n") : "";
   return ""
     + //
-    "Violation: " + violation.getReporter() + " Rule: " + violation.getRule().or("?") + " Severity: "
+    "Violation: " + violation.getReporter() + "\nRule: " + violation.getRule().or("?") + "\nSeverity: "
     + violation.getSeverity() + "\n" + //
-    "File: " + violation.getFile() + " " + source + "\n" + //
+    "File: " + violation.getFile() + " L" + violation.getStartLine() + "\n " + source + "\n" + //
+    "\n" + //
     violation.getMessage() + "\n" + //
     "\n" + //
     FINGERPRINT + "\n";
