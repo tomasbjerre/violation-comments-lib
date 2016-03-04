@@ -49,7 +49,7 @@ public class CommentsCreator {
 
  private void createCommentWithAllSingleFileComments() {
   StringBuilder sb = new StringBuilder();
-  sb.append("Found " + violations.size() + ":\n\n");
+  sb.append("Found " + violations.size() + " violations:\n\n");
   for (Violation violation : violations) {
    String singleFileCommentContent = createSingleFileCommentContent(violation);
    sb.append(singleFileCommentContent + "\n");
@@ -92,7 +92,7 @@ public class CommentsCreator {
   String source = violation.getSource().isPresent() ? ("Source: " + violation.getSource().get() + "\n") : "";
   return ""
     + //
-    "Violation: " + violation.getReporter() + "\nRule: " + violation.getRule().or("?") + "\nSeverity: "
+    "Reporter: " + violation.getReporter() + "\nRule: " + violation.getRule().or("?") + "\nSeverity: "
     + violation.getSeverity() + "\n" + //
     "File: " + violation.getFile() + " L" + violation.getStartLine() + "\n " + source + "\n" + //
     "\n" + //
