@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.comments.lib.model.CommentsProvider;
 import se.bjurr.violations.lib.model.Violation;
@@ -20,7 +21,7 @@ public class CommentsCreator {
  private static final String FINGERPRINT = "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
  private final CommentsProvider commentsProvider;
  private final List<Violation> violations;
- private final List<String> files;
+ private final List<ChangedFile> files;
 
  private CommentsCreator(CommentsProvider commentsProvider, List<Violation> violations) {
   checkNotNull(violations, "violations");
@@ -63,7 +64,7 @@ public class CommentsCreator {
   LOG.info("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
   for (Violation violation : violations) {
    String singleFileCommentContent = createSingleFileCommentContent(violation);
-   Optional<String> file = getFile(violation);
+   Optional<ChangedFile> file = getFile(violation);
    if (file.isPresent()) {
     LOG.info(violation.getReporter() + " " + violation.getSeverity() + " " + violation.getRule().or("") + " "
       + file.get() + " " + violation.getStartLine() + " " + violation.getSource().or(""));
@@ -79,9 +80,10 @@ public class CommentsCreator {
   * <br>
   * Here we make a guess on which file in the {@link CommentsProvider} to use.
   */
- private Optional<String> getFile(Violation violation) {
-  for (String providerFile : files) {
-   if (violation.getFile().endsWith(providerFile) || providerFile.endsWith(violation.getFile())) {
+ private Optional<ChangedFile> getFile(Violation violation) {
+  for (ChangedFile providerFile : files) {
+   if (violation.getFile().endsWith(providerFile.getFilename())
+     || providerFile.getFilename().endsWith(violation.getFile())) {
     return Optional.of(providerFile);
    }
   }

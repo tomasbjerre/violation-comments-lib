@@ -5,9 +5,9 @@ import java.util.List;
 public interface CommentsProvider {
  List<Comment> getComments();
 
- List<String> getFiles();
+ List<ChangedFile> getFiles();
 
- void createSingleFileComment(String file, Integer line, String comment);
+ void createSingleFileComment(ChangedFile file, Integer line, String comment);
 
  void removeComments(List<Comment> comments);
 
