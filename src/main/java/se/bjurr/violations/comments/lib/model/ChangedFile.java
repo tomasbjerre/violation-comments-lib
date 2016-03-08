@@ -1,28 +1,30 @@
 package se.bjurr.violations.comments.lib.model;
 
-import static com.google.common.base.Optional.fromNullable;
-
-import com.google.common.base.Optional;
+import java.util.List;
 
 public class ChangedFile {
  private final String filename;
- private final String sha;
+ /**
+  * Things that are specific to the {@link CommentsProvider}. This will be send
+  * back to the {@link CommentsProvider} when creating comments.
+  */
+ private final List<String> specifics;
 
- public ChangedFile(String filename, String sha) {
+ public ChangedFile(String filename, List<String> specifics) {
   this.filename = filename;
-  this.sha = sha;
+  this.specifics = specifics;
  }
 
  public String getFilename() {
   return filename;
  }
 
- public Optional<String> getSha() {
-  return fromNullable(sha);
+ public List<String> getSpecifics() {
+  return specifics;
  }
 
  @Override
  public String toString() {
-  return "ChangedFile [filename=" + filename + ", sha=" + sha + "]";
+  return "ChangedFile [filename=" + filename + ", specifics=" + specifics + "]";
  }
 }
