@@ -1,12 +1,12 @@
 # Changelog
 
-## Unreleased
+## 1.6
 ### No issue
 
 **Removing sha from changed file and adding specifics**
 
 
-[1d8a8921c6e9f96](https://github.com/tomasbjerre/violation-comments-lib/commit/1d8a8921c6e9f96) Tomas Bjerre *2016-03-08 16:04:29*
+[e0f1901bf18465c](https://github.com/tomasbjerre/violation-comments-lib/commit/e0f1901bf18465c) Tomas Bjerre *2016-03-08 16:05:37*
 
 
 ## 1.5
