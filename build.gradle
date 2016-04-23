@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
- compile 'se.bjurr.violations:violations-lib:1.6'
+ compile 'se.bjurr.violations:violations-lib:1.7'
 }
 
 eclipse {

@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+### No issue
+
+**Making Violation class serializable**
+
+
+[e2c605e09e3e566](https://github.com/tomasbjerre/violation-comments-lib/commit/e2c605e09e3e566) Tomas Bjerre *2016-04-23 17:10:44*
+
+
+## 1.7
+### No issue
+
+**Lib 1.6**
+
+
+[c6dbbade29c9a2b](https://github.com/tomasbjerre/violation-comments-lib/commit/c6dbbade29c9a2b) Tomas Bjerre *2016-04-07 16:40:42*
+
+
 ## 1.6
 ### No issue
 
