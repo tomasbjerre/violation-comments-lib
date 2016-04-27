@@ -3,10 +3,19 @@
 ## Unreleased
 ### No issue
 
+**Andoid lint**
+
+
+[2d339fa31395b61](https://github.com/tomasbjerre/violation-comments-lib/commit/2d339fa31395b61) Tomas Bjerre *2016-04-27 05:38:36*
+
+
+## 1.8
+### No issue
+
 **Making Violation class serializable**
 
 
-[e2c605e09e3e566](https://github.com/tomasbjerre/violation-comments-lib/commit/e2c605e09e3e566) Tomas Bjerre *2016-04-23 17:10:44*
+[c4252249564226c](https://github.com/tomasbjerre/violation-comments-lib/commit/c4252249564226c) Tomas Bjerre *2016-04-23 17:11:07*
 
 
 ## 1.7
