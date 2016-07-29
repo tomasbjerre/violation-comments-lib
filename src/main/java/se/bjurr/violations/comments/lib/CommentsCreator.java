@@ -17,11 +17,18 @@ import se.bjurr.violations.lib.model.Violation;
 import com.google.common.base.Optional;
 
 public class CommentsCreator {
- private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
  private static final String FINGERPRINT = "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
+ private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
+
+ public static void createComments(CommentsProvider commentsProvider, List<Violation> violations) {
+  CommentsCreator commentsCreator = new CommentsCreator(commentsProvider, violations);
+  commentsCreator.createComments();
+ }
+
  private final CommentsProvider commentsProvider;
- private final List<Violation> violations;
  private final List<ChangedFile> files;
+
+ private final List<Violation> violations;
 
  private CommentsCreator(CommentsProvider commentsProvider, List<Violation> violations) {
   checkNotNull(violations, "violations");
@@ -32,62 +39,31 @@ public class CommentsCreator {
   this.files = commentsProvider.getFiles();
  }
 
- public static void createComments(CommentsProvider commentsProvider, List<Violation> violations) {
-  CommentsCreator commentsCreator = new CommentsCreator(commentsProvider, violations);
-  commentsCreator.createComments();
- }
-
  public void createComments() {
-  List<Comment> oldComments = commentsProvider.getComments();
+  List<Comment> oldComments = this.commentsProvider.getComments();
   LOG.info(oldComments.size() + " comments found.");
   oldComments = filterCommentsCreatedByThisLib(oldComments);
   LOG.info(oldComments.size() + " comments found from " + CommentsCreator.class.getSimpleName() + ", asking "
-    + commentsProvider.getClass().getSimpleName() + " to remove them.");
-  commentsProvider.removeComments(oldComments);
+    + this.commentsProvider.getClass().getSimpleName() + " to remove them.");
+  this.commentsProvider.removeComments(oldComments);
   createSingleFileComments();
   createCommentWithAllSingleFileComments();
  }
 
  private void createCommentWithAllSingleFileComments() {
+  if (this.violations.isEmpty()) {
+   LOG.info("Found no violations, not creating any comment.");
+   return;
+  }
   StringBuilder sb = new StringBuilder();
-  sb.append("Found " + violations.size() + " violations:\n\n");
-  for (Violation violation : violations) {
+  sb.append("Found " + this.violations.size() + " violations:\n\n");
+  for (Violation violation : this.violations) {
    String singleFileCommentContent = createSingleFileCommentContent(violation);
    sb.append(singleFileCommentContent + "\n");
   }
-  LOG.info("Asking " + commentsProvider.getClass().getSimpleName()
+  LOG.info("Asking " + this.commentsProvider.getClass().getSimpleName()
     + " to create comment with all single file comments.");
-  commentsProvider.createCommentWithAllSingleFileComments(sb.toString());
- }
-
- private void createSingleFileComments() {
-  LOG.info("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
-  for (Violation violation : violations) {
-   String singleFileCommentContent = createSingleFileCommentContent(violation);
-   Optional<ChangedFile> file = getFile(violation);
-   if (file.isPresent()) {
-    LOG.info(violation.getReporter() + " " + violation.getSeverity() + " " + violation.getRule().or("") + " "
-      + file.get() + " " + violation.getStartLine() + " " + violation.getSource().or(""));
-    commentsProvider.createSingleFileComment(file.get(), violation.getStartLine(), singleFileCommentContent);
-   }
-  }
- }
-
- /**
-  * When creating comment, the call should use the file as it is specified by
-  * the comments provider. Not the one specified by the {@link Violation}. The
-  * one in the {@link Violation} may not be recognized. <br>
-  * <br>
-  * Here we make a guess on which file in the {@link CommentsProvider} to use.
-  */
- private Optional<ChangedFile> getFile(Violation violation) {
-  for (ChangedFile providerFile : files) {
-   if (violation.getFile().endsWith(providerFile.getFilename())
-     || providerFile.getFilename().endsWith(violation.getFile())) {
-    return Optional.of(providerFile);
-   }
-  }
-  return absent();
+  this.commentsProvider.createCommentWithAllSingleFileComments(sb.toString());
  }
 
  private String createSingleFileCommentContent(Violation violation) {
@@ -103,6 +79,19 @@ public class CommentsCreator {
     FINGERPRINT + "\n";
  }
 
+ private void createSingleFileComments() {
+  LOG.info("Asking " + this.commentsProvider.getClass().getSimpleName() + " to comment:");
+  for (Violation violation : this.violations) {
+   String singleFileCommentContent = createSingleFileCommentContent(violation);
+   Optional<ChangedFile> file = getFile(violation);
+   if (file.isPresent()) {
+    LOG.info(violation.getReporter() + " " + violation.getSeverity() + " " + violation.getRule().or("") + " "
+      + file.get() + " " + violation.getStartLine() + " " + violation.getSource().or(""));
+    this.commentsProvider.createSingleFileComment(file.get(), violation.getStartLine(), singleFileCommentContent);
+   }
+  }
+ }
+
  private List<Comment> filterCommentsCreatedByThisLib(List<Comment> unfilteredComments) {
   List<Comment> filteredComments = newArrayList();
   for (Comment comment : unfilteredComments) {
@@ -111,5 +100,22 @@ public class CommentsCreator {
    }
   }
   return filteredComments;
+ }
+
+ /**
+  * When creating comment, the call should use the file as it is specified by
+  * the comments provider. Not the one specified by the {@link Violation}. The
+  * one in the {@link Violation} may not be recognized. <br>
+  * <br>
+  * Here we make a guess on which file in the {@link CommentsProvider} to use.
+  */
+ private Optional<ChangedFile> getFile(Violation violation) {
+  for (ChangedFile providerFile : this.files) {
+   if (violation.getFile().endsWith(providerFile.getFilename())
+     || providerFile.getFilename().endsWith(violation.getFile())) {
+    return Optional.of(providerFile);
+   }
+  }
+  return absent();
  }
 }
