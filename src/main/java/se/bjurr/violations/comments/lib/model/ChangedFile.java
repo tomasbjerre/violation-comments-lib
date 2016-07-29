@@ -15,16 +15,54 @@ public class ChangedFile {
   this.specifics = specifics;
  }
 
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  ChangedFile other = (ChangedFile) obj;
+  if (this.filename == null) {
+   if (other.filename != null) {
+    return false;
+   }
+  } else if (!this.filename.equals(other.filename)) {
+   return false;
+  }
+  if (this.specifics == null) {
+   if (other.specifics != null) {
+    return false;
+   }
+  } else if (!this.specifics.equals(other.specifics)) {
+   return false;
+  }
+  return true;
+ }
+
  public String getFilename() {
-  return filename;
+  return this.filename;
  }
 
  public List<String> getSpecifics() {
-  return specifics;
+  return this.specifics;
+ }
+
+ @Override
+ public int hashCode() {
+  final int prime = 31;
+  int result = 1;
+  result = prime * result + ((this.filename == null) ? 0 : this.filename.hashCode());
+  result = prime * result + ((this.specifics == null) ? 0 : this.specifics.hashCode());
+  return result;
  }
 
  @Override
  public String toString() {
-  return "ChangedFile [filename=" + filename + ", specifics=" + specifics + "]";
+  return "ChangedFile [filename=" + this.filename + ", specifics=" + this.specifics + "]";
  }
 }
