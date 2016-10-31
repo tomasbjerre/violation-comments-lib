@@ -53,6 +53,11 @@ public class CommentsCreatorTest {
   public void removeComments(List<Comment> comments) {
    removeComments = comments;
   }
+
+  @Override
+  public boolean shouldComment(ChangedFile changedFile, Integer line) {
+   return true;
+  }
  };
  private List<Violation> violations;
  private Integer maxCommentSize;

@@ -107,7 +107,10 @@ public class CommentsCreator {
   for (Violation violation : mixedViolations) {
    Optional<ChangedFile> file = getFile(violation);
    if (file.isPresent()) {
-    isChanged.add(violation);
+    boolean shouldComment = commentsProvider.shouldComment(file.get(), violation.getStartLine());
+    if (shouldComment) {
+     isChanged.add(violation);
+    }
    }
   }
   return isChanged;
