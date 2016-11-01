@@ -49,8 +49,12 @@ public class CommentsCreator {
   LOG.info(oldComments.size() + " comments found from " + CommentsCreator.class.getSimpleName() + ", asking "
     + commentsProvider.getClass().getSimpleName() + " to remove them.");
   commentsProvider.removeComments(oldComments);
-  createSingleFileComments();
-  createCommentWithAllSingleFileComments();
+  if (commentsProvider.shouldCreateSingleFileComment()) {
+   createSingleFileComments();
+  }
+  if (commentsProvider.shouldCreateCommentWithAllSingleFileComments()) {
+   createCommentWithAllSingleFileComments();
+  }
  }
 
  private void createCommentWithAllSingleFileComments() {

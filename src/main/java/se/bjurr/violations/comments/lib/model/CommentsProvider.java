@@ -14,4 +14,8 @@ public interface CommentsProvider {
  void removeComments(List<Comment> comments);
 
  boolean shouldComment(ChangedFile changedFile, Integer line);
+
+ boolean shouldCreateCommentWithAllSingleFileComments();
+
+ boolean shouldCreateSingleFileComment();
 }

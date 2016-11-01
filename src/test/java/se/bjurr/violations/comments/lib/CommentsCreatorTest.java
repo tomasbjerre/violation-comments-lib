@@ -27,6 +27,8 @@ public class CommentsCreatorTest {
  private List<Comment> comments;
  private List<ChangedFile> files;
  private List<Comment> removeComments;
+ private boolean shouldCreateCommentWithAllSingleFileComments = true;
+ private boolean shouldCreateSingleFileComment = true;
  private final CommentsProvider commentsProvider = new CommentsProvider() {
 
   @Override
@@ -57,6 +59,16 @@ public class CommentsCreatorTest {
   @Override
   public boolean shouldComment(ChangedFile changedFile, Integer line) {
    return true;
+  }
+
+  @Override
+  public boolean shouldCreateCommentWithAllSingleFileComments() {
+   return shouldCreateCommentWithAllSingleFileComments;
+  }
+
+  @Override
+  public boolean shouldCreateSingleFileComment() {
+   return shouldCreateSingleFileComment;
   }
  };
  private List<Violation> violations;
@@ -175,6 +187,70 @@ public class CommentsCreatorTest {
  }
 
  @Test
+ public void testWithOnlyOne() {
+  violations.add(violationBuilder()//
+    .setReporter(ANDROIDLINT)//
+    .setStartLine(1)//
+    .setSeverity(ERROR)//
+    .setFile("file1")//
+    .setMessage("1111111111")//
+    .build());
+  violations.add(violationBuilder()//
+    .setReporter(ANDROIDLINT)//
+    .setStartLine(1)//
+    .setSeverity(ERROR)//
+    .setFile("file1")//
+    .setMessage("2222222222")//
+    .build());
+
+  shouldCreateSingleFileComment = false;
+  shouldCreateCommentWithAllSingleFileComments = true;
+
+  files.add(new ChangedFile("file1", null));
+
+  maxCommentSize = MAX_VALUE;
+
+  createComments(commentsProvider, violations, maxCommentSize);
+
+  assertThat(createCommentWithAllSingleFileComments)//
+    .hasSize(1);
+  assertThat(createSingleFileComment)//
+    .hasSize(0);
+ }
+
+ @Test
+ public void testWithOnlySingle() {
+  violations.add(violationBuilder()//
+    .setReporter(ANDROIDLINT)//
+    .setStartLine(1)//
+    .setSeverity(ERROR)//
+    .setFile("file1")//
+    .setMessage("1111111111")//
+    .build());
+  violations.add(violationBuilder()//
+    .setReporter(ANDROIDLINT)//
+    .setStartLine(1)//
+    .setSeverity(ERROR)//
+    .setFile("file1")//
+    .setMessage("2222222222")//
+    .build());
+
+  shouldCreateSingleFileComment = true;
+  shouldCreateCommentWithAllSingleFileComments = false;
+
+  files.add(new ChangedFile("file1", null));
+
+  maxCommentSize = MAX_VALUE;
+
+  createComments(commentsProvider, violations, maxCommentSize);
+
+  assertThat(createCommentWithAllSingleFileComments)//
+    .hasSize(0);
+  assertThat(createSingleFileComment)//
+    .hasSize(2);
+ }
+
+ @Test
  public void testWithSmallComment() {
   violations.add(violationBuilder()//
     .setReporter(ANDROIDLINT)//
@@ -215,5 +291,4 @@ public class CommentsCreatorTest {
   assertThat(comments)//
     .isEmpty();
  }
-
 }
