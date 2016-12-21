@@ -1,20 +1,20 @@
 package se.bjurr.violations.comments.lib;
 
-import static com.google.common.base.Optional.absent;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Lists.newArrayList;
+import static se.bjurr.violations.lib.util.Optional.absent;
+import static se.bjurr.violations.lib.util.Optional.fromNullable;
+import static se.bjurr.violations.lib.util.Utils.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Optional;
-
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.comments.lib.model.CommentsProvider;
 import se.bjurr.violations.lib.model.Violation;
+import se.bjurr.violations.lib.util.Optional;
 
 public class CommentsCreator {
  private static final String FINGERPRINT = "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
@@ -29,8 +29,8 @@ public class CommentsCreator {
  private final CommentsProvider commentsProvider;
  private final List<ChangedFile> files;
 
- private final List<Violation> violations;
  private final Integer maxCommentSize;
+ private final List<Violation> violations;
 
  private CommentsCreator(CommentsProvider commentsProvider, List<Violation> violations, Integer maxCommentSize) {
   checkNotNull(violations, "violations");
@@ -107,7 +107,7 @@ public class CommentsCreator {
  }
 
  private List<Violation> filterChanged(List<Violation> mixedViolations) {
-  List<Violation> isChanged = newArrayList();
+  List<Violation> isChanged = new ArrayList<>();
   for (Violation violation : mixedViolations) {
    Optional<ChangedFile> file = getFile(violation);
    if (file.isPresent()) {
@@ -121,7 +121,7 @@ public class CommentsCreator {
  }
 
  private List<Comment> filterCommentsCreatedByThisLib(List<Comment> unfilteredComments) {
-  List<Comment> filteredComments = newArrayList();
+  List<Comment> filteredComments = new ArrayList<>();
   for (Comment comment : unfilteredComments) {
    if (comment.getContent().contains(FINGERPRINT)) {
     filteredComments.add(comment);
@@ -141,7 +141,7 @@ public class CommentsCreator {
   for (ChangedFile providerFile : files) {
    if (violation.getFile().endsWith(providerFile.getFilename())
      || providerFile.getFilename().endsWith(violation.getFile())) {
-    return Optional.of(providerFile);
+    return fromNullable(providerFile);
    }
   }
   return absent();

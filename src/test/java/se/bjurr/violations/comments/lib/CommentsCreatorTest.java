@@ -1,7 +1,5 @@
 package se.bjurr.violations.comments.lib;
 
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Integer.MAX_VALUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.bjurr.violations.comments.lib.CommentsCreator.createComments;
@@ -9,26 +7,20 @@ import static se.bjurr.violations.lib.model.SEVERITY.ERROR;
 import static se.bjurr.violations.lib.model.Violation.violationBuilder;
 import static se.bjurr.violations.lib.reports.Reporter.ANDROIDLINT;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.io.Resources;
-
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.comments.lib.model.CommentsProvider;
 import se.bjurr.violations.lib.model.Violation;
+import se.bjurr.violations.lib.util.Utils;
 
 public class CommentsCreatorTest {
- private List<String> createCommentWithAllSingleFileComments;
- private List<String> createSingleFileComment;
  private List<Comment> comments;
- private List<ChangedFile> files;
- private List<Comment> removeComments;
- private boolean shouldCreateCommentWithAllSingleFileComments = true;
- private boolean shouldCreateSingleFileComment = true;
  private final CommentsProvider commentsProvider = new CommentsProvider() {
 
   @Override
@@ -71,21 +63,27 @@ public class CommentsCreatorTest {
    return shouldCreateSingleFileComment;
   }
  };
- private List<Violation> violations;
+ private List<String> createCommentWithAllSingleFileComments;
+ private List<String> createSingleFileComment;
+ private List<ChangedFile> files;
  private Integer maxCommentSize;
+ private List<Comment> removeComments;
+ private boolean shouldCreateCommentWithAllSingleFileComments = true;
+ private boolean shouldCreateSingleFileComment = true;
+ private List<Violation> violations;
 
  private String asFile(String string) throws Exception {
-  return Resources.toString(Resources.getResource(string), UTF_8).trim();
+  return Utils.toString(Utils.getResource(string));
  }
 
  @Before
  public void before() {
-  createCommentWithAllSingleFileComments = newArrayList();
-  createSingleFileComment = newArrayList();
-  comments = newArrayList();
-  files = newArrayList();
-  removeComments = newArrayList();
-  violations = newArrayList();
+  createCommentWithAllSingleFileComments = new ArrayList<>();
+  createSingleFileComment = new ArrayList<>();
+  comments = new ArrayList<>();
+  files = new ArrayList<>();
+  removeComments = new ArrayList<>();
+  violations = new ArrayList<>();
   maxCommentSize = MAX_VALUE;
  }
 

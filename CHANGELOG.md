@@ -3,10 +3,123 @@
 ## Unreleased
 ### No issue
 
+**violations lib 1.22**
+
+
+[8dd5e937f1d7d59](https://github.com/tomasbjerre/violation-comments-lib/commit/8dd5e937f1d7d59) Tomas Bjerre *2016-12-21 16:52:11*
+
+
+## 1.20
+### No issue
+
+**Codenarc, Cpd, Gendarme, Jcereport, Simian, ZptLint**
+
+
+[01bdde465bd0692](https://github.com/tomasbjerre/violation-comments-lib/commit/01bdde465bd0692) Tomas Bjerre *2016-11-06 06:51:43*
+
+
+## 1.19
+### No issue
+
+**Moving multiple/single commenting logic to lib**
+
+
+[e6a7f2cae5d658c](https://github.com/tomasbjerre/violation-comments-lib/commit/e6a7f2cae5d658c) Tomas Bjerre *2016-11-01 16:46:54*
+
+
+## 1.18
+### No issue
+
+**Adding shouldComment**
+
+
+[0da8555ac516d2a](https://github.com/tomasbjerre/violation-comments-lib/commit/0da8555ac516d2a) Tomas Bjerre *2016-10-31 20:50:06*
+
+
+## 1.17
+### No issue
+
+**Markdown in comments and not commenting unchanged files**
+
+
+[f2d49733aba6edd](https://github.com/tomasbjerre/violation-comments-lib/commit/f2d49733aba6edd) Tomas Bjerre *2016-10-27 16:54:11*
+
+
+## 1.16
+### No issue
+
+**Handling CSS Lint reports without line or evidence**
+
+
+[1e2705613d06f0f](https://github.com/tomasbjerre/violation-comments-lib/commit/1e2705613d06f0f) Tomas Bjerre *2016-10-26 15:49:58*
+
+
+## 1.15
+### No issue
+
+**Changing rule format in PyLint to CODE(codeName)**
+
+
+[825a60b90ddd0c7](https://github.com/tomasbjerre/violation-comments-lib/commit/825a60b90ddd0c7) Tomas Bjerre *2016-10-25 17:51:07*
+
+
+## 1.14
+### No issue
+
+**PyLint parser**
+
+
+[1d3632bfbda731d](https://github.com/tomasbjerre/violation-comments-lib/commit/1d3632bfbda731d) Tomas Bjerre *2016-10-24 17:23:26*
+
+
+## 1.13
+### No issue
+
+**Supporting StyleCop and fixing FxCop**
+
+
+[b7e4c2db7352fee](https://github.com/tomasbjerre/violation-comments-lib/commit/b7e4c2db7352fee) Tomas Bjerre *2016-10-03 17:04:18*
+
+
+## 1.12
+### No issue
+
+**FXCop**
+
+
+[37941030a9b1d75](https://github.com/tomasbjerre/violation-comments-lib/commit/37941030a9b1d75) Tomas Bjerre *2016-10-01 11:35:11*
+
+
+## 1.11
+### No issue
+
+**Not creating summary comment if zero violations found**
+
+
+[521e30bff067fae](https://github.com/tomasbjerre/violation-comments-lib/commit/521e30bff067fae) Tomas Bjerre *2016-07-29 19:04:16*
+
+
+## 1.10
+### No issue
+
+**Adding specifics to comments**
+
+
+[223dd85c2fae8c6](https://github.com/tomasbjerre/violation-comments-lib/commit/223dd85c2fae8c6) Tomas Bjerre *2016-07-29 15:05:30*
+
+**doc**
+
+
+[91c8a342ae81cbc](https://github.com/tomasbjerre/violation-comments-lib/commit/91c8a342ae81cbc) Tomas Bjerre *2016-07-28 20:17:55*
+
+
+## 1.9
+### No issue
+
 **Andoid lint**
 
 
-[2d339fa31395b61](https://github.com/tomasbjerre/violation-comments-lib/commit/2d339fa31395b61) Tomas Bjerre *2016-04-27 05:38:36*
+[95a5dcd2dc9e298](https://github.com/tomasbjerre/violation-comments-lib/commit/95a5dcd2dc9e298) Tomas Bjerre *2016-04-27 05:39:01*
 
 
 ## 1.8
