@@ -80,6 +80,11 @@ public class CommentsCreator {
  }
 
  private String createSingleFileCommentContent(Violation violation) {
+  Optional<String> providedCommentFormat = commentsProvider.findCommentFormat(violation);
+  if (providedCommentFormat.isPresent()) {
+   return providedCommentFormat.get();
+  }
+
   String source = violation.getSource().isPresent() ? "**Source**: " + violation.getSource().get() + "\n" : "";
   return "" + //
     "**Reporter**: " + violation.getReporter() + "\n" + //

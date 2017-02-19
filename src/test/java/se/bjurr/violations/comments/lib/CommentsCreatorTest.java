@@ -17,6 +17,7 @@ import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.comments.lib.model.CommentsProvider;
 import se.bjurr.violations.lib.model.Violation;
+import se.bjurr.violations.lib.util.Optional;
 import se.bjurr.violations.lib.util.Utils;
 
 public class CommentsCreatorTest {
@@ -61,6 +62,11 @@ public class CommentsCreatorTest {
   @Override
   public boolean shouldCreateSingleFileComment() {
    return shouldCreateSingleFileComment;
+  }
+
+  @Override
+  public Optional<String> findCommentFormat(Violation violation) {
+    return Optional.absent();
   }
  };
  private List<String> createCommentWithAllSingleFileComments;
