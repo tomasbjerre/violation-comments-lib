@@ -81,7 +81,7 @@ public class CommentsCreator {
  }
 
  private String createSingleFileCommentContent(ChangedFile changedFile, Violation violation) {
-  Optional<String> providedCommentFormat = commentsProvider.findCommentFormat(violation);
+  Optional<String> providedCommentFormat = commentsProvider.findCommentFormat(changedFile, violation);
   if (providedCommentFormat.isPresent()) {
    return providedCommentFormat.get();
   }

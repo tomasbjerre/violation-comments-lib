@@ -65,7 +65,7 @@ public class CommentsCreatorTest {
   }
 
   @Override
-  public Optional<String> findCommentFormat(Violation violation) {
+  public Optional<String> findCommentFormat(ChangedFile changedFile, Violation violation) {
     return Optional.absent();
   }
  };

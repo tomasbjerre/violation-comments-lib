@@ -25,5 +25,5 @@ public interface CommentsProvider {
  /**
   * Return absent to ignore. Or add your own formatting.
   */
-Optional<String> findCommentFormat(Violation violation);
+Optional<String> findCommentFormat(ChangedFile changedFile, Violation violation);
 }
