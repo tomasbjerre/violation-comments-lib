@@ -1,12 +1,75 @@
 # Changelog
 
-## Unreleased
+## 1.28
+### No issue
+
+**Exposing fingerprint**
+
+
+[5104c1fc930eb31](https://github.com/tomasbjerre/violation-comments-lib/commit/5104c1fc930eb31) Tomas Bjerre *2017-02-19 16:04:47*
+
+
+## 1.27
+### No issue
+
+**Allowing provider to implement a comment format**
+
+
+[676ce7038b4a38d](https://github.com/tomasbjerre/violation-comments-lib/commit/676ce7038b4a38d) Tomas Bjerre *2017-02-19 16:01:33*
+
+
+## 1.26
+### No issue
+
+**Making PatchParser public**
+
+
+[9d8aa4f7c61dd65](https://github.com/tomasbjerre/violation-comments-lib/commit/9d8aa4f7c61dd65) Tomas Bjerre *2017-02-19 08:01:55*
+
+
+## 1.25
+### No issue
+
+**Adding PatchParser**
+
+
+[e7fd79ab5d19534](https://github.com/tomasbjerre/violation-comments-lib/commit/e7fd79ab5d19534) Tomas Bjerre *2017-02-19 07:58:04*
+
+
+## 1.24
+### No issue
+
+**CLang, RubyCop, GoLint, GoVet, PHPMD, PHPCS**
+
+
+[a1c643772a1e63d](https://github.com/tomasbjerre/violation-comments-lib/commit/a1c643772a1e63d) Tomas Bjerre *2017-02-18 21:47:04*
+
+
+## 1.23
+### No issue
+
+**Finding findbugsmessages and correcting codenarc**
+
+
+[ef7c38326d57f24](https://github.com/tomasbjerre/violation-comments-lib/commit/ef7c38326d57f24) Tomas Bjerre *2017-02-16 20:53:28*
+
+
+## 1.22
+### No issue
+
+**Adding MyPy and PyDocStyle parsers**
+
+
+[511286b20056694](https://github.com/tomasbjerre/violation-comments-lib/commit/511286b20056694) Tomas Bjerre *2017-02-06 17:31:22*
+
+
+## 1.21
 ### No issue
 
 **violations lib 1.22**
 
 
-[8dd5e937f1d7d59](https://github.com/tomasbjerre/violation-comments-lib/commit/8dd5e937f1d7d59) Tomas Bjerre *2016-12-21 16:52:11*
+[8df929d4f1a9e87](https://github.com/tomasbjerre/violation-comments-lib/commit/8df929d4f1a9e87) Tomas Bjerre *2016-12-21 16:53:03*
 
 
 ## 1.20

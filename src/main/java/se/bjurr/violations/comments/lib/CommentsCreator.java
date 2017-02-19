@@ -65,7 +65,8 @@ public class CommentsCreator {
   StringBuilder sb = new StringBuilder();
   sb.append("Found " + violations.size() + " violations:\n\n");
   for (Violation violation : violations) {
-   String singleFileCommentContent = createSingleFileCommentContent(violation);
+    Optional<ChangedFile> changedFile = getFile(violation);
+   String singleFileCommentContent = createSingleFileCommentContent(changedFile.get(),violation);
    if (sb.length() + singleFileCommentContent.length() >= maxCommentSize) {
     LOG.info("Asking " + commentsProvider.getClass().getSimpleName()
       + " to create comment with a subset of all single file comments.");
@@ -79,7 +80,7 @@ public class CommentsCreator {
   commentsProvider.createCommentWithAllSingleFileComments(sb.toString());
  }
 
- private String createSingleFileCommentContent(Violation violation) {
+ private String createSingleFileCommentContent(ChangedFile changedFile, Violation violation) {
   Optional<String> providedCommentFormat = commentsProvider.findCommentFormat(violation);
   if (providedCommentFormat.isPresent()) {
    return providedCommentFormat.get();
@@ -90,7 +91,7 @@ public class CommentsCreator {
     "**Reporter**: " + violation.getReporter() + "\n" + //
     "**Rule**: " + violation.getRule().or("?") + "\n" + //
     "**Severity**: " + violation.getSeverity() + "\n" + //
-    "**File**: " + violation.getFile() + " L" + violation.getStartLine() + "\n" + //
+    "**File**: " + changedFile.getFilename() + " L" + violation.getStartLine() + "\n" + //
     source + //
     "\n" + //
     violation.getMessage() + "\n" + //
@@ -101,9 +102,9 @@ public class CommentsCreator {
  private void createSingleFileComments() {
   LOG.info("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
   for (Violation violation : violations) {
-   String singleFileCommentContent = createSingleFileCommentContent(violation);
    Optional<ChangedFile> file = getFile(violation);
    if (file.isPresent()) {
+     String singleFileCommentContent = createSingleFileCommentContent(file.get(),violation);
     LOG.info(violation.getReporter() + " " + violation.getSeverity() + " " + violation.getRule().or("") + " "
       + file.get() + " " + violation.getStartLine() + " " + violation.getSource().or(""));
     commentsProvider.createSingleFileComment(file.get(), violation.getStartLine(), singleFileCommentContent);
@@ -142,7 +143,7 @@ public class CommentsCreator {
   * <br>
   * Here we make a guess on which file in the {@link CommentsProvider} to use.
   */
- private Optional<ChangedFile> getFile(Violation violation) {
+ public Optional<ChangedFile> getFile(Violation violation) {
   for (ChangedFile providerFile : files) {
    if (violation.getFile().endsWith(providerFile.getFilename())
      || providerFile.getFilename().endsWith(violation.getFile())) {
