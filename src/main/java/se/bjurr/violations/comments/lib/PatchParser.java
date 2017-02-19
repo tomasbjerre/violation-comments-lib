@@ -12,7 +12,7 @@ public class PatchParser {
   /**
    * http://en.wikipedia.org/wiki/Diff_utility#Unified_format
    */
-  static Optional<Integer> findLineToComment(String patchString, Integer lineToComment) {
+  public static Optional<Integer> findLineToComment(String patchString, Integer lineToComment) {
    int currentLine = -1;
    int patchLocation = 0;
    for (String line : patchString.split("\n")) {
