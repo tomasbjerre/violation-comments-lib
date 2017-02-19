@@ -17,7 +17,7 @@ import se.bjurr.violations.lib.model.Violation;
 import se.bjurr.violations.lib.util.Optional;
 
 public class CommentsCreator {
- private static final String FINGERPRINT = "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
+ public static final String FINGERPRINT = "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
  private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
 
  public static void createComments(CommentsProvider commentsProvider, List<Violation> violations,
