@@ -36,7 +36,7 @@ public class CommentsCreator {
   checkNotNull(violations, "violations");
   checkNotNull(commentsProvider, "commentsProvider");
   this.commentsProvider = commentsProvider;
-  LOG.info(violations.size() + " violations.");
+  LOG.debug(violations.size() + " violations.");
   files = commentsProvider.getFiles();
   this.violations = filterChanged(violations);
   this.maxCommentSize = maxCommentSize;
@@ -44,9 +44,9 @@ public class CommentsCreator {
 
  public void createComments() {
   List<Comment> oldComments = commentsProvider.getComments();
-  LOG.info(oldComments.size() + " comments found.");
+  LOG.debug(oldComments.size() + " comments found.");
   oldComments = filterCommentsCreatedByThisLib(oldComments);
-  LOG.info(oldComments.size() + " comments found from " + CommentsCreator.class.getSimpleName() + ", asking "
+  LOG.debug(oldComments.size() + " comments found from " + CommentsCreator.class.getSimpleName() + ", asking "
     + commentsProvider.getClass().getSimpleName() + " to remove them.");
   commentsProvider.removeComments(oldComments);
   if (commentsProvider.shouldCreateSingleFileComment()) {
@@ -59,7 +59,7 @@ public class CommentsCreator {
 
  private void createCommentWithAllSingleFileComments() {
   if (violations.isEmpty()) {
-   LOG.info("Found no violations, not creating any comment.");
+   LOG.debug("Found no violations, not creating any comment.");
    return;
   }
   StringBuilder sb = new StringBuilder();
@@ -68,14 +68,14 @@ public class CommentsCreator {
     Optional<ChangedFile> changedFile = getFile(violation);
    String singleFileCommentContent = createSingleFileCommentContent(changedFile.get(),violation);
    if (sb.length() + singleFileCommentContent.length() >= maxCommentSize) {
-    LOG.info("Asking " + commentsProvider.getClass().getSimpleName()
+    LOG.debug("Asking " + commentsProvider.getClass().getSimpleName()
       + " to create comment with a subset of all single file comments.");
     commentsProvider.createCommentWithAllSingleFileComments(sb.toString());
     sb = new StringBuilder();
    }
    sb.append(singleFileCommentContent + "\n");
   }
-  LOG.info(
+  LOG.debug(
     "Asking " + commentsProvider.getClass().getSimpleName() + " to create comment with all single file comments.");
   commentsProvider.createCommentWithAllSingleFileComments(sb.toString());
  }
