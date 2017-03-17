@@ -100,12 +100,12 @@ public class CommentsCreator {
  }
 
  private void createSingleFileComments() {
-  LOG.info("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
+  LOG.debug("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
   for (Violation violation : violations) {
    Optional<ChangedFile> file = getFile(violation);
    if (file.isPresent()) {
      String singleFileCommentContent = createSingleFileCommentContent(file.get(),violation);
-    LOG.info(violation.getReporter() + " " + violation.getSeverity() + " " + violation.getRule().or("") + " "
+    LOG.debug(violation.getReporter() + " " + violation.getSeverity() + " " + violation.getRule().or("") + " "
       + file.get() + " " + violation.getStartLine() + " " + violation.getSource().or(""));
     commentsProvider.createSingleFileComment(file.get(), violation.getStartLine(), singleFileCommentContent);
    }
