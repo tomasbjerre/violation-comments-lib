@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Test;
 
 public class PatchParserTest {
@@ -18,61 +17,60 @@ public class PatchParserTest {
 
   @Test
   public void testThatChangedContentCanBeCommented() {
-    assertThat(findLineToComment("filename", "patch", 1))//
+    assertThat(findLineToComment("filename", "patch", 1)) //
         .isNull();
   }
 
   @Test
   public void testThatChangedContentCanBeCommentedNewFile() {
-    assertThat(findLineToComment("filename", NEW_DIFF, 1))//
+    assertThat(findLineToComment("filename", NEW_DIFF, 1)) //
         .isEqualTo(1);
 
-    assertThat(findLineToComment("filename", NEW_DIFF, 1))//
+    assertThat(findLineToComment("filename", NEW_DIFF, 1)) //
         .isEqualTo(1);
 
-    assertThat(findLineToComment("filename", NEW_DIFF, 5))//
+    assertThat(findLineToComment("filename", NEW_DIFF, 5)) //
         .isEqualTo(6);
 
-    assertThat(findLineToComment("filename", NEW_DIFF, 5))//
+    assertThat(findLineToComment("filename", NEW_DIFF, 5)) //
         .isEqualTo(6);
   }
 
   @Test
   public void testThatChangedContentCanBeCommentedChangedFile() {
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 1))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF, 1)) //
         .isEqualTo(2);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 1))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF, 1)) //
         .isEqualTo(2);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 4))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF, 4)) //
         .isEqualTo(5);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 4))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF, 4)) //
         .isEqualTo(5);
   }
 
   @Test
   public void testThatChangedContentCanBeCommentedChangedPartsOfFile() {
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 6))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 6)) //
         .isEqualTo(1);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 8))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 8)) //
         .isEqualTo(3);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 14))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 14)) //
         .isEqualTo(9);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 21))//
+    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 21)) //
         .isEqualTo(16);
   }
 
   private Integer findLineToComment(String filename, String patch, int commentLint) {
     List<String> list = new ArrayList<>();
     list.add(patch);
-    return PatchParser// .
-        .findLineToComment(patch, commentLint)//
+    return PatchParser // .
+        .findLineToComment(patch, commentLint) //
         .orNull();
   }
-
 }
