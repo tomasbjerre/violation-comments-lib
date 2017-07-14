@@ -8,7 +8,7 @@ buildscript {
  dependencies {
   classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
   classpath 'net.researchgate:gradle-release:2.2.2'
-  classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.21"
+  classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.48"
   classpath 'gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.6'
  }
 }
@@ -23,7 +23,7 @@ apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 apply plugin: 'com.github.sherter.google-java-format'
 
 task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
- filePath = "CHANGELOG.md";
+ file = new File("CHANGELOG.md");
  templateContent = new File('changelog.mustache').getText('UTF-8');
 }
 
@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
- compile 'se.bjurr.violations:violations-lib:1.27'
+ compile 'se.bjurr.violations:violations-lib:1.28'
  compile 'org.slf4j:slf4j-api:1.7.22'
  testCompile 'junit:junit:4.12'
  testCompile 'org.assertj:assertj-core:2.3.0'

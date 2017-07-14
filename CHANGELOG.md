@@ -1,5 +1,97 @@
 # Changelog
 
+## Unreleased
+### No issue
+
+**Violations-lib 1.28**
+
+
+[5375b07925cda37](https://github.com/tomasbjerre/violation-comments-lib/commit/5375b07925cda37) Tomas Bjerre *2017-07-14 19:06:13*
+
+**Avoiding NPE #1**
+
+ * Also adding Google Java Format Gradle Plugin. 
+
+[3748976b1d56dd0](https://github.com/tomasbjerre/violation-comments-lib/commit/3748976b1d56dd0) Tomas Bjerre *2017-06-02 08:17:42*
+
+
+## 1.36
+### No issue
+
+**URL in Klocwork**
+
+
+[bbe00a409dae215](https://github.com/tomasbjerre/violation-comments-lib/commit/bbe00a409dae215) Tomas Bjerre *2017-04-11 18:17:10*
+
+
+## 1.35
+### No issue
+
+**SbtScalac**
+
+
+[4ab85ebbfcf8bd2](https://github.com/tomasbjerre/violation-comments-lib/commit/4ab85ebbfcf8bd2) Tomas Bjerre *2017-04-10 18:17:22*
+
+
+## 1.34
+### No issue
+
+**Klocwork parser**
+
+
+[856b3a67a6deb68](https://github.com/tomasbjerre/violation-comments-lib/commit/856b3a67a6deb68) Tomas Bjerre *2017-03-30 17:25:53*
+
+
+## 1.33
+### No issue
+
+**Reducing logging**
+
+
+[b770deeed1a71d5](https://github.com/tomasbjerre/violation-comments-lib/commit/b770deeed1a71d5) Tomas Bjerre *2017-03-17 17:27:57*
+
+
+## 1.32
+### No issue
+
+**Reducing logging**
+
+
+[393cd45e3a4fd98](https://github.com/tomasbjerre/violation-comments-lib/commit/393cd45e3a4fd98) Tomas Bjerre *2017-03-17 16:50:51*
+
+
+## 1.31
+### No issue
+
+**Adding filtering util**
+
+
+[a35ce1151ab1af6](https://github.com/tomasbjerre/violation-comments-lib/commit/a35ce1151ab1af6) Tomas Bjerre *2017-03-17 14:15:37*
+
+**doc**
+
+
+[1d51c2e031a3bbd](https://github.com/tomasbjerre/violation-comments-lib/commit/1d51c2e031a3bbd) Tomas Bjerre *2017-02-19 20:55:35*
+
+
+## 1.30
+### No issue
+
+**Supplying changed file to comments provider**
+
+
+[f6e33176f503fee](https://github.com/tomasbjerre/violation-comments-lib/commit/f6e33176f503fee) Tomas Bjerre *2017-02-19 20:15:01*
+
+
+## 1.29
+### No issue
+
+**Using changedFile to construct comments**
+
+
+[9fec39f2122d254](https://github.com/tomasbjerre/violation-comments-lib/commit/9fec39f2122d254) Tomas Bjerre *2017-02-19 20:09:35*
+
+
 ## 1.28
 ### No issue
 
@@ -251,14 +343,5 @@
 
 
 [13a2715ad65011e](https://github.com/tomasbjerre/violation-comments-lib/commit/13a2715ad65011e) Tomas Bjerre *2016-03-04 19:38:29*
-
-
-## 1.0
-### No issue
-
-**Initial**
-
-
-[b4d61a4091599d2](https://github.com/tomasbjerre/violation-comments-lib/commit/b4d61a4091599d2) Tomas Bjerre *2016-03-04 18:18:53*
 
 

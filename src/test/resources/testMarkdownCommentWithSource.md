@@ -1,6 +1,6 @@
 Found 2 violations:
 
-**Reporter**: ANDROIDLINT
+**Reporter**: ToolUsed
 **Rule**: ?
 **Severity**: ERROR
 **File**: file1 L1

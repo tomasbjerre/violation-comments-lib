@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.bjurr.violations.comments.lib.CommentsCreator.createComments;
 import static se.bjurr.violations.lib.model.SEVERITY.ERROR;
 import static se.bjurr.violations.lib.model.Violation.violationBuilder;
-import static se.bjurr.violations.lib.reports.Reporter.ANDROIDLINT;
+import static se.bjurr.violations.lib.reports.Parser.ANDROIDLINT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +96,8 @@ public class CommentsCreatorTest {
   public void testMarkdown() throws Exception {
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
+            .setReporter("ToolUsed") //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -105,7 +106,7 @@ public class CommentsCreatorTest {
             .build());
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -113,7 +114,7 @@ public class CommentsCreatorTest {
             .build());
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file2") //
@@ -135,10 +136,64 @@ public class CommentsCreatorTest {
   }
 
   @Test
+  public void testMarkdownCustomReporter() throws Exception {
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setReporter("ToolUsed") //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile("file1") //
+            .setSource("File") //
+            .setMessage("1111111111") //
+            .build());
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile("file1") //
+            .setMessage("2222222222") //
+            .build());
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile("file2") //
+            .setMessage("2222222222") //
+            .build());
+
+    files.add(new ChangedFile("file1", null));
+
+    maxCommentSize = MAX_VALUE;
+
+    Utils.setReporter(violations, "CustomReporter");
+
+    createComments(commentsProvider, violations, maxCommentSize);
+
+    assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
+        .isEqualTo(
+            asFile("testMarkdownCommentWithSource.md")
+                .replaceAll("ToolUsed", "CustomReporter")
+                .replaceAll("ANDROIDLINT", "CustomReporter"));
+    assertThat(createSingleFileComment.get(0).trim()) //
+        .isEqualTo(
+            asFile("testMarkdownSingleFileCommentWithSource.md")
+                .replaceAll("ToolUsed", "CustomReporter")
+                .replaceAll("ANDROIDLINT", "CustomReporter"));
+    assertThat(createSingleFileComment.get(1).trim()) //
+        .isEqualTo(
+            asFile("testMarkdownSingleFileCommentWithoutSource.md")
+                .replaceAll("ToolUsed", "CustomReporter")
+                .replaceAll("ANDROIDLINT", "CustomReporter"));
+  }
+
+  @Test
   public void testWithBigComment() {
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -146,7 +201,7 @@ public class CommentsCreatorTest {
             .build());
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file2") //
@@ -155,7 +210,7 @@ public class CommentsCreatorTest {
 
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file3") //
@@ -199,7 +254,7 @@ public class CommentsCreatorTest {
   public void testWithOnlyOne() {
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -207,7 +262,7 @@ public class CommentsCreatorTest {
             .build());
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -233,7 +288,7 @@ public class CommentsCreatorTest {
   public void testWithOnlySingle() {
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -241,7 +296,7 @@ public class CommentsCreatorTest {
             .build());
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -267,7 +322,7 @@ public class CommentsCreatorTest {
   public void testWithSmallComment() {
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file1") //
@@ -275,7 +330,7 @@ public class CommentsCreatorTest {
             .build());
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file2") //
@@ -284,7 +339,7 @@ public class CommentsCreatorTest {
 
     violations.add(
         violationBuilder() //
-            .setReporter(ANDROIDLINT) //
+            .setParser(ANDROIDLINT) //
             .setStartLine(1) //
             .setSeverity(ERROR) //
             .setFile("file3") //
