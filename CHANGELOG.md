@@ -3,10 +3,28 @@
 ## Unreleased
 ### No issue
 
+**Adding HTML escaping utility**
+
+
+[fee8001940ad21a](https://github.com/tomasbjerre/violation-comments-lib/commit/fee8001940ad21a) Tomas Bjerre *2017-07-15 05:24:51*
+
+
+## 1.38
+### No issue
+
+**Violations-lib 1.29**
+
+
+[0d925a3aa9e9a9a](https://github.com/tomasbjerre/violation-comments-lib/commit/0d925a3aa9e9a9a) Tomas Bjerre *2017-07-14 19:31:21*
+
+
+## 1.37
+### No issue
+
 **Violations-lib 1.28**
 
 
-[5375b07925cda37](https://github.com/tomasbjerre/violation-comments-lib/commit/5375b07925cda37) Tomas Bjerre *2017-07-14 19:06:13*
+[cd62ff0a171369f](https://github.com/tomasbjerre/violation-comments-lib/commit/cd62ff0a171369f) Tomas Bjerre *2017-07-14 19:09:00*
 
 **Avoiding NPE #1**
 
