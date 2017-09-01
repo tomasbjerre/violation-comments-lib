@@ -3,10 +3,30 @@
 ## Unreleased
 ### No issue
 
+**Less comments and allow checkstyle without source**
+
+ * Not re-creating comments on same violation. 
+ * Allowing source to be absent in checkstyle reports. 
+
+[828dc101dd21524](https://github.com/tomasbjerre/violation-comments-lib/commit/828dc101dd21524) Tomas Bjerre *2017-09-01 18:45:07*
+
+
+## 1.40
+### No issue
+
+**Checking for null in API-calls**
+
+
+[5bdc8ebc86380b6](https://github.com/tomasbjerre/violation-comments-lib/commit/5bdc8ebc86380b6) Tomas Bjerre *2017-08-11 09:50:19*
+
+
+## 1.39
+### No issue
+
 **Adding HTML escaping utility**
 
 
-[fee8001940ad21a](https://github.com/tomasbjerre/violation-comments-lib/commit/fee8001940ad21a) Tomas Bjerre *2017-07-15 05:24:51*
+[32288f0eadb1a9d](https://github.com/tomasbjerre/violation-comments-lib/commit/32288f0eadb1a9d) Tomas Bjerre *2017-07-15 05:26:03*
 
 
 ## 1.38

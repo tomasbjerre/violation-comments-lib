@@ -67,6 +67,11 @@ public class CommentsCreatorTest {
         public Optional<String> findCommentFormat(ChangedFile changedFile, Violation violation) {
           return Optional.absent();
         }
+
+        @Override
+        public boolean shouldKeepOldComments() {
+          return false;
+        }
       };
   private List<String> createCommentWithAllSingleFileComments;
   private List<String> createSingleFileComment;
@@ -173,20 +178,11 @@ public class CommentsCreatorTest {
     createComments(commentsProvider, violations, maxCommentSize);
 
     assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
-        .isEqualTo(
-            asFile("testMarkdownCommentWithSource.md")
-                .replaceAll("ToolUsed", "CustomReporter")
-                .replaceAll("ANDROIDLINT", "CustomReporter"));
+        .isEqualTo(asFile("testMarkdownCustomReporter1.md"));
     assertThat(createSingleFileComment.get(0).trim()) //
-        .isEqualTo(
-            asFile("testMarkdownSingleFileCommentWithSource.md")
-                .replaceAll("ToolUsed", "CustomReporter")
-                .replaceAll("ANDROIDLINT", "CustomReporter"));
+        .isEqualTo(asFile("testMarkdownCustomReporter2.md"));
     assertThat(createSingleFileComment.get(1).trim()) //
-        .isEqualTo(
-            asFile("testMarkdownSingleFileCommentWithoutSource.md")
-                .replaceAll("ToolUsed", "CustomReporter")
-                .replaceAll("ANDROIDLINT", "CustomReporter"));
+        .isEqualTo(asFile("testMarkdownCustomReporter3.md"));
   }
 
   @Test

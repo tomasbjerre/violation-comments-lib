@@ -1,4 +1,4 @@
-**Reporter**: ToolUsed
+**Reporter**: CustomReporter
 **Rule**: ?
 **Severity**: ERROR
 **File**: file1 L1

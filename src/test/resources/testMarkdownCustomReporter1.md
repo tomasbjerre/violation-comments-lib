@@ -1,6 +1,6 @@
 Found 2 violations:
 
-**Reporter**: ToolUsed
+**Reporter**: CustomReporter
 **Rule**: ?
 **Severity**: ERROR
 **File**: file1 L1
@@ -10,7 +10,7 @@ Found 2 violations:
 
 *<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>* *<1562463996>*
 
-**Reporter**: ANDROIDLINT
+**Reporter**: CustomReporter
 **Rule**: ?
 **Severity**: ERROR
 **File**: file1 L1
