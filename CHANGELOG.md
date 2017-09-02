@@ -3,12 +3,21 @@
 ## Unreleased
 ### No issue
 
+**Travis with JDK8**
+
+
+[5a035817c37da5d](https://github.com/tomasbjerre/violation-comments-lib/commit/5a035817c37da5d) Tomas Bjerre *2017-09-01 19:23:26*
+
+
+## 1.41
+### No issue
+
 **Less comments and allow checkstyle without source**
 
  * Not re-creating comments on same violation. 
  * Allowing source to be absent in checkstyle reports. 
 
-[828dc101dd21524](https://github.com/tomasbjerre/violation-comments-lib/commit/828dc101dd21524) Tomas Bjerre *2017-09-01 18:45:07*
+[b153a96e2ce4ffe](https://github.com/tomasbjerre/violation-comments-lib/commit/b153a96e2ce4ffe) Tomas Bjerre *2017-09-01 19:05:07*
 
 
 ## 1.40

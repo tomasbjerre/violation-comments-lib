@@ -18,7 +18,7 @@ public class CommentsCreator {
   public static final String FINGERPRINT =
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
   private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
-  private static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
+  public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
 
   public static void createComments(
       CommentsProvider commentsProvider, List<Violation> violations, Integer maxCommentSize) {
@@ -33,7 +33,7 @@ public class CommentsCreator {
   private final Integer maxCommentSize;
   private final List<Violation> violations;
 
-  private CommentsCreator(
+  CommentsCreator(
       CommentsProvider commentsProvider, List<Violation> violations, Integer maxCommentSize) {
     checkNotNull(violations, "violations");
     checkNotNull(commentsProvider, "commentsProvider");
@@ -54,6 +54,32 @@ public class CommentsCreator {
   }
 
   private void createCommentWithAllSingleFileComments() {
+    final String s = getAccumulatedComments();
+    LOG.debug(
+        "Asking "
+            + commentsProvider.getClass().getSimpleName()
+            + " to create comment with all single file comments.");
+    List<Comment> oldComments = commentsProvider.getComments();
+    oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
+    oldComments = filterCommentsWithContent(oldComments, FINGERPRINT_ACC);
+    final List<Comment> theNewComment = filterCommentsWithContent(oldComments, s);
+    final boolean commentAlreadyExists = !theNewComment.isEmpty();
+    oldComments.removeAll(theNewComment);
+
+    if (!commentsProvider.shouldKeepOldComments()) {
+      commentsProvider.removeComments(oldComments);
+    }
+
+    if (violations.isEmpty()) {
+      return;
+    }
+
+    if (!commentAlreadyExists) {
+      commentsProvider.createCommentWithAllSingleFileComments(s);
+    }
+  }
+
+  String getAccumulatedComments() {
     StringBuilder sb = new StringBuilder();
     sb.append("Found " + violations.size() + " violations:\n\n");
     for (final Violation violation : violations) {
@@ -71,31 +97,10 @@ public class CommentsCreator {
       sb.append(singleFileCommentContent + "\n");
     }
     sb.append(" *" + FINGERPRINT_ACC + "*");
-    LOG.debug(
-        "Asking "
-            + commentsProvider.getClass().getSimpleName()
-            + " to create comment with all single file comments.");
-    List<Comment> oldComments = commentsProvider.getComments();
-    oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
-    oldComments = filterCommentsWithContent(oldComments, FINGERPRINT_ACC);
-    final List<Comment> theNewComment = filterCommentsWithContent(oldComments, sb.toString());
-    final boolean commentAlreadyExists = !theNewComment.isEmpty();
-    oldComments.removeAll(theNewComment);
-
-    if (!commentsProvider.shouldKeepOldComments()) {
-      commentsProvider.removeComments(oldComments);
-    }
-
-    if (violations.isEmpty()) {
-      return;
-    }
-
-    if (!commentAlreadyExists) {
-      commentsProvider.createCommentWithAllSingleFileComments(sb.toString());
-    }
+    return sb.toString();
   }
 
-  private String createSingleFileCommentContent(ChangedFile changedFile, Violation violation) {
+  String createSingleFileCommentContent(ChangedFile changedFile, Violation violation) {
     final Optional<String> providedCommentFormat =
         commentsProvider.findCommentFormat(changedFile, violation);
     if (providedCommentFormat.isPresent()) {
@@ -152,6 +157,7 @@ public class CommentsCreator {
   private void createSingleFileComments() {
     List<Comment> oldComments = commentsProvider.getComments();
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
+    oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
     LOG.debug("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
 
     final ViolationComments alreadyMadeComments = getViolationComments(oldComments, violations);
@@ -202,7 +208,9 @@ public class CommentsCreator {
     final List<Comment> madeComments = new ArrayList<>();
     for (final Violation violation : violations) {
       for (final Comment candidate : comments) {
-        if (candidate.getContent().contains(identifier(violation) + "")) {
+        final boolean containsIdentifier =
+            candidate.getContent().contains(identifier(violation) + "");
+        if (containsIdentifier) {
           madeViolations.add(violation);
           madeComments.add(candidate);
         }
@@ -230,7 +238,18 @@ public class CommentsCreator {
       List<Comment> unfilteredComments, String containing) {
     final List<Comment> filteredComments = new ArrayList<>();
     for (final Comment comment : unfilteredComments) {
-      if (comment.getContent().contains(containing)) {
+      if (comment.getContent().trim().contains(containing.trim())) {
+        filteredComments.add(comment);
+      }
+    }
+    return filteredComments;
+  }
+
+  private List<Comment> filterCommentsWithoutContent(
+      List<Comment> unfilteredComments, String containing) {
+    final List<Comment> filteredComments = new ArrayList<>();
+    for (final Comment comment : unfilteredComments) {
+      if (!comment.getContent().trim().contains(containing.trim())) {
         filteredComments.add(comment);
       }
     }

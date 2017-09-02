@@ -2,6 +2,8 @@ package se.bjurr.violations.comments.lib;
 
 import static java.lang.Integer.MAX_VALUE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
+import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
 import static se.bjurr.violations.comments.lib.CommentsCreator.createComments;
 import static se.bjurr.violations.lib.model.SEVERITY.ERROR;
 import static se.bjurr.violations.lib.model.Violation.violationBuilder;
@@ -19,7 +21,8 @@ import se.bjurr.violations.lib.util.Optional;
 import se.bjurr.violations.lib.util.Utils;
 
 public class CommentsCreatorTest {
-  private List<Comment> comments;
+  private List<Comment> existingComments;
+  private boolean shouldKeepOldComments = false;
   private final CommentsProvider commentsProvider =
       new CommentsProvider() {
 
@@ -35,7 +38,7 @@ public class CommentsCreatorTest {
 
         @Override
         public List<Comment> getComments() {
-          return comments;
+          return existingComments;
         }
 
         @Override
@@ -45,7 +48,7 @@ public class CommentsCreatorTest {
 
         @Override
         public void removeComments(List<Comment> comments) {
-          removeComments = comments;
+          removeComments.addAll(comments);
         }
 
         @Override
@@ -70,7 +73,7 @@ public class CommentsCreatorTest {
 
         @Override
         public boolean shouldKeepOldComments() {
-          return false;
+          return shouldKeepOldComments;
         }
       };
   private List<String> createCommentWithAllSingleFileComments;
@@ -90,41 +93,192 @@ public class CommentsCreatorTest {
   public void before() {
     createCommentWithAllSingleFileComments = new ArrayList<>();
     createSingleFileComment = new ArrayList<>();
-    comments = new ArrayList<>();
+    existingComments = new ArrayList<>();
     files = new ArrayList<>();
     removeComments = new ArrayList<>();
     violations = new ArrayList<>();
     maxCommentSize = MAX_VALUE;
   }
 
+  private final Violation violation1 =
+      violationBuilder() //
+          .setParser(ANDROIDLINT) //
+          .setReporter("ToolUsed") //
+          .setStartLine(1) //
+          .setSeverity(ERROR) //
+          .setFile("file1") //
+          .setSource("File") //
+          .setMessage("1111111111") //
+          .build();
+  private final Violation violation2 =
+      violationBuilder() //
+          .setParser(ANDROIDLINT) //
+          .setStartLine(1) //
+          .setSeverity(ERROR) //
+          .setFile("file1") //
+          .setMessage("2222222222") //
+          .build();
+  private final Violation violation3 =
+      violationBuilder() //
+          .setParser(ANDROIDLINT) //
+          .setStartLine(1) //
+          .setSeverity(ERROR) //
+          .setFile("file2") //
+          .setMessage("3333333333") //
+          .build();
+  private final List<String> specifics = new ArrayList<>();
+  private String type;
+  private String identifier;
+
+  @Test
+  public void testShouldKeepOldCommentsFalse() throws Exception {
+    violations.add(violation1);
+    violations.add(violation2);
+    violations.add(violation3);
+
+    files.add(new ChangedFile("file1", null));
+    files.add(new ChangedFile("file2", null));
+
+    final CommentsCreator commentsCreator =
+        new CommentsCreator(commentsProvider, violations, maxCommentSize);
+
+    existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
+    existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
+    existingComments.add(new Comment("id3", FINGERPRINT + " " + FINGERPRINT_ACC, type, specifics));
+    existingComments.add(new Comment("id4", "another comment", type, specifics));
+
+    shouldKeepOldComments = false;
+    shouldCreateCommentWithAllSingleFileComments = true;
+    shouldCreateSingleFileComment = true;
+
+    commentsCreator.createComments();
+
+    assertThat(createCommentWithAllSingleFileComments) //
+        .hasSize(1);
+    assertThat(createSingleFileComment) //
+        .hasSize(3);
+    assertThat(removeComments.get(0).getIdentifier()) //
+        .isEqualTo("id3");
+    assertThat(removeComments.get(1).getIdentifier()) //
+        .isEqualTo("id1");
+    assertThat(removeComments.get(2).getIdentifier()) //
+        .isEqualTo("id2");
+    assertThat(removeComments) //
+        .hasSize(3);
+  }
+
+  @Test
+  public void testShouldKeepOldCommentsFalseSameAcc() throws Exception {
+    violations.add(violation1);
+    violations.add(violation2);
+    violations.add(violation3);
+
+    files.add(new ChangedFile("file1", null));
+    files.add(new ChangedFile("file2", null));
+
+    final CommentsCreator commentsCreator =
+        new CommentsCreator(commentsProvider, violations, maxCommentSize);
+
+    existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
+    existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
+    existingComments.add(
+        new Comment("id3", commentsCreator.getAccumulatedComments(), type, specifics));
+    existingComments.add(new Comment("id4", "another comment", type, specifics));
+
+    shouldKeepOldComments = false;
+    shouldCreateCommentWithAllSingleFileComments = true;
+    shouldCreateSingleFileComment = true;
+
+    commentsCreator.createComments();
+
+    assertThat(createCommentWithAllSingleFileComments) //
+        .hasSize(0);
+    assertThat(createSingleFileComment) //
+        .hasSize(3);
+    assertThat(removeComments.get(0).getIdentifier()) //
+        .isEqualTo("id1");
+    assertThat(removeComments.get(1).getIdentifier()) //
+        .isEqualTo("id2");
+    assertThat(removeComments) //
+        .hasSize(2);
+  }
+
+  @Test
+  public void testShouldKeepOldCommentsFalseOneSameViolation() throws Exception {
+    violations.add(violation1);
+    violations.add(violation2);
+    violations.add(violation3);
+
+    final ChangedFile file1 = new ChangedFile("file1", null);
+    files.add(file1);
+    final ChangedFile file2 = new ChangedFile("file2", null);
+    files.add(file2);
+
+    final CommentsCreator commentsCreator =
+        new CommentsCreator(commentsProvider, violations, maxCommentSize);
+
+    existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
+    existingComments.add(
+        new Comment(
+            "id2",
+            commentsCreator.createSingleFileCommentContent(file1, violation1),
+            type,
+            specifics));
+    existingComments.add(new Comment("id3", FINGERPRINT + FINGERPRINT_ACC, type, specifics));
+    existingComments.add(new Comment("id4", "another comment", type, specifics));
+
+    shouldKeepOldComments = false;
+    shouldCreateCommentWithAllSingleFileComments = true;
+    shouldCreateSingleFileComment = true;
+
+    commentsCreator.createComments();
+
+    assertThat(createCommentWithAllSingleFileComments) //
+        .hasSize(1);
+    assertThat(createSingleFileComment) //
+        .hasSize(2);
+    assertThat(removeComments.get(0).getIdentifier()) //
+        .isEqualTo("id3");
+    assertThat(removeComments.get(1).getIdentifier()) //
+        .isEqualTo("id1");
+    assertThat(removeComments) //
+        .hasSize(2);
+  }
+
+  @Test
+  public void testShouldKeepOldCommentsTrue() throws Exception {
+    violations.add(violation1);
+    violations.add(violation2);
+    violations.add(violation3);
+
+    files.add(new ChangedFile("file1", null));
+    files.add(new ChangedFile("file2", null));
+
+    existingComments.add(new Comment(identifier, FINGERPRINT, type, specifics));
+    existingComments.add(new Comment(identifier, FINGERPRINT, type, specifics));
+    existingComments.add(
+        new Comment(identifier, FINGERPRINT + " " + FINGERPRINT_ACC, type, specifics));
+    existingComments.add(new Comment(identifier, "another comment", type, specifics));
+
+    shouldKeepOldComments = true;
+    shouldCreateCommentWithAllSingleFileComments = true;
+    shouldCreateSingleFileComment = true;
+
+    createComments(commentsProvider, violations, maxCommentSize);
+
+    assertThat(createCommentWithAllSingleFileComments) //
+        .hasSize(1);
+    assertThat(createSingleFileComment) //
+        .hasSize(3);
+    assertThat(removeComments) //
+        .hasSize(0);
+  }
+
   @Test
   public void testMarkdown() throws Exception {
-    violations.add(
-        violationBuilder() //
-            .setParser(ANDROIDLINT) //
-            .setReporter("ToolUsed") //
-            .setStartLine(1) //
-            .setSeverity(ERROR) //
-            .setFile("file1") //
-            .setSource("File") //
-            .setMessage("1111111111") //
-            .build());
-    violations.add(
-        violationBuilder() //
-            .setParser(ANDROIDLINT) //
-            .setStartLine(1) //
-            .setSeverity(ERROR) //
-            .setFile("file1") //
-            .setMessage("2222222222") //
-            .build());
-    violations.add(
-        violationBuilder() //
-            .setParser(ANDROIDLINT) //
-            .setStartLine(1) //
-            .setSeverity(ERROR) //
-            .setFile("file2") //
-            .setMessage("2222222222") //
-            .build());
+    violations.add(violation1);
+    violations.add(violation2);
+    violations.add(violation3);
 
     files.add(new ChangedFile("file1", null));
 
@@ -226,7 +380,7 @@ public class CommentsCreatorTest {
         .hasSize(2);
     assertThat(removeComments) //
         .isEmpty();
-    assertThat(comments) //
+    assertThat(existingComments) //
         .isEmpty();
   }
 
@@ -240,7 +394,7 @@ public class CommentsCreatorTest {
         .isEmpty();
     assertThat(removeComments) //
         .isEmpty();
-    assertThat(comments) //
+    assertThat(existingComments) //
         .isEmpty();
     assertThat(files) //
         .isEmpty();
@@ -354,8 +508,6 @@ public class CommentsCreatorTest {
     assertThat(createSingleFileComment) //
         .hasSize(2);
     assertThat(removeComments) //
-        .isEmpty();
-    assertThat(comments) //
         .isEmpty();
   }
 }
