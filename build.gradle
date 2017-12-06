@@ -19,7 +19,7 @@ apply from: project.buildscript.classLoader.getResource('release.gradle').toURI(
 
 
 dependencies {
- compile 'se.bjurr.violations:violations-lib:1.37'
+ compile 'se.bjurr.violations:violations-lib:+'
  compile 'org.slf4j:slf4j-api:1.7.22'
  testCompile 'junit:junit:4.12'
  testCompile 'org.assertj:assertj-core:2.3.0'

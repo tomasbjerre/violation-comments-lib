@@ -6,10 +6,19 @@ Changelog of Violation comments lib.
 ## Unreleased
 ### No issue
 
+**Doc**
+
+
+[b406e738dbab263](https://github.com/tomasbjerre/violation-comments-lib/commit/b406e738dbab263) Tomas Bjerre *2017-12-06 21:26:18*
+
+
+## 1.45
+### No issue
+
 **Refactoring build scripts**
 
 
-[00ccb83418dcc63](https://github.com/tomasbjerre/violation-comments-lib/commit/00ccb83418dcc63) Tomas Bjerre *2017-12-06 18:28:17*
+[093ae31ed088ae8](https://github.com/tomasbjerre/violation-comments-lib/commit/093ae31ed088ae8) Tomas Bjerre *2017-12-06 19:14:09*
 
 **Accepting PMD files without ruleset-tag**
 

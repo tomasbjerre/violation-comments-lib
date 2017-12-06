@@ -1,2 +1,2 @@
 #!/bin/bash
-./gradlew clean gitChangelog eclipse build install -i
+./gradlew --refresh-dependencies clean gitChangelog eclipse build install -i
