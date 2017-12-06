@@ -1,7 +1,47 @@
-# Changelog
+
+ # Violation comments lib changelog
+
+Changelog of Violation comments lib.
 
 ## Unreleased
 ### No issue
+
+**Refactoring build scripts**
+
+
+[00ccb83418dcc63](https://github.com/tomasbjerre/violation-comments-lib/commit/00ccb83418dcc63) Tomas Bjerre *2017-12-06 18:28:17*
+
+**Accepting PMD files without ruleset-tag**
+
+
+[e24956ad07e6338](https://github.com/tomasbjerre/violation-comments-lib/commit/e24956ad07e6338) Tomas Bjerre *2017-12-02 06:07:21*
+
+
+## 1.44
+### No issue
+
+**Resharper WikiUrl**
+
+
+[c635a578a560f7b](https://github.com/tomasbjerre/violation-comments-lib/commit/c635a578a560f7b) Tomas Bjerre *2017-10-13 09:36:39*
+
+
+## 1.43
+### No issue
+
+**Added handling for empty IssueType Description attributes for Resharper**
+
+
+[f697b739af855e5](https://github.com/tomasbjerre/violation-comments-lib/commit/f697b739af855e5) Tomas Bjerre *2017-10-09 16:34:38*
+
+
+## 1.42
+### No issue
+
+**Correcting removals and adding more tests**
+
+
+[def9e7c447542cc](https://github.com/tomasbjerre/violation-comments-lib/commit/def9e7c447542cc) Tomas Bjerre *2017-09-02 08:59:03*
 
 **Travis with JDK8**
 
@@ -48,18 +88,21 @@
 
 
 ## 1.37
+### GitHub [#1](https://github.com/tomasbjerre/violation-comments-lib/issues/1) NPE in PatchParser
+
+**Avoiding NPE**
+
+ * Also adding Google Java Format Gradle Plugin. 
+
+[3748976b1d56dd0](https://github.com/tomasbjerre/violation-comments-lib/commit/3748976b1d56dd0) Tomas Bjerre *2017-06-02 08:17:42*
+
+
 ### No issue
 
 **Violations-lib 1.28**
 
 
 [cd62ff0a171369f](https://github.com/tomasbjerre/violation-comments-lib/commit/cd62ff0a171369f) Tomas Bjerre *2017-07-14 19:09:00*
-
-**Avoiding NPE #1**
-
- * Also adding Google Java Format Gradle Plugin. 
-
-[3748976b1d56dd0](https://github.com/tomasbjerre/violation-comments-lib/commit/3748976b1d56dd0) Tomas Bjerre *2017-06-02 08:17:42*
 
 
 ## 1.36
@@ -392,3 +435,4 @@
 [13a2715ad65011e](https://github.com/tomasbjerre/violation-comments-lib/commit/13a2715ad65011e) Tomas Bjerre *2016-03-04 19:38:29*
 
 
+ 
