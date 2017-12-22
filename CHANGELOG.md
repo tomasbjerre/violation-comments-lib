@@ -3,13 +3,22 @@
 
 Changelog of Violation comments lib.
 
-## Unreleased
+## 1.50
+### No issue
+
+**Bumping version to fix faulty release**
+
+
+[7d6566b54bfb2e5](https://github.com/tomasbjerre/violation-comments-lib/commit/7d6566b54bfb2e5) Tomas Bjerre *2017-12-22 18:32:10*
+
+
+## 1.49
 ### No issue
 
 **Doc**
 
 
-[e57f89259e5dad7](https://github.com/tomasbjerre/violation-comments-lib/commit/e57f89259e5dad7) Tomas Bjerre *2017-12-22 17:40:34*
+[d719a9dc561c910](https://github.com/tomasbjerre/violation-comments-lib/commit/d719a9dc561c910) Tomas Bjerre *2017-12-22 17:41:36*
 
 
 ## 1.48
@@ -129,7 +138,7 @@ Changelog of Violation comments lib.
 
 
 ## 1.37
-### GitHub [#1](https://github.com/tomasbjerre/violations-lib/pull/1) This is just a test...
+### GitHub [#1](https://github.com/tomasbjerre/violation-comments-lib/issues/1) NPE in PatchParser
 
 **Avoiding NPE**
 
