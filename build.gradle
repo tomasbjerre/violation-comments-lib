@@ -19,7 +19,9 @@ apply from: project.buildscript.classLoader.getResource('release.gradle').toURI(
 
 
 dependencies {
- compile 'se.bjurr.violations:violations-lib:1.42:all'
+ compile 'se.bjurr.violations:violations-lib:1.42:all', {
+  exclude group: 'com.google.code.gson', module: 'gson'
+ }
  compile 'org.slf4j:slf4j-api:1.7.22'
  testCompile 'junit:junit:4.12'
  testCompile 'org.assertj:assertj-core:2.3.0'
