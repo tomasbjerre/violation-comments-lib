@@ -9,7 +9,39 @@ Changelog of Violation comments lib.
 **Doc**
 
 
-[b406e738dbab263](https://github.com/tomasbjerre/violation-comments-lib/commit/b406e738dbab263) Tomas Bjerre *2017-12-06 21:26:18*
+[e57f89259e5dad7](https://github.com/tomasbjerre/violation-comments-lib/commit/e57f89259e5dad7) Tomas Bjerre *2017-12-22 17:40:34*
+
+
+## 1.48
+### No issue
+
+**Excluding Gson from classpath**
+
+
+[44a0ccfdd58fd28](https://github.com/tomasbjerre/violation-comments-lib/commit/44a0ccfdd58fd28) Tomas Bjerre *2017-12-22 12:28:22*
+
+
+## 1.47
+### No issue
+
+**DocFX parsing JSON with Gson, not ScriptEngine**
+
+
+[c78af34856f351e](https://github.com/tomasbjerre/violation-comments-lib/commit/c78af34856f351e) Tomas Bjerre *2017-12-22 11:38:06*
+
+
+## 1.46
+### No issue
+
+**DocFX**
+
+
+[35f468cbfff653a](https://github.com/tomasbjerre/violation-comments-lib/commit/35f468cbfff653a) Tomas Bjerre *2017-12-21 14:22:47*
+
+**Doc**
+
+
+[7eea4cafc59e937](https://github.com/tomasbjerre/violation-comments-lib/commit/7eea4cafc59e937) Tomas Bjerre *2017-12-09 06:03:58*
 
 
 ## 1.45
@@ -97,7 +129,7 @@ Changelog of Violation comments lib.
 
 
 ## 1.37
-### GitHub [#1](https://github.com/tomasbjerre/violation-comments-lib/issues/1) NPE in PatchParser
+### GitHub [#1](https://github.com/tomasbjerre/violations-lib/pull/1) This is just a test...
 
 **Avoiding NPE**
 
