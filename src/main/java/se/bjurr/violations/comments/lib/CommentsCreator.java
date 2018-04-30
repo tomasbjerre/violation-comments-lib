@@ -21,7 +21,9 @@ public class CommentsCreator {
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
 
   public static void createComments(
-      CommentsProvider commentsProvider, List<Violation> violations, Integer maxCommentSize) {
+      final CommentsProvider commentsProvider,
+      final List<Violation> violations,
+      final Integer maxCommentSize) {
     final CommentsCreator commentsCreator =
         new CommentsCreator(commentsProvider, violations, maxCommentSize);
     commentsCreator.createComments();
@@ -34,7 +36,9 @@ public class CommentsCreator {
   private final List<Violation> violations;
 
   CommentsCreator(
-      CommentsProvider commentsProvider, List<Violation> violations, Integer maxCommentSize) {
+      final CommentsProvider commentsProvider,
+      final List<Violation> violations,
+      final Integer maxCommentSize) {
     checkNotNull(violations, "violations");
     checkNotNull(commentsProvider, "commentsProvider");
     this.commentsProvider = commentsProvider;
@@ -100,7 +104,7 @@ public class CommentsCreator {
     return sb.toString();
   }
 
-  String createSingleFileCommentContent(ChangedFile changedFile, Violation violation) {
+  String createSingleFileCommentContent(final ChangedFile changedFile, final Violation violation) {
     final Optional<String> providedCommentFormat =
         commentsProvider.findCommentFormat(changedFile, violation);
     if (providedCommentFormat.isPresent()) {
@@ -150,8 +154,9 @@ public class CommentsCreator {
         + "\n";
   }
 
-  private int identifier(Violation violation) {
-    return violation.toString().replaceAll("[^a-zA-Z0-9]", "").hashCode();
+  private String identifier(final Violation violation) {
+    //The letter makes it invisible in GitHub.
+    return "a" + violation.toString().replaceAll("[^a-zA-Z0-9]", "").hashCode();
   }
 
   private void createSingleFileComments() {
@@ -193,7 +198,7 @@ public class CommentsCreator {
   }
 
   private void removeOldCommentsThatAreNotStillReported(
-      List<Comment> oldComments, final ViolationComments alreadyMadeComments) {
+      final List<Comment> oldComments, final ViolationComments alreadyMadeComments) {
     if (!commentsProvider.shouldKeepOldComments()) {
       final List<Comment> existingWithoutViolation = new ArrayList<>();
       existingWithoutViolation.addAll(oldComments);
@@ -203,7 +208,7 @@ public class CommentsCreator {
   }
 
   private ViolationComments getViolationComments(
-      List<Comment> comments, List<Violation> violations) {
+      final List<Comment> comments, final List<Violation> violations) {
     final List<Violation> madeViolations = new ArrayList<>();
     final List<Comment> madeComments = new ArrayList<>();
     for (final Violation violation : violations) {
@@ -219,7 +224,7 @@ public class CommentsCreator {
     return new ViolationComments(madeComments, madeViolations);
   }
 
-  private List<Violation> filterChanged(List<Violation> mixedViolations) {
+  private List<Violation> filterChanged(final List<Violation> mixedViolations) {
     final List<Violation> isChanged = new ArrayList<>();
     for (final Violation violation : mixedViolations) {
       final Optional<ChangedFile> file = getFile(violation);
@@ -235,7 +240,7 @@ public class CommentsCreator {
   }
 
   private List<Comment> filterCommentsWithContent(
-      List<Comment> unfilteredComments, String containing) {
+      final List<Comment> unfilteredComments, final String containing) {
     final List<Comment> filteredComments = new ArrayList<>();
     for (final Comment comment : unfilteredComments) {
       if (comment.getContent().trim().contains(containing.trim())) {
@@ -246,7 +251,7 @@ public class CommentsCreator {
   }
 
   private List<Comment> filterCommentsWithoutContent(
-      List<Comment> unfilteredComments, String containing) {
+      final List<Comment> unfilteredComments, final String containing) {
     final List<Comment> filteredComments = new ArrayList<>();
     for (final Comment comment : unfilteredComments) {
       if (!comment.getContent().trim().contains(containing.trim())) {
@@ -263,7 +268,7 @@ public class CommentsCreator {
    * <br>
    * Here we make a guess on which file in the {@link CommentsProvider} to use.
    */
-  public Optional<ChangedFile> getFile(Violation violation) {
+  public Optional<ChangedFile> getFile(final Violation violation) {
     for (final ChangedFile providerFile : files) {
       if (violation.getFile().endsWith(providerFile.getFilename())
           || providerFile.getFilename().endsWith(violation.getFile())) {
