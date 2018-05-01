@@ -19,8 +19,9 @@ apply from: project.buildscript.classLoader.getResource('release.gradle').toURI(
 
 
 dependencies {
- compile 'se.bjurr.violations:violations-lib:1.54'
+ compile 'se.bjurr.violations:violations-lib:1.55'
  compile 'org.slf4j:slf4j-api:1.7.22'
+ compile 'com.github.spullara.mustache.java:compiler:0.9.5'
  testCompile 'junit:junit:4.12'
  testCompile 'org.assertj:assertj-core:2.3.0'
 }

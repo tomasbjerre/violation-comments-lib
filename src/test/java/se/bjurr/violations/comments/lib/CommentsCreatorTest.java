@@ -27,12 +27,13 @@ public class CommentsCreatorTest {
       new CommentsProvider() {
 
         @Override
-        public void createCommentWithAllSingleFileComments(String string) {
+        public void createCommentWithAllSingleFileComments(final String string) {
           createCommentWithAllSingleFileComments.add(string);
         }
 
         @Override
-        public void createSingleFileComment(ChangedFile file, Integer line, String comment) {
+        public void createSingleFileComment(
+            final ChangedFile file, final Integer line, final String comment) {
           createSingleFileComment.add(comment);
         }
 
@@ -47,12 +48,12 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public void removeComments(List<Comment> comments) {
+        public void removeComments(final List<Comment> comments) {
           removeComments.addAll(comments);
         }
 
         @Override
-        public boolean shouldComment(ChangedFile changedFile, Integer line) {
+        public boolean shouldComment(final ChangedFile changedFile, final Integer line) {
           return true;
         }
 
@@ -67,7 +68,7 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public Optional<String> findCommentFormat(ChangedFile changedFile, Violation violation) {
+        public Optional<String> findCommentTemplate() {
           return Optional.absent();
         }
 
@@ -85,7 +86,7 @@ public class CommentsCreatorTest {
   private boolean shouldCreateSingleFileComment = true;
   private List<Violation> violations;
 
-  private String asFile(String string) throws Exception {
+  private String asFile(final String string) throws Exception {
     return Utils.toString(Utils.getResource(string));
   }
 

@@ -1,7 +1,6 @@
 package se.bjurr.violations.comments.lib.model;
 
 import java.util.List;
-import se.bjurr.violations.lib.model.Violation;
 import se.bjurr.violations.lib.util.Optional;
 
 public interface CommentsProvider {
@@ -21,8 +20,7 @@ public interface CommentsProvider {
 
   boolean shouldCreateSingleFileComment();
 
-  /** Return absent to ignore. Or add your own formatting. */
-  Optional<String> findCommentFormat(ChangedFile changedFile, Violation violation);
-
   boolean shouldKeepOldComments();
+
+  Optional<String> findCommentTemplate();
 }

@@ -4,8 +4,17 @@ import static se.bjurr.violations.lib.util.Optional.absent;
 import static se.bjurr.violations.lib.util.Optional.fromNullable;
 import static se.bjurr.violations.lib.util.Utils.checkNotNull;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
@@ -15,6 +24,8 @@ import se.bjurr.violations.lib.model.Violation;
 import se.bjurr.violations.lib.util.Optional;
 
 public class CommentsCreator {
+  private static final String DEFAULT_VIOLATION_TEMPLATE_MUSTACH =
+      "default-violation-template.mustach";
   public static final String FINGERPRINT =
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
   private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
@@ -105,53 +116,23 @@ public class CommentsCreator {
   }
 
   String createSingleFileCommentContent(final ChangedFile changedFile, final Violation violation) {
-    final Optional<String> providedCommentFormat =
-        commentsProvider.findCommentFormat(changedFile, violation);
-    if (providedCommentFormat.isPresent()) {
-      return providedCommentFormat.get();
+    final MustacheFactory mf = new DefaultMustacheFactory();
+    Reader templateReader = null;
+    final Optional<String> commentTemplateOpt = commentsProvider.findCommentTemplate();
+    if (commentTemplateOpt.isPresent()) {
+      templateReader = new StringReader(commentTemplateOpt.get());
+    } else {
+      templateReader = mf.getReader(DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
     }
-
-    final String source =
-        violation.getSource().isPresent()
-            ? "**Source**: " + violation.getSource().get() + "\n"
-            : "";
-    return ""
-        + //
-        "**Reporter**: "
-        + violation.getReporter()
-        + "\n"
-        + //
-        "**Rule**: "
-        + violation.getRule().or("?")
-        + "\n"
-        + //
-        "**Severity**: "
-        + violation.getSeverity()
-        + "\n"
-        + //
-        "**File**: "
-        + changedFile.getFilename()
-        + " L"
-        + violation.getStartLine()
-        + "\n"
-        + //
-        source
-        + //
-        "\n"
-        + //
-        violation.getMessage()
-        + "\n"
-        + //
-        "\n"
-        + //
-        "*"
-        + FINGERPRINT
-        + "* *"
-        + "<"
-        + identifier(violation)
-        + ">"
-        + "*"
-        + "\n";
+    final Mustache mustache = mf.compile(templateReader, "Violation Template");
+    final Writer writer = new StringWriter();
+    final Map<String, Object> context = new HashMap<>();
+    context.put("violation", violation);
+    context.put("changedFile", changedFile);
+    final List<Object> scopes = new ArrayList<>();
+    scopes.add(context);
+    mustache.execute(writer, scopes);
+    return writer.toString() + "\n\n*" + FINGERPRINT + "* *<" + identifier(violation) + ">*";
   }
 
   private String identifier(final Violation violation) {
@@ -184,13 +165,13 @@ public class CommentsCreator {
                 + " "
                 + violation.getSeverity()
                 + " "
-                + violation.getRule().or("")
+                + violation.getRule()
                 + " "
                 + file.get()
                 + " "
                 + violation.getStartLine()
                 + " "
-                + violation.getSource().or(""));
+                + violation.getSource());
         commentsProvider.createSingleFileComment(
             file.get(), violation.getStartLine(), singleFileCommentContent);
       }

@@ -8,3 +8,25 @@ It is used by these libraries:
  * [Violation Comments to GitHub Lib](https://github.com/tomasbjerre/violation-comments-to-github-lib).
  * [Violation Comments to GitLab Lib](https://github.com/tomasbjerre/violation-comments-to-gitlab-lib).
  * [Violation Comments to Bitbucket Server Lib](https://github.com/tomasbjerre/violation-comments-to-bitbucket-server-lib).
+
+## Template
+
+It uses a template to render each violation comment. There is a default that can be replaced with a custom template. 
+
+The context available when the template is rendered is:
+
+ * `violation` that is an instance of [Violation](https://github.com/tomasbjerre/violations-lib/blob/master/src/main/java/se/bjurr/violations/lib/model/Violation.java).
+
+A template may look like:
+
+```
+**Reporter**: {{violation.reporter}}{{#violation.rule}}
+
+**Rule**: {{violation.rule}}{{/violation.rule}}
+**Severity**: {{violation.severity}}
+**File**: {{violation.file}} L{{violation.startLine}}{{#violation.source}}
+
+**Source**: {{violation.source}}{{/violation.source}}
+
+{{violation.message}}
+```
