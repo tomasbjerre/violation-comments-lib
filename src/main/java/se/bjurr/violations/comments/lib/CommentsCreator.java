@@ -119,7 +119,7 @@ public class CommentsCreator {
     final MustacheFactory mf = new DefaultMustacheFactory();
     Reader templateReader = null;
     final Optional<String> commentTemplateOpt = commentsProvider.findCommentTemplate();
-    if (commentTemplateOpt.isPresent()) {
+    if (commentTemplateOpt.isPresent() && !commentTemplateOpt.get().isEmpty()) {
       templateReader = new StringReader(commentTemplateOpt.get());
     } else {
       templateReader = mf.getReader(DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
