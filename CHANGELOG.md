@@ -3,6 +3,86 @@
 
 Changelog of Violation comments lib.
 
+## Unreleased
+### No issue
+
+**GCC, ARM GCC and Doxygen**
+
+
+[51062805f8c212a](https://github.com/tomasbjerre/violation-comments-lib/commit/51062805f8c212a) Tomas Bjerre *2018-07-04 18:10:39*
+
+
+## 1.58
+### No issue
+
+**Escaped message and filename**
+
+
+[0589e4be1365d0f](https://github.com/tomasbjerre/violation-comments-lib/commit/0589e4be1365d0f) Tomas Bjerre *2018-07-04 10:10:10*
+
+
+## 1.57
+### No issue
+
+**Ignoring empty template**
+
+
+[8e4122d67018abf](https://github.com/tomasbjerre/violation-comments-lib/commit/8e4122d67018abf) Tomas Bjerre *2018-05-13 08:17:23*
+
+
+## 1.56
+### GitHub [#2](https://github.com/tomasbjerre/violation-comments-lib/issues/2) Violation message configuration feature request
+
+**Custom template**
+
+
+[60d282b1fd63633](https://github.com/tomasbjerre/violation-comments-lib/commit/60d282b1fd63633) Tomas Bjerre *2018-05-13 08:04:10*
+
+
+### No issue
+
+**Hiding hashcodes in GitHub**
+
+
+[315ea32cd395c9f](https://github.com/tomasbjerre/violation-comments-lib/commit/315ea32cd395c9f) Tomas Bjerre *2018-04-30 12:50:16*
+
+
+## 1.55
+### No issue
+
+**PCLint**
+
+
+[e3f0343a6e9bb22](https://github.com/tomasbjerre/violation-comments-lib/commit/e3f0343a6e9bb22) Tomas Bjerre *2018-02-13 18:53:09*
+
+
+## 1.54
+### No issue
+
+**Google error-prone**
+
+
+[9c312faaa1a58f4](https://github.com/tomasbjerre/violation-comments-lib/commit/9c312faaa1a58f4) Tomas Bjerre *2018-01-14 11:47:02*
+
+
+## 1.53
+### No issue
+
+**Relocating to correct Java identifier**
+
+
+[42694eb091e963f](https://github.com/tomasbjerre/violation-comments-lib/commit/42694eb091e963f) Tomas Bjerre *2017-12-31 11:34:15*
+
+
+## 1.52
+### No issue
+
+**Fixing encoding issues**
+
+
+[d35b94a368e8bc6](https://github.com/tomasbjerre/violation-comments-lib/commit/d35b94a368e8bc6) Tomas Bjerre *2017-12-25 19:34:43*
+
+
 ## 1.50
 ### No issue
 
