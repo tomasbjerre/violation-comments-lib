@@ -136,7 +136,7 @@ public class CommentsCreator {
   }
 
   private String identifier(final Violation violation) {
-    //The letter makes it invisible in GitHub.
+    // The letter makes it invisible in GitHub.
     return "a" + violation.toString().replaceAll("[^a-zA-Z0-9]", "").hashCode();
   }
 
