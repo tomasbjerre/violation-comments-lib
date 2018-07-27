@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
 import static se.bjurr.violations.comments.lib.CommentsCreator.createComments;
+import static se.bjurr.violations.comments.lib.ViolationRenderer.createSingleFileCommentContent;
 import static se.bjurr.violations.lib.model.SEVERITY.ERROR;
 import static se.bjurr.violations.lib.model.Violation.violationBuilder;
 import static se.bjurr.violations.lib.reports.Parser.ANDROIDLINT;
@@ -183,7 +184,16 @@ public class CommentsCreatorTest {
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
     existingComments.add(
-        new Comment("id3", commentsCreator.getAccumulatedComments(), type, specifics));
+        new Comment(
+            "id3",
+            ViolationRenderer.getAccumulatedComments(
+                    violations,
+                    files,
+                    commentsProvider.findCommentTemplate().orNull(),
+                    maxCommentSize)
+                .get(0),
+            type,
+            specifics));
     existingComments.add(new Comment("id4", "another comment", type, specifics));
 
     shouldKeepOldComments = false;
@@ -221,10 +231,7 @@ public class CommentsCreatorTest {
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(
         new Comment(
-            "id2",
-            commentsCreator.createSingleFileCommentContent(file1, violation1),
-            type,
-            specifics));
+            "id2", createSingleFileCommentContent(file1, violation1, null), type, specifics));
     existingComments.add(new Comment("id3", FINGERPRINT + FINGERPRINT_ACC, type, specifics));
     existingComments.add(new Comment("id4", "another comment", type, specifics));
 
