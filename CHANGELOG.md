@@ -3,13 +3,13 @@
 
 Changelog of Violation comments lib.
 
-## Unreleased
+## 1.63
 ### No issue
 
 **Removing Fliptables dependency**
 
 
-[5d625e0fbf94b31](https://github.com/tomasbjerre/violation-comments-lib/commit/5d625e0fbf94b31) Tomas Bjerre *2018-09-12 20:39:02*
+[3d0165516b65fc5](https://github.com/tomasbjerre/violation-comments-lib/commit/3d0165516b65fc5) Tomas Bjerre *2018-09-12 20:39:50*
 
 
 ## 1.62
