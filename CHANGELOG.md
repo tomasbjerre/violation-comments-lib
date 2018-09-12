@@ -3,6 +3,20 @@
 
 Changelog of Violation comments lib.
 
+## 1.60
+### No issue
+
+**Correcting CPD parser and adding category to model**
+
+
+[a4fe8a053585801](https://github.com/tomasbjerre/violation-comments-lib/commit/a4fe8a053585801) Tomas Bjerre *2018-09-12 19:24:53*
+
+**Refactorings**
+
+
+[aa1382018005eff](https://github.com/tomasbjerre/violation-comments-lib/commit/aa1382018005eff) Tomas Bjerre *2018-07-27 07:32:56*
+
+
 ## 1.59
 ### No issue
 
