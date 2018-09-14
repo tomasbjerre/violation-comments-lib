@@ -21,7 +21,7 @@ import se.bjurr.violations.lib.util.Optional;
 public class CommentsCreator {
   public static final String FINGERPRINT =
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
-  private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CommentsCreator.class);
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
 
   public static void createComments(
@@ -46,27 +46,32 @@ public class CommentsCreator {
     checkNotNull(violations, "violations");
     checkNotNull(commentsProvider, "commentsProvider");
     this.commentsProvider = commentsProvider;
-    LOG.debug(violations.size() + " violations.");
+    LOGGER.debug(violations.size() + " violations.");
     files = commentsProvider.getFiles();
     this.violations = filterChanged(violations);
     this.maxCommentSize = maxCommentSize;
   }
 
   public void createComments() {
-    if (commentsProvider.shouldCreateCommentWithAllSingleFileComments()) {
-      createCommentWithAllSingleFileComments();
+    if (commentsProvider.shouldCreateBulkComment()) {
+      createBulkComments();
     }
-    if (commentsProvider.shouldCreateSingleFileComment()) {
-      createSingleFileComments();
+    if (commentsProvider.shouldCommentOnTheDiff()) {
+      createDiffFileComments();
     }
   }
 
-  private void createCommentWithAllSingleFileComments() {
+  /**
+   * Create a comment containing the accumulated violations and comments of all
+   * files. The comment is split into several comments if it is longer than the
+   * maximum comment length.
+   */
+  private void createBulkComments() {
     final List<String> accumulatedComments =
         getAccumulatedComments(
             violations, files, commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
     for (final String accumulatedComment : accumulatedComments) {
-      LOG.debug(
+      LOGGER.debug(
           "Asking "
               + commentsProvider.getClass().getSimpleName()
               + " to create comment with all single file comments.");
@@ -83,16 +88,19 @@ public class CommentsCreator {
 
       final boolean commentHasNotBeenMade = alreadyMadeComments.isEmpty();
       if (commentHasNotBeenMade) {
-        commentsProvider.createCommentWithAllSingleFileComments(accumulatedComment);
+        commentsProvider.createBulkComment(accumulatedComment);
       }
     }
   }
 
-  private void createSingleFileComments() {
+  /**
+   * Create a discussion on the diff for each violation.
+   */
+  private void createDiffFileComments() {
     List<Comment> oldComments = commentsProvider.getComments();
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
     oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
-    LOG.debug("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
+    LOGGER.debug("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
 
     final ViolationComments alreadyMadeComments = getViolationComments(oldComments, violations);
 
@@ -107,22 +115,13 @@ public class CommentsCreator {
       final Optional<ChangedFile> file = getFile(files, violation);
       if (file.isPresent()) {
         final String commentTemplate = commentsProvider.findCommentTemplate().orNull();
-        final String singleFileCommentContent =
+        final String discussionContent =
             createSingleFileCommentContent(file.get(), violation, commentTemplate);
-        LOG.debug(
-            violation.getReporter()
-                + " "
-                + violation.getSeverity()
-                + " "
-                + violation.getRule()
-                + " "
-                + file.get()
-                + " "
-                + violation.getStartLine()
-                + " "
-                + violation.getSource());
-        commentsProvider.createSingleFileComment(
-            file.get(), violation.getStartLine(), singleFileCommentContent);
+        LOGGER.debug(violation.getReporter() + " " + violation.getSeverity() +
+                " " + violation.getRule() + " " + file.get() + " " +
+                violation.getStartLine() + " " + violation.getSource());
+        commentsProvider.createDiffDiscussion(file.get(), discussionContent,
+                violation.getStartLine(), null);
       }
     }
   }

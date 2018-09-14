@@ -28,14 +28,14 @@ public class CommentsCreatorTest {
       new CommentsProvider() {
 
         @Override
-        public void createCommentWithAllSingleFileComments(final String string) {
+        public void createBulkComment(final String string) {
           createCommentWithAllSingleFileComments.add(string);
         }
 
         @Override
-        public void createSingleFileComment(
-            final ChangedFile file, final Integer line, final String comment) {
-          createSingleFileComment.add(comment);
+        public void createDiffDiscussion(ChangedFile file, String discussionContent,
+                Integer newLine, Integer oldLine) {
+          createSingleFileComment.add(discussionContent);
         }
 
         @Override
@@ -59,13 +59,13 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public boolean shouldCreateCommentWithAllSingleFileComments() {
-          return shouldCreateCommentWithAllSingleFileComments;
+        public boolean shouldCreateBulkComment() {
+          return shouldCreateBulkComment;
         }
 
         @Override
-        public boolean shouldCreateSingleFileComment() {
-          return shouldCreateSingleFileComment;
+        public boolean shouldCommentOnTheDiff() {
+          return shouldCommentOnTheDiff;
         }
 
         @Override
@@ -83,8 +83,8 @@ public class CommentsCreatorTest {
   private List<ChangedFile> files;
   private Integer maxCommentSize;
   private List<Comment> removeComments;
-  private boolean shouldCreateCommentWithAllSingleFileComments = true;
-  private boolean shouldCreateSingleFileComment = true;
+  private boolean shouldCreateBulkComment = true;
+  private boolean shouldCommentOnTheDiff = true;
   private List<Violation> violations;
 
   private String asFile(final String string) throws Exception {
@@ -150,8 +150,8 @@ public class CommentsCreatorTest {
     existingComments.add(new Comment("id4", "another comment", type, specifics));
 
     shouldKeepOldComments = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    shouldCreateBulkComment = true;
+    shouldCommentOnTheDiff = true;
 
     commentsCreator.createComments();
 
@@ -197,8 +197,8 @@ public class CommentsCreatorTest {
     existingComments.add(new Comment("id4", "another comment", type, specifics));
 
     shouldKeepOldComments = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    shouldCreateBulkComment = true;
+    shouldCommentOnTheDiff = true;
 
     commentsCreator.createComments();
 
@@ -236,8 +236,8 @@ public class CommentsCreatorTest {
     existingComments.add(new Comment("id4", "another comment", type, specifics));
 
     shouldKeepOldComments = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    shouldCreateBulkComment = true;
+    shouldCommentOnTheDiff = true;
 
     commentsCreator.createComments();
 
@@ -269,8 +269,8 @@ public class CommentsCreatorTest {
     existingComments.add(new Comment(identifier, "another comment", type, specifics));
 
     shouldKeepOldComments = true;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    shouldCreateBulkComment = true;
+    shouldCommentOnTheDiff = true;
 
     createComments(commentsProvider, violations, maxCommentSize);
 
@@ -427,8 +427,8 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    shouldCreateSingleFileComment = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
+    shouldCommentOnTheDiff = false;
+    shouldCreateBulkComment = true;
 
     files.add(new ChangedFile("file1", null));
 
@@ -461,8 +461,8 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    shouldCreateSingleFileComment = true;
-    shouldCreateCommentWithAllSingleFileComments = false;
+    shouldCommentOnTheDiff = true;
+    shouldCreateBulkComment = false;
 
     files.add(new ChangedFile("file1", null));
 
