@@ -1,29 +1,34 @@
 package se.bjurr.violations.comments.lib.model;
 
 import java.util.List;
+
 import se.bjurr.violations.lib.util.Optional;
 
 /**
- * @deprecated Replaced by {@link CommentSupplier}.
+ * Callback interface for applications that supply the comments to a consumer.
+ * The implementation of it defines which kind of callback should be made.
+ *
+ * @author Patrizio Bonzani
  */
-@Deprecated
-public interface CommentsProvider {
+public interface CommentSupplier {
 
 	/**
 	 * Create a single comment containing all file comments and violations.
 	 *
 	 * @param string The combined comments.
 	 */
-	void createCommentWithAllSingleFileComments(String string);
+	void createBulkComment(String string);
 
 	/**
 	 * Create a discussion on the diff on the line the violation occurred.
 	 *
 	 * @param file The file in which the violation occurred.
-	 * @param line The line number after the patch.
-	 * @param comment The text of the comment.
+	 * @param content The text of the comment.
+	 * @param newLine The line number after the patch.
+	 * @param oldLine The line number before the patch.
 	 */
-	void createSingleFileComment(ChangedFile file, Integer line, String comment);
+	void createDiffComment(ChangedFile file, String content, Integer newLine,
+			Integer oldLine);
 
 	List<Comment> getComments();
 
@@ -39,7 +44,7 @@ public interface CommentsProvider {
 	 * @return <code>true</code> if the comments should be combined,
 	 *         <code>false</code> otherwise.
 	 */
-	boolean shouldCreateCommentWithAllSingleFileComments();
+	boolean shouldCreateBulkComment();
 
 	/**
 	 * Returns if a comment per violation should be made on the diff.
@@ -47,7 +52,7 @@ public interface CommentsProvider {
 	 * @return <code>true</code> if each comment containing the violation
 	 *         should be posted on the diff, <code>false</code> otherwise.
 	 */
-	boolean shouldCreateSingleFileComment();
+	boolean shouldCreateCommentPerViolation();
 
 	boolean shouldKeepOldComments();
 

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
+import se.bjurr.violations.comments.lib.model.CommentSupplier;
 import se.bjurr.violations.comments.lib.model.CommentsProvider;
 import se.bjurr.violations.lib.model.Violation;
 import se.bjurr.violations.lib.util.Optional;
@@ -21,9 +22,10 @@ import se.bjurr.violations.lib.util.Optional;
 public class CommentsCreator {
   public static final String FINGERPRINT =
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
-  private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CommentsCreator.class);
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
 
+  @Deprecated
   public static void createComments(
       final CommentsProvider commentsProvider,
       final List<Violation> violations,
@@ -33,12 +35,23 @@ public class CommentsCreator {
     commentsCreator.createComments();
   }
 
+  public static void createComments(
+      final CommentSupplier commentSupplier,
+      final List<Violation> violations,
+      final Integer maxCommentSize) {
+    final CommentsCreator commentsCreator =
+        new CommentsCreator(commentSupplier, violations, maxCommentSize);
+    commentsCreator.createComments();
+  }
+
   private final CommentsProvider commentsProvider;
+  private final CommentSupplier commentSupplier;
   private final List<ChangedFile> files;
 
   private final Integer maxCommentSize;
   private final List<Violation> violations;
 
+  @Deprecated
   CommentsCreator(
       final CommentsProvider commentsProvider,
       final List<Violation> violations,
@@ -46,31 +59,74 @@ public class CommentsCreator {
     checkNotNull(violations, "violations");
     checkNotNull(commentsProvider, "commentsProvider");
     this.commentsProvider = commentsProvider;
-    LOG.debug(violations.size() + " violations.");
+    this.commentSupplier = null;
+    LOGGER.debug(violations.size() + " violations.");
     files = commentsProvider.getFiles();
     this.violations = filterChanged(violations);
     this.maxCommentSize = maxCommentSize;
   }
 
+  CommentsCreator(
+      final CommentSupplier commentSupplier,
+      final List<Violation> violations,
+      final Integer maxCommentSize) {
+    checkNotNull(violations, "violations");
+    checkNotNull(commentSupplier, "commentSupplier");
+    this.commentsProvider = null;
+    this.commentSupplier = commentSupplier;
+    LOGGER.debug(violations.size() + " violations.");
+    files = commentSupplier.getFiles();
+    this.violations = filterChanged(violations);
+    this.maxCommentSize = maxCommentSize;
+  }
+
   public void createComments() {
-    if (commentsProvider.shouldCreateCommentWithAllSingleFileComments()) {
-      createCommentWithAllSingleFileComments();
-    }
-    if (commentsProvider.shouldCreateSingleFileComment()) {
-      createSingleFileComments();
+    /* TODO: remove this condition when removing the deprecated stuff*/
+    if(commentSupplier != null) {
+      if (commentSupplier.shouldCreateBulkComment()) {
+        createBulkComments();
+      }
+      if (commentSupplier.shouldCreateCommentPerViolation()) {
+        createDiffFileComments();
+      }
+    } else {
+      if (commentsProvider.shouldCreateCommentWithAllSingleFileComments()) {
+        createBulkComments();
+      }
+      if (commentsProvider.shouldCreateSingleFileComment()) {
+        createDiffFileComments();
+      }
     }
   }
 
-  private void createCommentWithAllSingleFileComments() {
-    final List<String> accumulatedComments =
-        getAccumulatedComments(
-            violations, files, commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
+  /**
+   * Create a comment containing the accumulated violations and comments of all
+   * files. The comment is split into several comments if it is longer than the
+   * maximum comment length.
+   */
+  private void createBulkComments() {
+    final List<String> accumulatedComments;
+    final String commentSupplierClassName;
+    /* TODO: remove this condition when removing the deprecated stuff*/
+    if (commentSupplier != null) {
+      accumulatedComments = getAccumulatedComments(violations, files,
+          commentSupplier.findCommentTemplate().orNull(), maxCommentSize);
+      commentSupplierClassName = commentSupplier.getClass().getSimpleName();
+    } else {
+      accumulatedComments = getAccumulatedComments(violations, files,
+          commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
+      commentSupplierClassName = commentsProvider.getClass().getSimpleName();
+    }
     for (final String accumulatedComment : accumulatedComments) {
-      LOG.debug(
-          "Asking "
-              + commentsProvider.getClass().getSimpleName()
+      LOGGER.debug("Asking " + commentSupplierClassName
               + " to create comment with all single file comments.");
-      List<Comment> oldComments = commentsProvider.getComments();
+      List<Comment> oldComments;
+      /* TODO: remove this condition when removing the deprecated stuff*/
+      if (commentSupplier != null) {
+        oldComments = commentSupplier.getComments();
+      } else {
+        oldComments = commentsProvider.getComments();
+      }
       oldComments = filterCommentsWithContent(oldComments, FINGERPRINT_ACC);
       final List<Comment> alreadyMadeComments =
           filterCommentsWithContent(oldComments, accumulatedComment);
@@ -83,16 +139,33 @@ public class CommentsCreator {
 
       final boolean commentHasNotBeenMade = alreadyMadeComments.isEmpty();
       if (commentHasNotBeenMade) {
-        commentsProvider.createCommentWithAllSingleFileComments(accumulatedComment);
+        /* TODO: remove this condition when removing the deprecated stuff*/
+        if (commentSupplier != null) {
+          commentSupplier.createBulkComment(accumulatedComment);
+        } else {
+          commentsProvider.createCommentWithAllSingleFileComments(accumulatedComment);
+        }
       }
     }
   }
 
-  private void createSingleFileComments() {
-    List<Comment> oldComments = commentsProvider.getComments();
+  /**
+   * Create a discussion on the diff for each violation.
+   */
+  private void createDiffFileComments() {
+    List<Comment> oldComments;
+    final String commentSupplierClassName;
+    /* TODO: remove this condition when removing the deprecated stuff*/
+    if (commentSupplier != null) {
+      oldComments = commentSupplier.getComments();
+      commentSupplierClassName = commentSupplier.getClass().getSimpleName();
+    } else {
+      oldComments = commentsProvider.getComments();
+      commentSupplierClassName = commentsProvider.getClass().getSimpleName();
+    }
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
     oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
-    LOG.debug("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
+    LOGGER.debug("Asking " + commentSupplierClassName + " to comment:");
 
     final ViolationComments alreadyMadeComments = getViolationComments(oldComments, violations);
 
@@ -106,34 +179,44 @@ public class CommentsCreator {
       }
       final Optional<ChangedFile> file = getFile(files, violation);
       if (file.isPresent()) {
-        final String commentTemplate = commentsProvider.findCommentTemplate().orNull();
-        final String singleFileCommentContent =
+        final String commentTemplate;
+        /* TODO: remove this condition when removing the deprecated stuff*/
+        if (commentSupplier != null) {
+          commentTemplate = commentSupplier.findCommentTemplate().orNull();
+        } else {
+          commentTemplate = commentsProvider.findCommentTemplate().orNull();
+        }
+        final String commentContent =
             createSingleFileCommentContent(file.get(), violation, commentTemplate);
-        LOG.debug(
-            violation.getReporter()
-                + " "
-                + violation.getSeverity()
-                + " "
-                + violation.getRule()
-                + " "
-                + file.get()
-                + " "
-                + violation.getStartLine()
-                + " "
-                + violation.getSource());
-        commentsProvider.createSingleFileComment(
-            file.get(), violation.getStartLine(), singleFileCommentContent);
+        LOGGER.debug(violation.getReporter() + " " + violation.getSeverity() +
+                " " + violation.getRule() + " " + file.get() + " " +
+                violation.getStartLine() + " " + violation.getSource());
+        /* TODO: remove this condition when removing the deprecated stuff*/
+        if (commentSupplier != null) {
+          commentSupplier.createDiffComment(file.get(), commentContent,
+              violation.getStartLine(), null);
+        } else {
+          commentsProvider.createSingleFileComment(file.get(),
+              violation.getStartLine(), commentContent);
+        }
       }
     }
   }
 
   private void removeOldCommentsThatAreNotStillReported(
       final List<Comment> oldComments, final List<Comment> comments) {
-    if (!commentsProvider.shouldKeepOldComments()) {
+    boolean shouldKeepOldComments = commentSupplier != null ?
+        commentSupplier.shouldKeepOldComments() : commentsProvider.shouldKeepOldComments();
+    if (!shouldKeepOldComments) {
       final List<Comment> existingWithoutViolation = new ArrayList<>();
       existingWithoutViolation.addAll(oldComments);
       existingWithoutViolation.removeAll(comments);
-      commentsProvider.removeComments(existingWithoutViolation);
+      /* TODO: remove this condition when removing the deprecated stuff*/
+      if (commentSupplier != null) {
+        commentSupplier.removeComments(existingWithoutViolation);
+      } else {
+        commentsProvider.removeComments(existingWithoutViolation);
+      }
     }
   }
 
@@ -142,7 +225,8 @@ public class CommentsCreator {
     for (final Violation violation : mixedViolations) {
       final Optional<ChangedFile> file = getFile(files, violation);
       if (file.isPresent()) {
-        final boolean shouldComment =
+        final boolean shouldComment = commentSupplier != null ?
+            commentSupplier.shouldComment(file.get(), violation.getStartLine()) :
             commentsProvider.shouldComment(file.get(), violation.getStartLine());
         if (shouldComment) {
           isChanged.add(violation);
