@@ -28,13 +28,13 @@ public class CommentsCreatorTest {
       new CommentsProvider() {
 
         @Override
-        public void createCommentWithAllSingleFileComments(final String string) {
+        public void createBulkComment(final String string) {
           createCommentWithAllSingleFileComments.add(string);
         }
 
         @Override
-        public void createSingleFileComment(
-            final ChangedFile file, final Integer line, final String comment) {
+        public void createViolationComment(
+            final ChangedFile file, final String comment, final Integer line) {
           createSingleFileComment.add(comment);
         }
 
@@ -59,12 +59,12 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public boolean shouldCreateCommentWithAllSingleFileComments() {
+        public boolean shouldCreateBulkComment() {
           return shouldCreateCommentWithAllSingleFileComments;
         }
 
         @Override
-        public boolean shouldCreateSingleFileComment() {
+        public boolean shouldCreateCommentPerViolation() {
           return shouldCreateSingleFileComment;
         }
 

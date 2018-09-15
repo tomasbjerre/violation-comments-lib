@@ -120,8 +120,8 @@ public class CommentsCreator {
         LOGGER.debug(violation.getReporter() + " " + violation.getSeverity() +
                 " " + violation.getRule() + " " + file.get() + " " +
                 violation.getStartLine() + " " + violation.getSource());
-        commentsProvider.createDiffComment(file.get(), commentContent,
-                violation.getStartLine(), null);
+        commentsProvider.createViolationComment(file.get(), commentContent,
+                violation.getStartLine());
       }
     }
   }

@@ -8,7 +8,7 @@ import se.bjurr.violations.lib.util.Optional;
  * Callback interface for applications that supply the comments to a consumer.
  * The implementation of it defines which kind of callback should be made.
  *
- * @author Patrizio Bonzani
+ * @author Tomas Bjerre, Patrizio Bonzani
  */
 public interface CommentsProvider {
 
@@ -20,15 +20,13 @@ public interface CommentsProvider {
 	void createBulkComment(String string);
 
 	/**
-	 * Create a discussion on the diff on the line the violation occurred.
+	 * Create a comment on the on the line the violation occurred.
 	 *
 	 * @param file The file in which the violation occurred.
 	 * @param content The text of the comment.
-	 * @param newLine The line number after the patch.
-	 * @param oldLine The line number before the patch.
+	 * @param line The line number on which the violation occurred.
 	 */
-	void createDiffComment(ChangedFile file, String content, Integer newLine,
-			Integer oldLine);
+	void createViolationComment(ChangedFile file, String content, Integer line);
 
 	List<Comment> getComments();
 
