@@ -33,7 +33,7 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public void createDiffDiscussion(ChangedFile file, String discussionContent,
+        public void createDiffComment(ChangedFile file, String discussionContent,
                 Integer newLine, Integer oldLine) {
           createSingleFileComment.add(discussionContent);
         }
@@ -64,7 +64,7 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public boolean shouldCommentOnTheDiff() {
+        public boolean shouldCreateCommentPerViolation() {
           return shouldCommentOnTheDiff;
         }
 

@@ -56,7 +56,7 @@ public class CommentsCreator {
     if (commentsProvider.shouldCreateBulkComment()) {
       createBulkComments();
     }
-    if (commentsProvider.shouldCommentOnTheDiff()) {
+    if (commentsProvider.shouldCreateCommentPerViolation()) {
       createDiffFileComments();
     }
   }
@@ -120,7 +120,7 @@ public class CommentsCreator {
         LOGGER.debug(violation.getReporter() + " " + violation.getSeverity() +
                 " " + violation.getRule() + " " + file.get() + " " +
                 violation.getStartLine() + " " + violation.getSource());
-        commentsProvider.createDiffDiscussion(file.get(), discussionContent,
+        commentsProvider.createDiffComment(file.get(), discussionContent,
                 violation.getStartLine(), null);
       }
     }

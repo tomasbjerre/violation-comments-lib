@@ -7,6 +7,7 @@ public interface CommentsProvider {
 
 	/**
 	 * Create a single comment containing all file comments and violations.
+	 *
 	 * @param string The combined comments.
 	 */
 	void createBulkComment(String string);
@@ -15,12 +16,12 @@ public interface CommentsProvider {
 	 * Create a discussion on the diff on the line the violation occurred.
 	 *
 	 * @param file The file in which the violation occurred.
-	 * @param discussionContent The text of the discussion.
+	 * @param content The text of the comment.
 	 * @param newLine The line number after the patch.
 	 * @param oldLine The line number before the patch.
 	 */
-	void createDiffDiscussion(ChangedFile file, String discussionContent,
-			Integer newLine, Integer oldLine);
+	void createDiffComment(ChangedFile file, String content, Integer newLine,
+			Integer oldLine);
 
 	List<Comment> getComments();
 
@@ -39,12 +40,12 @@ public interface CommentsProvider {
 	boolean shouldCreateBulkComment();
 
 	/**
-	 * Returns if comments should be made on to the diff.
+	 * Returns if a comment per violation should be made on the diff.
 	 *
-	 * @return <code>true</code> if the comments containing the violations
+	 * @return <code>true</code> if each comment containing the violation
 	 *         should be posted on the diff, <code>false</code> otherwise.
 	 */
-	boolean shouldCommentOnTheDiff();
+	boolean shouldCreateCommentPerViolation();
 
 	boolean shouldKeepOldComments();
 
