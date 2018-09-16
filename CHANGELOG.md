@@ -3,6 +3,43 @@
 
 Changelog of Violation comments lib.
 
+## 1.63
+### No issue
+
+**Removing Fliptables dependency**
+
+
+[3d0165516b65fc5](https://github.com/tomasbjerre/violation-comments-lib/commit/3d0165516b65fc5) Tomas Bjerre *2018-09-12 20:39:50*
+
+
+## 1.62
+### No issue
+
+**Reverting dynamic version because of error in bintrayUpload**
+
+
+[83a41f1af549520](https://github.com/tomasbjerre/violation-comments-lib/commit/83a41f1af549520) Tomas Bjerre *2018-09-12 19:54:05*
+
+**Depending on latest lib**
+
+
+[c5edb212cb1b567](https://github.com/tomasbjerre/violation-comments-lib/commit/c5edb212cb1b567) Tomas Bjerre *2018-09-12 19:48:11*
+
+
+## 1.60
+### No issue
+
+**Correcting CPD parser and adding category to model**
+
+
+[a4fe8a053585801](https://github.com/tomasbjerre/violation-comments-lib/commit/a4fe8a053585801) Tomas Bjerre *2018-09-12 19:24:53*
+
+**Refactorings**
+
+
+[aa1382018005eff](https://github.com/tomasbjerre/violation-comments-lib/commit/aa1382018005eff) Tomas Bjerre *2018-07-27 07:32:56*
+
+
 ## 1.59
 ### No issue
 
