@@ -4,8 +4,21 @@ import java.util.List;
 import se.bjurr.violations.lib.util.Optional;
 
 public interface CommentsProvider {
+
+  /**
+   * Create a single comment containing all file comments and violations.
+   *
+   * @param string The combined comments.
+   */
   void createCommentWithAllSingleFileComments(String string);
 
+  /**
+   * Create a discussion on the diff on the line the violation occurred.
+   *
+   * @param file The file in which the violation occurred.
+   * @param line The line number after the patch.
+   * @param comment The text of the comment.
+   */
   void createSingleFileComment(ChangedFile file, Integer line, String comment);
 
   List<Comment> getComments();
