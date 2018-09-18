@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.69
+### No issue
+
+**Prettier logging**
+
+
+[bbcd4cd9ca1ec17](https://github.com/tomasbjerre/violation-comments-lib/commit/bbcd4cd9ca1ec17) Tomas Bjerre *2018-09-18 09:46:30*
+
+
 ## 1.68
 ### No issue
 
