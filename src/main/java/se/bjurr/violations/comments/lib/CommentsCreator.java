@@ -1,5 +1,6 @@
 package se.bjurr.violations.comments.lib;
 
+import static java.util.stream.Collectors.joining;
 import static se.bjurr.violations.comments.lib.ChangedFileUtils.findChangedFile;
 import static se.bjurr.violations.comments.lib.CommentFilterer.filterCommentsWithContent;
 import static se.bjurr.violations.comments.lib.CommentFilterer.filterCommentsWithoutContent;
@@ -10,7 +11,6 @@ import static se.bjurr.violations.lib.util.Utils.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
@@ -152,8 +152,8 @@ public class CommentsCreator {
             .stream() //
             .map((f) -> f.getFilename()) //
             .sorted() //
-            .collect(Collectors.joining("\n"));
-    violationsLogger.log("Files changed:\n" + changedFiles);
+            .collect(joining("\n  "));
+    violationsLogger.log("Files changed:\n  " + changedFiles);
 
     String violationFiles =
         mixedViolations //
@@ -161,29 +161,47 @@ public class CommentsCreator {
             .map((f) -> f.getFile()) //
             .distinct() //
             .sorted() //
-            .collect(Collectors.joining("\n"));
-    violationsLogger.log("Files with violations:\n" + violationFiles);
+            .collect(joining("\n  "));
+    violationsLogger.log("Files with violations:\n  " + violationFiles);
 
     final List<Violation> isChanged = new ArrayList<>();
+    List<String> included = new ArrayList<>();
+    List<String> notIncludedUntouched = new ArrayList<>();
+    List<String> notIncludedNotChanged = new ArrayList<>();
     for (final Violation violation : mixedViolations) {
       final Optional<ChangedFile> file = findChangedFile(files, violation);
+      String violationFile = violation.getFile() + " " + violation.getStartLine();
       if (file.isPresent()) {
         final boolean shouldComment =
             commentsProvider.shouldComment(file.get(), violation.getStartLine());
         if (shouldComment) {
           isChanged.add(violation);
-          violationsLogger.log(
-              "Will include violation on: " + violation.getFile() + " " + violation.getStartLine());
+          included.add(violationFile);
         } else {
-          violationsLogger.log(
-              "Will not include violation on changed file because violation reported on untouched lines: "
-                  + violation.getFile()
-                  + " "
-                  + violation.getStartLine()
-                  + ".");
+          notIncludedUntouched.add(violationFile);
         }
+      } else {
+        notIncludedNotChanged.add(violationFile);
       }
     }
+
+    if (!included.isEmpty()) {
+      violationsLogger.log(
+              "Will include violations on:\n  " + included.stream().collect(joining("\n  ")));
+    }
+
+    if (!notIncludedUntouched.isEmpty()) {
+      violationsLogger.log(
+              "Will not include violations on changed files because violation reported on untouched lines:\n  "
+                      + notIncludedUntouched.stream().collect(joining("\n  ")));
+    }
+
+    if (!notIncludedNotChanged.isEmpty()) {
+      violationsLogger.log(
+              "Will not include violations on unchanged files:\n  "
+                      + notIncludedNotChanged.stream().collect(joining("\n  ")));
+    }
+
     return isChanged;
   }
 }
