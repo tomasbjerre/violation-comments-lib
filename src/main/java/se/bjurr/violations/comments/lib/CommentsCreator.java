@@ -187,19 +187,19 @@ public class CommentsCreator {
 
     if (!included.isEmpty()) {
       violationsLogger.log(
-              "Will include violations on:\n  " + included.stream().collect(joining("\n  ")));
+          "Will include violations on:\n  " + included.stream().collect(joining("\n  ")));
     }
 
     if (!notIncludedUntouched.isEmpty()) {
       violationsLogger.log(
-              "Will not include violations on changed files because violation reported on untouched lines:\n  "
-                      + notIncludedUntouched.stream().collect(joining("\n  ")));
+          "Will not include violations on changed files because violation reported on untouched lines:\n  "
+              + notIncludedUntouched.stream().collect(joining("\n  ")));
     }
 
     if (!notIncludedNotChanged.isEmpty()) {
       violationsLogger.log(
-              "Will not include violations on unchanged files:\n  "
-                      + notIncludedNotChanged.stream().collect(joining("\n  ")));
+          "Will not include violations on unchanged files:\n  "
+              + notIncludedNotChanged.stream().collect(joining("\n  ")));
     }
 
     return isChanged;
