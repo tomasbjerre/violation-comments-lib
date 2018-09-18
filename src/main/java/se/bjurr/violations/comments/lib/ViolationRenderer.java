@@ -1,6 +1,6 @@
 package se.bjurr.violations.comments.lib;
 
-import static se.bjurr.violations.comments.lib.ChangedFileUtils.getFile;
+import static se.bjurr.violations.comments.lib.ChangedFileUtils.findChangedFile;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
 import static se.bjurr.violations.lib.util.Optional.fromNullable;
@@ -34,7 +34,7 @@ public class ViolationRenderer {
     StringBuilder sb = new StringBuilder();
     sb.append("Found " + violations.size() + " violations:\n\n");
     for (final Violation violation : violations) {
-      final Optional<ChangedFile> changedFile = getFile(files, violation);
+      final Optional<ChangedFile> changedFile = findChangedFile(files, violation);
       final String singleFileCommentContent =
           createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
       if (sb.length() + singleFileCommentContent.length() >= maxCommentSize) {

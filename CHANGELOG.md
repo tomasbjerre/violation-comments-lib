@@ -3,6 +3,34 @@
 
 Changelog of Violation comments lib.
 
+## 1.65
+### No issue
+
+**Fix optional rule in YAMLLint**
+
+
+[455516c345f19e3](https://github.com/tomasbjerre/violation-comments-lib/commit/455516c345f19e3) Tomas Bjerre *2018-09-17 13:22:47*
+
+**Add javadoc.**
+
+
+[dff4bbd7b53ce2a](https://github.com/tomasbjerre/violation-comments-lib/commit/dff4bbd7b53ce2a) Patrizio Bonzani *2018-09-15 19:22:01*
+
+**Refactorings**
+
+
+[aa1382018005eff](https://github.com/tomasbjerre/violation-comments-lib/commit/aa1382018005eff) Tomas Bjerre *2018-07-27 07:32:56*
+
+
+## 1.64
+### No issue
+
+**YAMLLint**
+
+
+[34d5b892a092227](https://github.com/tomasbjerre/violation-comments-lib/commit/34d5b892a092227) Tomas Bjerre *2018-09-15 07:41:18*
+
+
 ## 1.63
 ### No issue
 
@@ -33,11 +61,6 @@ Changelog of Violation comments lib.
 
 
 [a4fe8a053585801](https://github.com/tomasbjerre/violation-comments-lib/commit/a4fe8a053585801) Tomas Bjerre *2018-09-12 19:24:53*
-
-**Refactorings**
-
-
-[aa1382018005eff](https://github.com/tomasbjerre/violation-comments-lib/commit/aa1382018005eff) Tomas Bjerre *2018-07-27 07:32:56*
 
 
 ## 1.59

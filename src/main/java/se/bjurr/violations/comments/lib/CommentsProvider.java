@@ -1,6 +1,8 @@
-package se.bjurr.violations.comments.lib.model;
+package se.bjurr.violations.comments.lib;
 
 import java.util.List;
+import se.bjurr.violations.comments.lib.model.ChangedFile;
+import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.util.Optional;
 
 public interface CommentsProvider {
