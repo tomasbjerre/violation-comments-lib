@@ -12,6 +12,7 @@ import static se.bjurr.violations.lib.reports.Parser.ANDROIDLINT;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,8 +90,13 @@ public class CommentsCreatorTest {
   private ViolationsLogger logger =
       new ViolationsLogger() {
         @Override
-        public void log(final String string) {
-          Logger.getLogger(ViolationsLogger.class.getSimpleName()).info(string);
+        public void log(final Level level, final String string) {
+          Logger.getLogger(ViolationsLogger.class.getSimpleName()).log(level, string);
+        }
+
+        @Override
+        public void log(final Level level, final String string, final Throwable t) {
+          Logger.getLogger(ViolationsLogger.class.getSimpleName()).log(level, string, t);
         }
       };
 

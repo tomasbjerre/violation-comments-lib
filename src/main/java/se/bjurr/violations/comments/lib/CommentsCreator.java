@@ -1,5 +1,6 @@
 package se.bjurr.violations.comments.lib;
 
+import static java.util.logging.Level.INFO;
 import static java.util.stream.Collectors.joining;
 import static se.bjurr.violations.comments.lib.ChangedFileUtils.findChangedFile;
 import static se.bjurr.violations.comments.lib.CommentFilterer.filterCommentsWithContent;
@@ -68,6 +69,7 @@ public class CommentsCreator {
     if (!commentsProvider.shouldCreateCommentWithAllSingleFileComments()
         && !commentsProvider.shouldCreateSingleFileComment()) {
       violationsLogger.log(
+          INFO,
           "Will not comment because both 'CreateCommentWithAllSingleFileComments' and 'CreateSingleFileComment' is false.");
     }
   }
@@ -78,6 +80,7 @@ public class CommentsCreator {
             violations, files, commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
     for (final String accumulatedComment : accumulatedComments) {
       violationsLogger.log(
+          INFO,
           "Asking "
               + commentsProvider.getClass().getSimpleName()
               + " to create comment with all single file comments.");
@@ -103,7 +106,8 @@ public class CommentsCreator {
     List<Comment> oldComments = commentsProvider.getComments();
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
     oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
-    violationsLogger.log("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
+    violationsLogger.log(
+        INFO, "Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
 
     final ViolationComments alreadyMadeComments = getViolationComments(oldComments, violations);
 
@@ -121,6 +125,7 @@ public class CommentsCreator {
         final String singleFileCommentContent =
             createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
         violationsLogger.log(
+            INFO,
             violation.getReporter()
                 + " "
                 + violation.getSeverity()
@@ -155,7 +160,7 @@ public class CommentsCreator {
             .map((f) -> f.getFilename()) //
             .sorted() //
             .collect(joining("\n  "));
-    violationsLogger.log("Files changed:\n  " + changedFiles);
+    violationsLogger.log(INFO, "Files changed:\n  " + changedFiles);
 
     String violationFiles =
         mixedViolations //
@@ -164,7 +169,7 @@ public class CommentsCreator {
             .distinct() //
             .sorted() //
             .collect(joining("\n  "));
-    violationsLogger.log("Files with violations:\n  " + violationFiles);
+    violationsLogger.log(INFO, "Files with violations:\n  " + violationFiles);
 
     final List<Violation> isChanged = new ArrayList<>();
     Set<String> included = new TreeSet<>();
@@ -189,17 +194,19 @@ public class CommentsCreator {
 
     if (!included.isEmpty()) {
       violationsLogger.log(
-          "Will include violations on:\n  " + included.stream().collect(joining("\n  ")));
+          INFO, "Will include violations on:\n  " + included.stream().collect(joining("\n  ")));
     }
 
     if (!notIncludedUntouched.isEmpty()) {
       violationsLogger.log(
+          INFO,
           "Will not include violations on changed files because violation reported on untouched lines:\n  "
               + notIncludedUntouched.stream().collect(joining("\n  ")));
     }
 
     if (!notIncludedNotChanged.isEmpty()) {
       violationsLogger.log(
+          INFO,
           "Will not include violations on unchanged files:\n  "
               + notIncludedNotChanged.stream().collect(joining("\n  ")));
     }
