@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.70
+### No issue
+
+**Exception and log level**
+
+
+[3f6e9c3c892f357](https://github.com/tomasbjerre/violation-comments-lib/commit/3f6e9c3c892f357) Tomas Bjerre *2018-09-18 18:38:03*
+
+
 ## 1.69
 ### No issue
 
