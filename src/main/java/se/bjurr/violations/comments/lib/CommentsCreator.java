@@ -176,19 +176,12 @@ public class CommentsCreator {
               "Will include violation on: " + violation.getFile() + " " + violation.getStartLine());
         } else {
           violationsLogger.log(
-              "Will not include violation on changed file: "
+              "Will not include violation on changed file because violation reported on untouched lines: "
                   + violation.getFile()
                   + " "
                   + violation.getStartLine()
                   + ".");
         }
-      } else {
-        violationsLogger.log(
-            "Will not include violation on un-changed file: "
-                + violation.getFile()
-                + " "
-                + violation.getStartLine()
-                + ".");
       }
     }
     return isChanged;
