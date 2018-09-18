@@ -11,6 +11,9 @@ import static se.bjurr.violations.lib.util.Utils.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
@@ -165,9 +168,9 @@ public class CommentsCreator {
     violationsLogger.log("Files with violations:\n  " + violationFiles);
 
     final List<Violation> isChanged = new ArrayList<>();
-    List<String> included = new ArrayList<>();
-    List<String> notIncludedUntouched = new ArrayList<>();
-    List<String> notIncludedNotChanged = new ArrayList<>();
+    Set<String> included = new TreeSet<>();
+    Set<String> notIncludedUntouched = new TreeSet<>();
+    Set<String> notIncludedNotChanged = new TreeSet<>();
     for (final Violation violation : mixedViolations) {
       final Optional<ChangedFile> file = findChangedFile(files, violation);
       String violationFile = violation.getFile() + " " + violation.getStartLine();
