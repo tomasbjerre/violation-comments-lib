@@ -24,6 +24,10 @@ public class CommentsCreator {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommentsCreator.class);
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
 
+  /**
+   * Create a bulk comment containing all violations and/or individual comments
+   * for each violation depending on the {@link CommentsProvider} configuration.
+   */
   public static void createComments(
       final CommentsProvider commentsProvider,
       final List<Violation> violations,
@@ -52,12 +56,16 @@ public class CommentsCreator {
     this.maxCommentSize = maxCommentSize;
   }
 
+  /**
+   * Create a bulk comment containing all violations and/or individual comments
+   * for each violation depending on the {@link CommentsProvider} configuration.
+   */
   public void createComments() {
     if (commentsProvider.shouldCreateBulkComment()) {
-      createBulkComments();
+      createBulkComment();
     }
     if (commentsProvider.shouldCreateCommentPerViolation()) {
-      createDiffFileComments();
+      createCommentPerViolation();
     }
   }
 
@@ -66,7 +74,7 @@ public class CommentsCreator {
    * files. The comment is split into several comments if it is longer than the
    * maximum comment length.
    */
-  private void createBulkComments() {
+  private void createBulkComment() {
     final List<String> accumulatedComments =
         getAccumulatedComments(
             violations, files, commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
@@ -94,9 +102,9 @@ public class CommentsCreator {
   }
 
   /**
-   * Create a discussion on the diff for each violation.
+   * Create a comment for each violation.
    */
-  private void createDiffFileComments() {
+  private void createCommentPerViolation() {
     List<Comment> oldComments = commentsProvider.getComments();
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
     oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
