@@ -1,6 +1,8 @@
 package se.bjurr.violations.comments.lib;
 
-import static se.bjurr.violations.comments.lib.ChangedFileUtils.getFile;
+import static java.util.logging.Level.INFO;
+import static java.util.stream.Collectors.joining;
+import static se.bjurr.violations.comments.lib.ChangedFileUtils.findChangedFile;
 import static se.bjurr.violations.comments.lib.CommentFilterer.filterCommentsWithContent;
 import static se.bjurr.violations.comments.lib.CommentFilterer.filterCommentsWithoutContent;
 import static se.bjurr.violations.comments.lib.CommentFilterer.getViolationComments;
@@ -10,11 +12,12 @@ import static se.bjurr.violations.lib.util.Utils.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
-import se.bjurr.violations.comments.lib.model.CommentsProvider;
 import se.bjurr.violations.lib.model.Violation;
 import se.bjurr.violations.lib.util.Optional;
 
@@ -23,17 +26,20 @@ public class CommentsCreator {
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
   private static final Logger LOGGER = LoggerFactory.getLogger(CommentsCreator.class);
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
+  private final ViolationsLogger violationsLogger;
 
   /**
-   * Create a bulk comment containing all violations and/or individual comments
-   * for each violation depending on the {@link CommentsProvider} configuration.
+   * Create a bulk comment containing all violations and/or individual comments for each violation
+   * depending on the {@link CommentsProvider} configuration.
    */
   public static void createComments(
-      final CommentsProvider commentsProvider,
+      final ViolationsLogger violationsLogger,
       final List<Violation> violations,
-      final Integer maxCommentSize) {
+      final Integer maxCommentSize,
+      final CommentsProvider commentsProvider) {
+
     final CommentsCreator commentsCreator =
-        new CommentsCreator(commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(violationsLogger, commentsProvider, violations, maxCommentSize);
     commentsCreator.createComments();
   }
 
@@ -44,21 +50,22 @@ public class CommentsCreator {
   private final List<Violation> violations;
 
   CommentsCreator(
+      ViolationsLogger violationsLogger,
       final CommentsProvider commentsProvider,
       final List<Violation> violations,
       final Integer maxCommentSize) {
     checkNotNull(violations, "violations");
     checkNotNull(commentsProvider, "commentsProvider");
+    this.violationsLogger = checkNotNull(violationsLogger, "violationsLogger");
     this.commentsProvider = commentsProvider;
-    LOGGER.debug(violations.size() + " violations.");
     files = commentsProvider.getFiles();
     this.violations = filterChanged(violations);
     this.maxCommentSize = maxCommentSize;
   }
 
   /**
-   * Create a bulk comment containing all violations and/or individual comments
-   * for each violation depending on the {@link CommentsProvider} configuration.
+   * Create a bulk comment containing all violations and/or individual comments for each violation
+   * depending on the {@link CommentsProvider} configuration.
    */
   public void createComments() {
     if (commentsProvider.shouldCreateBulkComment()) {
@@ -67,19 +74,25 @@ public class CommentsCreator {
     if (commentsProvider.shouldCreateCommentPerViolation()) {
       createCommentPerViolation();
     }
+    if (!commentsProvider.shouldCreateBulkComment()
+        && !commentsProvider.shouldCreateCommentPerViolation()) {
+      violationsLogger.log(
+          INFO,
+          "Will not comment because both 'CreateCommentWithAllSingleFileComments' and 'CreateSingleFileComment' is false.");
+    }
   }
 
   /**
-   * Create a comment containing the accumulated violations and comments of all
-   * files. The comment is split into several comments if it is longer than the
-   * maximum comment length.
+   * Create a comment containing the accumulated violations and comments of all files. The comment
+   * is split into several comments if it is longer than the maximum comment length.
    */
   private void createBulkComment() {
     final List<String> accumulatedComments =
         getAccumulatedComments(
             violations, files, commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
     for (final String accumulatedComment : accumulatedComments) {
-      LOGGER.debug(
+      violationsLogger.log(
+          INFO,
           "Asking "
               + commentsProvider.getClass().getSimpleName()
               + " to create comment with all single file comments.");
@@ -101,14 +114,13 @@ public class CommentsCreator {
     }
   }
 
-  /**
-   * Create a comment for each violation.
-   */
+  /** Create a comment for each violation. */
   private void createCommentPerViolation() {
     List<Comment> oldComments = commentsProvider.getComments();
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
     oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
-    LOGGER.debug("Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
+    violationsLogger.log(
+        INFO, "Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
 
     final ViolationComments alreadyMadeComments = getViolationComments(oldComments, violations);
 
@@ -120,16 +132,26 @@ public class CommentsCreator {
       if (violationCommentExistsSinceBefore) {
         continue;
       }
-      final Optional<ChangedFile> file = getFile(files, violation);
-      if (file.isPresent()) {
+      final Optional<ChangedFile> changedFile = findChangedFile(files, violation);
+      if (changedFile.isPresent()) {
         final String commentTemplate = commentsProvider.findCommentTemplate().orNull();
         final String commentContent =
-            createSingleFileCommentContent(file.get(), violation, commentTemplate);
-        LOGGER.debug(violation.getReporter() + " " + violation.getSeverity() +
-                " " + violation.getRule() + " " + file.get() + " " +
-                violation.getStartLine() + " " + violation.getSource());
-        commentsProvider.createViolationComment(file.get(), commentContent,
-                violation.getStartLine());
+            createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
+        violationsLogger.log(
+            INFO,
+            violation.getReporter()
+                + " "
+                + violation.getSeverity()
+                + " "
+                + violation.getRule()
+                + " "
+                + changedFile.get()
+                + " "
+                + violation.getStartLine()
+                + " "
+                + violation.getSource());
+        commentsProvider.createViolationComment(
+            changedFile.get(), commentContent, violation.getStartLine());
       }
     }
   }
@@ -145,17 +167,63 @@ public class CommentsCreator {
   }
 
   private List<Violation> filterChanged(final List<Violation> mixedViolations) {
+    String changedFiles =
+        files //
+            .stream() //
+            .map((f) -> f.getFilename()) //
+            .sorted() //
+            .collect(joining("\n  "));
+    violationsLogger.log(INFO, "Files changed:\n  " + changedFiles);
+
+    String violationFiles =
+        mixedViolations //
+            .stream() //
+            .map((f) -> f.getFile()) //
+            .distinct() //
+            .sorted() //
+            .collect(joining("\n  "));
+    violationsLogger.log(INFO, "Files with violations:\n  " + violationFiles);
+
     final List<Violation> isChanged = new ArrayList<>();
+    Set<String> included = new TreeSet<>();
+    Set<String> notIncludedUntouched = new TreeSet<>();
+    Set<String> notIncludedNotChanged = new TreeSet<>();
     for (final Violation violation : mixedViolations) {
-      final Optional<ChangedFile> file = getFile(files, violation);
+      final Optional<ChangedFile> file = findChangedFile(files, violation);
+      String violationFile = violation.getFile() + " " + violation.getStartLine();
       if (file.isPresent()) {
         final boolean shouldComment =
             commentsProvider.shouldComment(file.get(), violation.getStartLine());
         if (shouldComment) {
           isChanged.add(violation);
+          included.add(violationFile);
+        } else {
+          notIncludedUntouched.add(violationFile);
         }
+      } else {
+        notIncludedNotChanged.add(violationFile);
       }
     }
+
+    if (!included.isEmpty()) {
+      violationsLogger.log(
+          INFO, "Will include violations on:\n  " + included.stream().collect(joining("\n  ")));
+    }
+
+    if (!notIncludedUntouched.isEmpty()) {
+      violationsLogger.log(
+          INFO,
+          "Will not include violations on changed files because violation reported on untouched lines:\n  "
+              + notIncludedUntouched.stream().collect(joining("\n  ")));
+    }
+
+    if (!notIncludedNotChanged.isEmpty()) {
+      violationsLogger.log(
+          INFO,
+          "Will not include violations on unchanged files:\n  "
+              + notIncludedNotChanged.stream().collect(joining("\n  ")));
+    }
+
     return isChanged;
   }
 }

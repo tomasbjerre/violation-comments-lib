@@ -1,6 +1,7 @@
 package se.bjurr.violations.comments.lib.model;
 
 import java.util.List;
+import se.bjurr.violations.comments.lib.CommentsProvider;
 
 public class ChangedFile {
   private final String filename;

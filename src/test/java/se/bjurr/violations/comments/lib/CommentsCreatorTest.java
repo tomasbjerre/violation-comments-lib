@@ -12,11 +12,12 @@ import static se.bjurr.violations.lib.reports.Parser.ANDROIDLINT;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
-import se.bjurr.violations.comments.lib.model.CommentsProvider;
 import se.bjurr.violations.lib.model.Violation;
 import se.bjurr.violations.lib.util.Optional;
 import se.bjurr.violations.lib.util.Utils;
@@ -86,6 +87,18 @@ public class CommentsCreatorTest {
   private boolean shouldCreateCommentWithAllSingleFileComments = true;
   private boolean shouldCreateSingleFileComment = true;
   private List<Violation> violations;
+  private ViolationsLogger logger =
+      new ViolationsLogger() {
+        @Override
+        public void log(final Level level, final String string) {
+          Logger.getLogger(ViolationsLogger.class.getSimpleName()).log(level, string);
+        }
+
+        @Override
+        public void log(final Level level, final String string, final Throwable t) {
+          Logger.getLogger(ViolationsLogger.class.getSimpleName()).log(level, string, t);
+        }
+      };
 
   private String asFile(final String string) throws Exception {
     return Utils.toString(Utils.getResource(string));
@@ -142,7 +155,7 @@ public class CommentsCreatorTest {
     files.add(new ChangedFile("file2", null));
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(logger, commentsProvider, violations, maxCommentSize);
 
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
@@ -179,7 +192,7 @@ public class CommentsCreatorTest {
     files.add(new ChangedFile("file2", null));
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(logger, commentsProvider, violations, maxCommentSize);
 
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
@@ -226,7 +239,7 @@ public class CommentsCreatorTest {
     files.add(file2);
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(logger, commentsProvider, violations, maxCommentSize);
 
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(
@@ -272,7 +285,7 @@ public class CommentsCreatorTest {
     shouldCreateCommentWithAllSingleFileComments = true;
     shouldCreateSingleFileComment = true;
 
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(1);
@@ -292,7 +305,7 @@ public class CommentsCreatorTest {
 
     maxCommentSize = MAX_VALUE;
 
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
         .isEqualTo(asFile("testMarkdownCommentWithSource.md"));
@@ -337,7 +350,7 @@ public class CommentsCreatorTest {
 
     Utils.setReporter(violations, "CustomReporter");
 
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
         .isEqualTo(asFile("testMarkdownCustomReporter1.md"));
@@ -380,7 +393,7 @@ public class CommentsCreatorTest {
 
     maxCommentSize = 10;
 
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(3);
@@ -394,7 +407,7 @@ public class CommentsCreatorTest {
 
   @Test
   public void testWithNoComments() {
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .isEmpty();
@@ -434,7 +447,7 @@ public class CommentsCreatorTest {
 
     maxCommentSize = MAX_VALUE;
 
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(1);
@@ -468,7 +481,7 @@ public class CommentsCreatorTest {
 
     maxCommentSize = MAX_VALUE;
 
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(0);
@@ -509,7 +522,7 @@ public class CommentsCreatorTest {
 
     maxCommentSize = MAX_VALUE;
 
-    createComments(commentsProvider, violations, maxCommentSize);
+    createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(1);

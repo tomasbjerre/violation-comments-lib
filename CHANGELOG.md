@@ -3,6 +3,79 @@
 
 Changelog of Violation comments lib.
 
+## 1.70
+### No issue
+
+**Exception and log level**
+
+
+[3f6e9c3c892f357](https://github.com/tomasbjerre/violation-comments-lib/commit/3f6e9c3c892f357) Tomas Bjerre *2018-09-18 18:38:03*
+
+
+## 1.69
+### No issue
+
+**Prettier logging**
+
+
+[bbcd4cd9ca1ec17](https://github.com/tomasbjerre/violation-comments-lib/commit/bbcd4cd9ca1ec17) Tomas Bjerre *2018-09-18 09:46:30*
+
+
+## 1.68
+### No issue
+
+**Prettier logging**
+
+
+[274bc4dcb142350](https://github.com/tomasbjerre/violation-comments-lib/commit/274bc4dcb142350) Tomas Bjerre *2018-09-18 09:27:50*
+
+
+## 1.67
+### No issue
+
+**Reducing logging a bit**
+
+
+[4d8b9a6487a98c6](https://github.com/tomasbjerre/violation-comments-lib/commit/4d8b9a6487a98c6) Tomas Bjerre *2018-09-18 08:20:35*
+
+
+## 1.66
+### No issue
+
+**Enabling injected logger**
+
+
+[06b1d32334c4974](https://github.com/tomasbjerre/violation-comments-lib/commit/06b1d32334c4974) Tomas Bjerre *2018-09-18 07:20:59*
+
+
+## 1.65
+### No issue
+
+**Fix optional rule in YAMLLint**
+
+
+[455516c345f19e3](https://github.com/tomasbjerre/violation-comments-lib/commit/455516c345f19e3) Tomas Bjerre *2018-09-17 13:22:47*
+
+**Add javadoc.**
+
+
+[dff4bbd7b53ce2a](https://github.com/tomasbjerre/violation-comments-lib/commit/dff4bbd7b53ce2a) Patrizio Bonzani *2018-09-15 19:22:01*
+
+**Refactorings**
+
+
+[aa1382018005eff](https://github.com/tomasbjerre/violation-comments-lib/commit/aa1382018005eff) Tomas Bjerre *2018-07-27 07:32:56*
+
+
+## 1.64
+### No issue
+
+**YAMLLint**
+
+
+[34d5b892a092227](https://github.com/tomasbjerre/violation-comments-lib/commit/34d5b892a092227) Tomas Bjerre *2018-09-15 07:41:18*
+
+
 ## 1.63
 ### No issue
 
@@ -33,11 +106,6 @@ Changelog of Violation comments lib.
 
 
 [a4fe8a053585801](https://github.com/tomasbjerre/violation-comments-lib/commit/a4fe8a053585801) Tomas Bjerre *2018-09-12 19:24:53*
-
-**Refactorings**
-
-
-[aa1382018005eff](https://github.com/tomasbjerre/violation-comments-lib/commit/aa1382018005eff) Tomas Bjerre *2018-07-27 07:32:56*
 
 
 ## 1.59
