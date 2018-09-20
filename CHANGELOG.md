@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.72
+### No issue
+
+**Correcting Kotlin parsers**
+
+
+[743364430ee3ed7](https://github.com/tomasbjerre/violation-comments-lib/commit/743364430ee3ed7) Tomas Bjerre *2018-09-20 23:45:45*
+
+
 ## 1.71
 ### No issue
 
