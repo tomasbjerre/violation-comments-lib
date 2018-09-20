@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.71
+### No issue
+
+**Kotlin Maven and Gradle parsers**
+
+
+[f17afb9b02e8ae6](https://github.com/tomasbjerre/violation-comments-lib/commit/f17afb9b02e8ae6) Tomas Bjerre *2018-09-20 14:08:18*
+
+
 ## 1.70
 ### No issue
 
