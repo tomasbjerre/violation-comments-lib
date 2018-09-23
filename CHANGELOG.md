@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.73
+### No issue
+
+**Automating reporters in readme**
+
+
+[cae11ceab390b62](https://github.com/tomasbjerre/violation-comments-lib/commit/cae11ceab390b62) Tomas Bjerre *2018-09-23 12:45:11*
+
+
 ## 1.72
 ### No issue
 
