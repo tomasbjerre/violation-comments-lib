@@ -163,7 +163,7 @@ Changelog of Violation comments lib.
 
 
 ## 1.56
-### GitHub [#2](https://github.com/tomasbjerre/violation-comments-lib/issues/2) Violation message configuration feature request
+### GitHub [#2](https://github.com/tomasbjerre/violation-comments-lib/issues/2) Violation message configuration feature request    *enhancement*  
 
 **Custom template**
 
@@ -350,7 +350,7 @@ Changelog of Violation comments lib.
 
 
 ## 1.37
-### GitHub [#1](https://github.com/tomasbjerre/violation-comments-lib/issues/1) NPE in PatchParser
+### GitHub [#1](https://github.com/tomasbjerre/violation-comments-lib/issues/1) NPE in PatchParser    *bug*  
 
 **Avoiding NPE**
 
