@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.75
+### No issue
+
+**Including entire rule in Flake8**
+
+
+[a90086243f31fd7](https://github.com/tomasbjerre/violation-comments-lib/commit/a90086243f31fd7) Tomas Bjerre *2018-10-06 06:23:43*
+
+
 ## 1.73
 ### No issue
 
