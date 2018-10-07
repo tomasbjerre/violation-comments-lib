@@ -3,13 +3,13 @@
 
 Changelog of Violation comments lib.
 
-## Unreleased
+## 1.76
 ### No issue
 
 **Diff line translation util**
 
 
-[02fd4cbe4968e1b](https://github.com/tomasbjerre/violation-comments-lib/commit/02fd4cbe4968e1b) Tomas Bjerre *2018-10-07 08:01:26*
+[bed3c49e850b224](https://github.com/tomasbjerre/violation-comments-lib/commit/bed3c49e850b224) Tomas Bjerre *2018-10-07 08:04:53*
 
 
 ## 1.75
