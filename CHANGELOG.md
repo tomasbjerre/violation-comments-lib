@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.77
+### No issue
+
+**Correcting diff translator**
+
+
+[7b1366e93b1c5da](https://github.com/tomasbjerre/violation-comments-lib/commit/7b1366e93b1c5da) Tomas Bjerre *2018-10-07 08:44:02*
+
+
 ## 1.76
 ### No issue
 
