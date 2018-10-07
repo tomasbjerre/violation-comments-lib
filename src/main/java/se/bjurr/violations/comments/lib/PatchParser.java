@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
 
 public class PatchParser {
 
+  private static final Pattern RANGE_PATTERN = Pattern.compile(
+      "@@\\p{IsWhite_Space}-[0-9]+(?:,[0-9]+)?\\p{IsWhite_Space}\\+([0-9]+)(?:,[0-9]+)?\\p{IsWhite_Space}@@.*");
+
   /** http://en.wikipedia.org/wiki/Diff_utility#Unified_format */
   public static Optional<Integer> findLineToComment(String patchString, Integer lineToComment) {
     if (patchString == null) {
@@ -19,10 +22,7 @@ public class PatchParser {
     int patchLocation = 0;
     for (String line : patchString.split("\n")) {
       if (line.startsWith("@")) {
-        Matcher matcher =
-            Pattern.compile(
-                    "@@\\p{IsWhite_Space}-[0-9]+(?:,[0-9]+)?\\p{IsWhite_Space}\\+([0-9]+)(?:,[0-9]+)?\\p{IsWhite_Space}@@.*")
-                .matcher(line);
+        Matcher matcher = RANGE_PATTERN.matcher(line);
         if (!matcher.matches()) {
           throw new IllegalStateException(
               "Unable to parse patch line " + line + "\nFull patch: \n" + patchString);
@@ -49,10 +49,7 @@ public class PatchParser {
     int patchLocation = 1;
     for (String line : patchString.split("\n")) {
       if (line.startsWith("@")) {
-        Matcher matcher =
-            Pattern.compile(
-                    "@@\\p{IsWhite_Space}-[0-9]+(?:,[0-9]+)?\\p{IsWhite_Space}\\+([0-9]+)(?:,[0-9]+)?\\p{IsWhite_Space}@@.*")
-                .matcher(line);
+        Matcher matcher = RANGE_PATTERN.matcher(line);
         if (!matcher.matches()) {
           throw new IllegalStateException(
               "Unable to parse patch line " + line + "\nFull patch: \n" + patchString);
