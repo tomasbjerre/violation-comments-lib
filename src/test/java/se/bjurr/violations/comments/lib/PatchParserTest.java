@@ -82,14 +82,7 @@ public class PatchParserTest {
   public void testThatLineTableCanBeRetrieved() {
     String patch =
         "--- a/src/main/java/se/bjurr/violations/lib/example/OtherClass.java\n+++ b/src/main/java/se/bjurr/violations/lib/example/OtherClass.java\n@@ -4,12 +4,15 @@ package se.bjurr.violations.lib.example;\n  * No ending dot\n  */\n public class OtherClass {\n- public static String CoNstANT = \"yes\";\n+ public static String CoNstANT = \"yes\"; \n \n  public void myMethod() {\n   if (CoNstANT.equals(\"abc\")) {\n \n   }\n+  if (CoNstANT.equals(\"abc\")) {\n+\n+  }\n  }\n \n  @Override\n";
-    String[] diffLines = patch.split("\n");
-    for (int i = 0; i < diffLines.length; i++) {
-      LOG.info(i + 1 + " | " + diffLines[i]);
-    }
-    final Map<Integer, Optional<Integer>> map = PatchParser.getLineTranslation(patch);
-    for (Map.Entry<Integer, Optional<Integer>> e : map.entrySet()) {
-      LOG.info(e.getKey() + " : " + e.getValue().orElse(null));
-    }
+    final Map<Integer, Optional<Integer>> map = getIntegerOptionalMap(patch);
 
     assertThat(map.get(6).orElse(null)) //
         .isEqualTo(6);
@@ -108,5 +101,35 @@ public class PatchParserTest {
         .isNull();
     assertThat(map.get(16).orElse(null)) //
         .isEqualTo(13);
+  }
+
+  @Test
+  public void testThatLineTableCanBeRetrieved2() {
+    String patch =
+        "--- a/src/main/java/se/bjurr/violations/lib/example/MyClass.java\n+++ b/src/main/java/se/bjurr/violations/lib/example/MyClass.java\n@@ -9,6 +9,8 @@ public class MyClass {\n   } else {\n \n   }\n+  if (a == null)\n+   a.charAt(123);\n   a.length();\n  }\n \n";
+    final Map<Integer, Optional<Integer>> map = getIntegerOptionalMap(patch);
+
+    assertThat(map.get(11).orElse(null)) //
+        .isEqualTo(11);
+    assertThat(map.get(12).orElse(null)) //
+        .isNull();
+    assertThat(map.get(13).orElse(null)) //
+        .isNull();
+    assertThat(map.get(14).orElse(null)) //
+        .isEqualTo(12);
+  }
+
+  private Map<Integer, Optional<Integer>> getIntegerOptionalMap(final String patch) {
+    String[] diffLines = patch.split("\n");
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < diffLines.length; i++) {
+      sb.append(i + 1 + " | " + diffLines[i] + "\n");
+    }
+    final Map<Integer, Optional<Integer>> map = PatchParser.getLineTranslation(patch);
+    for (Map.Entry<Integer, Optional<Integer>> e : map.entrySet()) {
+      sb.append(e.getKey() + " : " + e.getValue().orElse(null) + "\n");
+    }
+    LOG.info("\n" + sb.toString());
+    return map;
   }
 }

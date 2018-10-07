@@ -58,15 +58,17 @@ public class PatchParser {
               "Unable to parse patch line " + line + "\nFull patch: \n" + patchString);
         }
         currentLine = Integer.parseInt(matcher.group(1));
+        patchLocation = currentLine;
       } else if (line.startsWith("+") && !line.startsWith("++")) {
         map.put(currentLine, Optional.empty());
         currentLine++;
-        patchLocation--;
       } else if (line.startsWith(" ")) {
         map.put(currentLine, Optional.of(patchLocation));
         currentLine++;
+        patchLocation++;
+      } else {
+        patchLocation++;
       }
-      patchLocation++;
     }
     return map;
   }
