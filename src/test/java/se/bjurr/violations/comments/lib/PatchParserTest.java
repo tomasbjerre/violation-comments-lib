@@ -4,9 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Logger;
 import org.junit.Test;
 
 public class PatchParserTest {
+  private static Logger LOG = Logger.getLogger(PatchParser.class.getSimpleName());
 
   private static final String NEW_DIFF =
       "@@ -1,6 +1,6 @@\n <html>\n  <head></head>\n <body>\n-<font>\n+<font> \n </body> \n </html>";
@@ -71,6 +75,38 @@ public class PatchParserTest {
     list.add(patch);
     return PatchParser // .
         .findLineToComment(patch, commentLint) //
-        .orNull();
+        .orElse(null);
+  }
+
+  @Test
+  public void testThatLineTableCanBeRetrieved() {
+    String patch =
+        "--- a/src/main/java/se/bjurr/violations/lib/example/OtherClass.java\n+++ b/src/main/java/se/bjurr/violations/lib/example/OtherClass.java\n@@ -4,12 +4,15 @@ package se.bjurr.violations.lib.example;\n  * No ending dot\n  */\n public class OtherClass {\n- public static String CoNstANT = \"yes\";\n+ public static String CoNstANT = \"yes\"; \n \n  public void myMethod() {\n   if (CoNstANT.equals(\"abc\")) {\n \n   }\n+  if (CoNstANT.equals(\"abc\")) {\n+\n+  }\n  }\n \n  @Override\n";
+    String[] diffLines = patch.split("\n");
+    for (int i = 0; i < diffLines.length; i++) {
+      LOG.info(i + 1 + " | " + diffLines[i]);
+    }
+    final Map<Integer, Optional<Integer>> map = PatchParser.getLineTranslation(patch);
+    for (Map.Entry<Integer, Optional<Integer>> e : map.entrySet()) {
+      LOG.info(e.getKey() + " : " + e.getValue().orElse(null));
+    }
+
+    assertThat(map.get(6).orElse(null)) //
+        .isEqualTo(6);
+    assertThat(map.get(7).orElse(null)) //
+        .isNull();
+    assertThat(map.get(8).orElse(null)) //
+        .isEqualTo(8);
+
+    assertThat(map.get(12).orElse(null)) //
+        .isEqualTo(12);
+    assertThat(map.get(13).orElse(null)) //
+        .isNull();
+    assertThat(map.get(14).orElse(null)) //
+        .isNull();
+    assertThat(map.get(15).orElse(null)) //
+        .isNull();
+    assertThat(map.get(16).orElse(null)) //
+        .isEqualTo(13);
   }
 }
