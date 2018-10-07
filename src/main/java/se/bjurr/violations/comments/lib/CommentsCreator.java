@@ -24,10 +24,14 @@ import se.bjurr.violations.lib.util.Optional;
 public class CommentsCreator {
   public static final String FINGERPRINT =
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
-  private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CommentsCreator.class);
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
   private final ViolationsLogger violationsLogger;
 
+  /**
+   * Create a bulk comment containing all violations and/or individual comments for each violation
+   * depending on the {@link CommentsProvider} configuration.
+   */
   public static void createComments(
       final ViolationsLogger violationsLogger,
       final List<Violation> violations,
@@ -59,22 +63,30 @@ public class CommentsCreator {
     this.maxCommentSize = maxCommentSize;
   }
 
+  /**
+   * Create a bulk comment containing all violations and/or individual comments for each violation
+   * depending on the {@link CommentsProvider} configuration.
+   */
   public void createComments() {
-    if (commentsProvider.shouldCreateCommentWithAllSingleFileComments()) {
-      createCommentWithAllSingleFileComments();
+    if (commentsProvider.shouldCreateBulkComment()) {
+      createBulkComment();
     }
-    if (commentsProvider.shouldCreateSingleFileComment()) {
-      createSingleFileComments();
+    if (commentsProvider.shouldCreateCommentPerViolation()) {
+      createCommentPerViolation();
     }
-    if (!commentsProvider.shouldCreateCommentWithAllSingleFileComments()
-        && !commentsProvider.shouldCreateSingleFileComment()) {
+    if (!commentsProvider.shouldCreateBulkComment()
+        && !commentsProvider.shouldCreateCommentPerViolation()) {
       violationsLogger.log(
           INFO,
           "Will not comment because both 'CreateCommentWithAllSingleFileComments' and 'CreateSingleFileComment' is false.");
     }
   }
 
-  private void createCommentWithAllSingleFileComments() {
+  /**
+   * Create a comment containing the accumulated violations and comments of all files. The comment
+   * is split into several comments if it is longer than the maximum comment length.
+   */
+  private void createBulkComment() {
     final List<String> accumulatedComments =
         getAccumulatedComments(
             violations, files, commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
@@ -97,12 +109,13 @@ public class CommentsCreator {
 
       final boolean commentHasNotBeenMade = alreadyMadeComments.isEmpty();
       if (commentHasNotBeenMade) {
-        commentsProvider.createCommentWithAllSingleFileComments(accumulatedComment);
+        commentsProvider.createBulkComment(accumulatedComment);
       }
     }
   }
 
-  private void createSingleFileComments() {
+  /** Create a comment for each violation. */
+  private void createCommentPerViolation() {
     List<Comment> oldComments = commentsProvider.getComments();
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
     oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
@@ -122,7 +135,7 @@ public class CommentsCreator {
       final Optional<ChangedFile> changedFile = findChangedFile(files, violation);
       if (changedFile.isPresent()) {
         final String commentTemplate = commentsProvider.findCommentTemplate().orNull();
-        final String singleFileCommentContent =
+        final String commentContent =
             createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
         violationsLogger.log(
             INFO,
@@ -132,13 +145,13 @@ public class CommentsCreator {
                 + " "
                 + violation.getRule()
                 + " "
-                + changedFile.get().getFilename()
+                + changedFile.get()
                 + " "
                 + violation.getStartLine()
                 + " "
                 + violation.getSource());
-        commentsProvider.createSingleFileComment(
-            changedFile.get(), violation.getStartLine(), singleFileCommentContent);
+        commentsProvider.createViolationComment(
+            changedFile.get(), commentContent, violation.getStartLine());
       }
     }
   }

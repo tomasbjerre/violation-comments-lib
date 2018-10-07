@@ -5,6 +5,12 @@ import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.util.Optional;
 
+/**
+ * Callback interface for applications that supply the comments to a consumer. The implementation of
+ * it defines which kind of callback should be made.
+ *
+ * @author Tomas Bjerre, Patrizio Bonzani
+ */
 public interface CommentsProvider {
 
   /**
@@ -12,16 +18,16 @@ public interface CommentsProvider {
    *
    * @param string The combined comments.
    */
-  void createCommentWithAllSingleFileComments(String string);
+  void createBulkComment(String string);
 
   /**
-   * Create a discussion on the diff on the line the violation occurred.
+   * Create a comment on the on the line the violation occurred.
    *
    * @param file The file in which the violation occurred.
-   * @param line The line number after the patch.
-   * @param comment The text of the comment.
+   * @param content The text of the comment.
+   * @param line The line number on which the violation occurred.
    */
-  void createSingleFileComment(ChangedFile file, Integer line, String comment);
+  void createViolationComment(ChangedFile file, String content, Integer line);
 
   List<Comment> getComments();
 
@@ -31,9 +37,20 @@ public interface CommentsProvider {
 
   boolean shouldComment(ChangedFile changedFile, Integer line);
 
-  boolean shouldCreateCommentWithAllSingleFileComments();
+  /**
+   * Returns if comments and violations should be combined into one comment.
+   *
+   * @return <code>true</code> if the comments should be combined, <code>false</code> otherwise.
+   */
+  boolean shouldCreateBulkComment();
 
-  boolean shouldCreateSingleFileComment();
+  /**
+   * Returns if a comment per violation should be made on the diff.
+   *
+   * @return <code>true</code> if each comment containing the violation should be posted on the
+   *     diff, <code>false</code> otherwise.
+   */
+  boolean shouldCreateCommentPerViolation();
 
   boolean shouldKeepOldComments();
 
