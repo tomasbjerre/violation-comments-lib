@@ -16,11 +16,11 @@ public class PatchParser {
           "@@\\p{IsWhite_Space}-[0-9]+(?:,[0-9]+)?\\p{IsWhite_Space}\\+([0-9]+)(?:,[0-9]+)?\\p{IsWhite_Space}@@.*");
 
   private final Map<Integer, Optional<Integer>> newLineToOldLineTable;
-  private final Map<Integer, Optional<Integer>> newLineToPatchLocationTable;
+  private final Map<Integer, Optional<Integer>> newLineToLineInDiffTable;
 
   public PatchParser(String patchString) {
     newLineToOldLineTable = new TreeMap<>();
-    newLineToPatchLocationTable = new TreeMap<>();
+    newLineToLineInDiffTable = new TreeMap<>();
     if (patchString == null) {
       return;
     }
@@ -47,27 +47,26 @@ public class PatchParser {
         patchLocation++;
       }
       diffLocation++;
-      newLineToPatchLocationTable.put(currentLine, of(diffLocation));
+      newLineToLineInDiffTable.put(currentLine, of(diffLocation));
     }
   }
 
   public boolean isLineInDiff(Integer newLine) {
-    return newLineToOldLineTable.containsKey(newLine);
+    return newLineToLineInDiffTable.containsKey(newLine);
   }
 
-  public Integer getOldLine(Integer newLine) {
-    if (!newLineToOldLineTable.containsKey(newLine)) {
-      return null;
+  public Optional<Integer> findOldLine(Integer newLine) {
+    if (newLineToOldLineTable.containsKey(newLine)) {
+      return newLineToOldLineTable.get(newLine);
     }
-    return newLineToOldLineTable.get(newLine).orElse(null);
+    return empty();
   }
 
   public Optional<Integer> findLineInDiff(final int newLine) {
-    if (newLineToPatchLocationTable.containsKey(newLine)) {
-      return newLineToPatchLocationTable.get(newLine);
-    } else {
-      return empty();
+    if (newLineToLineInDiffTable.containsKey(newLine)) {
+      return newLineToLineInDiffTable.get(newLine);
     }
+    return empty();
   }
 
   Map<Integer, Optional<Integer>> getNewLineToOldLineTable() {

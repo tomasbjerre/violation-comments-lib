@@ -67,14 +67,14 @@ public class PatchParserTest {
 
     assertThat(pp.isLineInDiff(999)) //
         .isFalse();
-    assertThat(pp.getOldLine(999)) //
+    assertThat(pp.findOldLine(999).orElse(null)) //
         .isNull();
     assertThat(pp.findLineInDiff(999).orElse(null)) //
         .isNull();
 
     assertThat(pp.isLineInDiff(6)) //
         .isTrue();
-    assertThat(pp.getOldLine(6)) //
+    assertThat(pp.findOldLine(6).orElse(null)) //
         .isEqualTo(6);
     assertThat(pp.findLineInDiff(6).orElse(null)) //
         .isEqualTo(5);
