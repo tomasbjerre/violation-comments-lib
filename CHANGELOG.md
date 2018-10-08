@@ -3,8 +3,13 @@
 
 Changelog of Violation comments lib.
 
-## Unreleased
+## 1.78
 ### No issue
+
+**Ease avoid NPE in PatchParser**
+
+
+[0720ba159848140](https://github.com/tomasbjerre/violation-comments-lib/commit/0720ba159848140) Tomas Bjerre *2018-10-08 15:57:54*
 
 **Removing custom Optional**
 
