@@ -2,8 +2,6 @@ package se.bjurr.violations.comments.lib;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -21,61 +19,65 @@ public class PatchParserTest {
 
   @Test
   public void testThatChangedContentCanBeCommented() {
-    assertThat(findLineToComment("filename", "patch", 1)) //
+    assertThat(findLineToComment("patch", 1)) //
         .isNull();
   }
 
   @Test
   public void testThatChangedContentCanBeCommentedNewFile() {
-    assertThat(findLineToComment("filename", NEW_DIFF, 1)) //
+    assertThat(findLineToComment(NEW_DIFF, 1)) //
         .isEqualTo(1);
 
-    assertThat(findLineToComment("filename", NEW_DIFF, 1)) //
-        .isEqualTo(1);
-
-    assertThat(findLineToComment("filename", NEW_DIFF, 5)) //
-        .isEqualTo(6);
-
-    assertThat(findLineToComment("filename", NEW_DIFF, 5)) //
+    assertThat(findLineToComment(NEW_DIFF, 5)) //
         .isEqualTo(6);
   }
 
   @Test
   public void testThatChangedContentCanBeCommentedChangedFile() {
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 1)) //
+    assertThat(findLineToComment(CHANGED_DIFF, 1)) //
         .isEqualTo(2);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 1)) //
-        .isEqualTo(2);
-
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 4)) //
-        .isEqualTo(5);
-
-    assertThat(findLineToComment("filename", CHANGED_DIFF, 4)) //
+    assertThat(findLineToComment(CHANGED_DIFF, 4)) //
         .isEqualTo(5);
   }
 
   @Test
   public void testThatChangedContentCanBeCommentedChangedPartsOfFile() {
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 6)) //
+    assertThat(findLineToComment(CHANGED_DIFF_2, 6)) //
         .isEqualTo(1);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 8)) //
+    assertThat(findLineToComment(CHANGED_DIFF_2, 8)) //
         .isEqualTo(3);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 14)) //
+    assertThat(findLineToComment(CHANGED_DIFF_2, 14)) //
         .isEqualTo(9);
 
-    assertThat(findLineToComment("filename", CHANGED_DIFF_2, 21)) //
+    assertThat(findLineToComment(CHANGED_DIFF_2, 21)) //
         .isEqualTo(16);
   }
 
-  private Integer findLineToComment(String filename, String patch, int commentLint) {
-    List<String> list = new ArrayList<>();
-    list.add(patch);
-    return PatchParser // .
-        .findLineToComment(patch, commentLint) //
-        .orElse(null);
+  @Test
+  public void testThatOldLineIsEmptyIfOutsideOfDiff() {
+    String patch =
+        "--- a/src/main/java/se/bjurr/violations/lib/example/OtherClass.java\n+++ b/src/main/java/se/bjurr/violations/lib/example/OtherClass.java\n@@ -4,12 +4,15 @@ package se.bjurr.violations.lib.example;\n  * No ending dot\n  */\n public class OtherClass {\n- public static String CoNstANT = \"yes\";\n+ public static String CoNstANT = \"yes\"; \n \n  public void myMethod() {\n   if (CoNstANT.equals(\"abc\")) {\n \n   }\n+  if (CoNstANT.equals(\"abc\")) {\n+\n+  }\n  }\n \n  @Override\n";
+
+    getIntegerOptionalMap(patch);
+
+    final PatchParser pp = new PatchParser(patch);
+
+    assertThat(pp.isLineInDiff(999)) //
+        .isFalse();
+    assertThat(pp.getOldLine(999)) //
+        .isNull();
+    assertThat(pp.findLineInDiff(999).orElse(null)) //
+        .isNull();
+
+    assertThat(pp.isLineInDiff(6)) //
+        .isTrue();
+    assertThat(pp.getOldLine(6)) //
+        .isEqualTo(6);
+    assertThat(pp.findLineInDiff(6).orElse(null)) //
+        .isEqualTo(5);
   }
 
   @Test
@@ -119,13 +121,23 @@ public class PatchParserTest {
         .isEqualTo(12);
   }
 
+  private Integer findLineToComment(String patch, int commentLint) {
+    getIntegerOptionalMap(patch);
+
+    return new PatchParser(patch) //
+        .findLineInDiff(commentLint) //
+        .orElse(null);
+  }
+
   private Map<Integer, Optional<Integer>> getIntegerOptionalMap(final String patch) {
     String[] diffLines = patch.split("\n");
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < diffLines.length; i++) {
       sb.append(i + 1 + " | " + diffLines[i] + "\n");
     }
-    final Map<Integer, Optional<Integer>> map = PatchParser.getLineTranslation(patch);
+    final Map<Integer, Optional<Integer>> map =
+        new PatchParser(patch) //
+            .getNewLineToOldLineTable();
     for (Map.Entry<Integer, Optional<Integer>> e : map.entrySet()) {
       sb.append(e.getKey() + " : " + e.getValue().orElse(null) + "\n");
     }

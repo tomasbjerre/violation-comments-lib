@@ -6,6 +6,11 @@ Changelog of Violation comments lib.
 ## Unreleased
 ### No issue
 
+**Removing custom Optional**
+
+
+[d753fe027d7c269](https://github.com/tomasbjerre/violation-comments-lib/commit/d753fe027d7c269) Tomas Bjerre *2018-10-08 14:53:14*
+
 **Compile static pattern just once.**
 
  * Signed-off-by: Patrizio Bonzani &lt;bonzani@users.noreply.github.com&gt; 

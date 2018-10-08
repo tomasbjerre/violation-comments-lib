@@ -1,6 +1,7 @@
 package se.bjurr.violations.comments.lib;
 
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 import java.util.Map;
 import java.util.Optional;
@@ -14,40 +15,18 @@ public class PatchParser {
       Pattern.compile(
           "@@\\p{IsWhite_Space}-[0-9]+(?:,[0-9]+)?\\p{IsWhite_Space}\\+([0-9]+)(?:,[0-9]+)?\\p{IsWhite_Space}@@.*");
 
-  /** http://en.wikipedia.org/wiki/Diff_utility#Unified_format */
-  public static Optional<Integer> findLineToComment(String patchString, Integer lineToComment) {
-    if (patchString == null) {
-      return empty();
-    }
-    int currentLine = -1;
-    int patchLocation = 0;
-    for (String line : patchString.split("\n")) {
-      if (line.startsWith("@")) {
-        Matcher matcher = RANGE_PATTERN.matcher(line);
-        if (!matcher.matches()) {
-          throw new IllegalStateException(
-              "Unable to parse patch line " + line + "\nFull patch: \n" + patchString);
-        }
-        currentLine = Integer.parseInt(matcher.group(1));
-      } else if (line.startsWith("+") || line.startsWith(" ")) {
-        // Added or unmodified
-        if (currentLine == lineToComment) {
-          return Optional.ofNullable(patchLocation);
-        }
-        currentLine++;
-      }
-      patchLocation++;
-    }
-    return empty();
-  }
+  private final Map<Integer, Optional<Integer>> newLineToOldLineTable;
+  private final Map<Integer, Optional<Integer>> newLineToPatchLocationTable;
 
-  public static Map<Integer, Optional<Integer>> getLineTranslation(final String patchString) {
-    final Map<Integer, Optional<Integer>> map = new TreeMap<>();
+  public PatchParser(String patchString) {
+    newLineToOldLineTable = new TreeMap<>();
+    newLineToPatchLocationTable = new TreeMap<>();
     if (patchString == null) {
-      return map;
+      return;
     }
     int currentLine = -1;
     int patchLocation = 1;
+    int diffLocation = 0;
     for (String line : patchString.split("\n")) {
       if (line.startsWith("@")) {
         Matcher matcher = RANGE_PATTERN.matcher(line);
@@ -58,16 +37,40 @@ public class PatchParser {
         currentLine = Integer.parseInt(matcher.group(1));
         patchLocation = currentLine;
       } else if (line.startsWith("+") && !line.startsWith("++")) {
-        map.put(currentLine, Optional.empty());
+        newLineToOldLineTable.put(currentLine, empty());
         currentLine++;
       } else if (line.startsWith(" ")) {
-        map.put(currentLine, Optional.of(patchLocation));
+        newLineToOldLineTable.put(currentLine, of(patchLocation));
         currentLine++;
         patchLocation++;
       } else {
         patchLocation++;
       }
+      diffLocation++;
+      newLineToPatchLocationTable.put(currentLine, of(diffLocation));
     }
-    return map;
+  }
+
+  public boolean isLineInDiff(Integer newLine) {
+    return newLineToOldLineTable.containsKey(newLine);
+  }
+
+  public Integer getOldLine(Integer newLine) {
+    if (!newLineToOldLineTable.containsKey(newLine)) {
+      return null;
+    }
+    return newLineToOldLineTable.get(newLine).orElse(null);
+  }
+
+  public Optional<Integer> findLineInDiff(final int newLine) {
+    if (newLineToPatchLocationTable.containsKey(newLine)) {
+      return newLineToPatchLocationTable.get(newLine);
+    } else {
+      return empty();
+    }
+  }
+
+  Map<Integer, Optional<Integer>> getNewLineToOldLineTable() {
+    return newLineToOldLineTable;
   }
 }
