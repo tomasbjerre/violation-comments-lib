@@ -1,9 +1,9 @@
 package se.bjurr.violations.comments.lib;
 
+import static java.util.Optional.ofNullable;
 import static se.bjurr.violations.comments.lib.ChangedFileUtils.findChangedFile;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
-import static se.bjurr.violations.lib.util.Optional.fromNullable;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.ViolationData;
 import se.bjurr.violations.lib.model.Violation;
-import se.bjurr.violations.lib.util.Optional;
 
 public class ViolationRenderer {
   private static final String DEFAULT_VIOLATION_TEMPLATE_MUSTACH =
@@ -53,7 +53,7 @@ public class ViolationRenderer {
       final ChangedFile changedFile, final Violation violation, final String commentTemplate) {
     final MustacheFactory mf = new DefaultMustacheFactory();
     Reader templateReader = null;
-    final Optional<String> commentTemplateOpt = fromNullable(commentTemplate);
+    final Optional<String> commentTemplateOpt = ofNullable(commentTemplate);
     if (commentTemplateOpt.isPresent() && !commentTemplateOpt.get().isEmpty()) {
       templateReader = new StringReader(commentTemplateOpt.get());
     } else {

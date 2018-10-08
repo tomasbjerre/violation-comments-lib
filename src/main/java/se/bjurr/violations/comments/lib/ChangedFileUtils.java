@@ -1,12 +1,12 @@
 package se.bjurr.violations.comments.lib;
 
-import static se.bjurr.violations.lib.util.Optional.absent;
-import static se.bjurr.violations.lib.util.Optional.fromNullable;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 import java.util.List;
+import java.util.Optional;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.lib.model.Violation;
-import se.bjurr.violations.lib.util.Optional;
 
 public class ChangedFileUtils {
 
@@ -23,9 +23,9 @@ public class ChangedFileUtils {
       String violationFile = violation.getFile();
       String fileFile = providerFile.getFilename();
       if (violationFile.endsWith(fileFile) || fileFile.endsWith(violationFile)) {
-        return fromNullable(providerFile);
+        return ofNullable(providerFile);
       }
     }
-    return absent();
+    return empty();
   }
 }

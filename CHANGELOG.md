@@ -3,6 +3,16 @@
 
 Changelog of Violation comments lib.
 
+## Unreleased
+### No issue
+
+**Compile static pattern just once.**
+
+ * Signed-off-by: Patrizio Bonzani &lt;bonzani@users.noreply.github.com&gt; 
+
+[39c9103988f97c4](https://github.com/tomasbjerre/violation-comments-lib/commit/39c9103988f97c4) Patrizio Bonzani *2018-10-07 14:18:58*
+
+
 ## 1.77
 ### No issue
 

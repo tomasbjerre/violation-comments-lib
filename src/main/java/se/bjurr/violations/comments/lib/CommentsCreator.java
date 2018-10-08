@@ -12,6 +12,7 @@ import static se.bjurr.violations.lib.util.Utils.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import org.slf4j.Logger;
@@ -19,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.model.Violation;
-import se.bjurr.violations.lib.util.Optional;
 
 public class CommentsCreator {
   public static final String FINGERPRINT =
@@ -77,7 +77,7 @@ public class CommentsCreator {
   private void createCommentWithAllSingleFileComments() {
     final List<String> accumulatedComments =
         getAccumulatedComments(
-            violations, files, commentsProvider.findCommentTemplate().orNull(), maxCommentSize);
+            violations, files, commentsProvider.findCommentTemplate().orElse(null), maxCommentSize);
     for (final String accumulatedComment : accumulatedComments) {
       violationsLogger.log(
           INFO,
@@ -121,7 +121,7 @@ public class CommentsCreator {
       }
       final Optional<ChangedFile> changedFile = findChangedFile(files, violation);
       if (changedFile.isPresent()) {
-        final String commentTemplate = commentsProvider.findCommentTemplate().orNull();
+        final String commentTemplate = commentsProvider.findCommentTemplate().orElse(null);
         final String singleFileCommentContent =
             createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
         violationsLogger.log(

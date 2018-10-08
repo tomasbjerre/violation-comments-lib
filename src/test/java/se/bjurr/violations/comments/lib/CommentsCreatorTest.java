@@ -1,6 +1,7 @@
 package se.bjurr.violations.comments.lib;
 
 import static java.lang.Integer.MAX_VALUE;
+import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
@@ -12,6 +13,7 @@ import static se.bjurr.violations.lib.reports.Parser.ANDROIDLINT;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Before;
@@ -19,7 +21,6 @@ import org.junit.Test;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.model.Violation;
-import se.bjurr.violations.lib.util.Optional;
 import se.bjurr.violations.lib.util.Utils;
 
 public class CommentsCreatorTest {
@@ -71,7 +72,7 @@ public class CommentsCreatorTest {
 
         @Override
         public Optional<String> findCommentTemplate() {
-          return Optional.absent();
+          return empty();
         }
 
         @Override
@@ -202,7 +203,7 @@ public class CommentsCreatorTest {
             ViolationRenderer.getAccumulatedComments(
                     violations,
                     files,
-                    commentsProvider.findCommentTemplate().orNull(),
+                    commentsProvider.findCommentTemplate().orElse(null),
                     maxCommentSize)
                 .get(0),
             type,

@@ -10,8 +10,9 @@ import java.util.regex.Pattern;
 
 public class PatchParser {
 
-  private static final Pattern RANGE_PATTERN = Pattern.compile(
-      "@@\\p{IsWhite_Space}-[0-9]+(?:,[0-9]+)?\\p{IsWhite_Space}\\+([0-9]+)(?:,[0-9]+)?\\p{IsWhite_Space}@@.*");
+  private static final Pattern RANGE_PATTERN =
+      Pattern.compile(
+          "@@\\p{IsWhite_Space}-[0-9]+(?:,[0-9]+)?\\p{IsWhite_Space}\\+([0-9]+)(?:,[0-9]+)?\\p{IsWhite_Space}@@.*");
 
   /** http://en.wikipedia.org/wiki/Diff_utility#Unified_format */
   public static Optional<Integer> findLineToComment(String patchString, Integer lineToComment) {
