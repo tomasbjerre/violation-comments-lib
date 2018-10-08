@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.79
+### No issue
+
+**Avoiding null**
+
+
+[2892e177204f8fb](https://github.com/tomasbjerre/violation-comments-lib/commit/2892e177204f8fb) Tomas Bjerre *2018-10-08 16:06:44*
+
+
 ## 1.78
 ### No issue
 
