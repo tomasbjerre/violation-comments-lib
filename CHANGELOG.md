@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.81
+### No issue
+
+**Making CodeNarc respect source directory**
+
+
+[fc168235b05478c](https://github.com/tomasbjerre/violation-comments-lib/commit/fc168235b05478c) Tomas Bjerre *2019-01-09 18:28:17*
+
+
 ## 1.80
 ### No issue
 
