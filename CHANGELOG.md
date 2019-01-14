@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.82
+### No issue
+
+**Avoiding faulty slash with CodeNarc**
+
+
+[144278e65293ea0](https://github.com/tomasbjerre/violation-comments-lib/commit/144278e65293ea0) Tomas Bjerre *2019-01-14 17:33:15*
+
+
 ## 1.81
 ### No issue
 
