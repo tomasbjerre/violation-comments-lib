@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.83
+### No issue
+
+**MSCPP and IAR**
+
+
+[2afdb6db192d217](https://github.com/tomasbjerre/violation-comments-lib/commit/2afdb6db192d217) Tomas Bjerre *2019-01-29 17:10:09*
+
+
 ## 1.82
 ### No issue
 
