@@ -15,7 +15,7 @@ It uses a template to render each violation comment. There is a default that can
 
 The context available when the template is rendered is:
 
- * `violation` that is an instance of [Violation](https://github.com/tomasbjerre/violations-lib/blob/master/src/main/java/se/bjurr/violations/lib/model/Violation.java).
+ * `violation` that is an instance of [Violation](src/main/java/se/bjurr/violations/comments/lib/model/ViolationData.java).
 
 A template may look like:
 
