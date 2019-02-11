@@ -3,6 +3,20 @@
 
 Changelog of Violation comments lib.
 
+## 1.85
+### No issue
+
+**Faulty release**
+
+
+[74dc67749a8b204](https://github.com/tomasbjerre/violation-comments-lib/commit/74dc67749a8b204) Tomas Bjerre *2019-02-11 18:18:43*
+
+**Fixing Flake8 parser**
+
+
+[a064938923c5a61](https://github.com/tomasbjerre/violation-comments-lib/commit/a064938923c5a61) Tomas Bjerre *2019-02-11 18:01:23*
+
+
 ## 1.83
 ### No issue
 
