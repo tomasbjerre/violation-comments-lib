@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.86
+### No issue
+
+**golangci-lint**
+
+
+[d9c2bffa7c69a96](https://github.com/tomasbjerre/violation-comments-lib/commit/d9c2bffa7c69a96) Tomas Bjerre *2019-03-07 15:50:43*
+
+
 ## 1.85
 ### No issue
 
