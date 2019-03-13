@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.87
+### No issue
+
+**Klocwork line numbers**
+
+
+[2586ffa596c30f5](https://github.com/tomasbjerre/violation-comments-lib/commit/2586ffa596c30f5) Tomas Bjerre *2019-03-13 19:14:16*
+
+
 ## 1.86
 ### No issue
 
