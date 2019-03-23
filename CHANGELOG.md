@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.88
+### No issue
+
+**Sonar Report**
+
+
+[f4f38602f79cbc7](https://github.com/tomasbjerre/violation-comments-lib/commit/f4f38602f79cbc7) Tomas Bjerre *2019-03-23 14:33:00*
+
+
 ## 1.87
 ### No issue
 
