@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.94
+### No issue
+
+**maxNumberOfViolations**
+
+
+[17fb929e65c48ef](https://github.com/tomasbjerre/violation-comments-lib/commit/17fb929e65c48ef) Tomas Bjerre *2019-03-31 11:20:24*
+
+
 ## 1.93
 ### No issue
 
