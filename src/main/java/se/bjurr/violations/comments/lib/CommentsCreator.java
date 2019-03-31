@@ -32,21 +32,19 @@ public class CommentsCreator {
       final CommentsProvider commentsProvider) {
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(violationsLogger, commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(violationsLogger, commentsProvider, violations);
     commentsCreator.createComments();
   }
 
   private final CommentsProvider commentsProvider;
   private final List<ChangedFile> files;
 
-  private final Integer maxCommentSize;
   private final List<Violation> violations;
 
   CommentsCreator(
       final ViolationsLogger violationsLogger,
       final CommentsProvider commentsProvider,
-      final List<Violation> violations,
-      final Integer maxCommentSize) {
+      final List<Violation> violations) {
     checkNotNull(violations, "violations");
     checkNotNull(commentsProvider, "commentsProvider");
     this.violationsLogger = checkNotNull(violationsLogger, "violationsLogger");
@@ -58,7 +56,6 @@ public class CommentsCreator {
     } else {
       this.violations = allViolations;
     }
-    this.maxCommentSize = maxCommentSize;
   }
 
   public void createComments() {
@@ -79,7 +76,10 @@ public class CommentsCreator {
   private void createCommentWithAllSingleFileComments() {
     final List<String> accumulatedComments =
         getAccumulatedComments(
-            violations, files, commentsProvider.findCommentTemplate().orElse(null), maxCommentSize);
+            violations,
+            files,
+            commentsProvider.findCommentTemplate().orElse(null),
+            commentsProvider.getMaxCommentSize());
     for (final String accumulatedComment : accumulatedComments) {
       violationsLogger.log(
           INFO,

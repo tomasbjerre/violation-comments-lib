@@ -40,4 +40,6 @@ public interface CommentsProvider {
   Optional<String> findCommentTemplate();
 
   int getMaxNumberOfComments();
+
+  Integer getMaxCommentSize();
 }

@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## Unreleased
+### GitHub [#8](https://github.com/tomasbjerre/violation-comments-lib/issues/8) Please add option to limit number of comments    *enhancement*  
+
+**maxNumberOfComments**
+
+
+[2b31f748563eb1f](https://github.com/tomasbjerre/violation-comments-lib/commit/2b31f748563eb1f) Tomas Bjerre *2019-03-31 08:11:17*
+
+
 ## 1.89
 ### No issue
 

@@ -84,6 +84,11 @@ public class CommentsCreatorTest {
         public int getMaxNumberOfComments() {
           return maxNumberOfComments;
         }
+
+        @Override
+        public Integer getMaxCommentSize() {
+          return maxCommentSize;
+        }
       };
   private List<String> createCommentWithAllSingleFileComments;
   private List<String> createSingleFileComment;
@@ -162,7 +167,7 @@ public class CommentsCreatorTest {
     files.add(new ChangedFile("file2", null));
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(logger, commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(logger, commentsProvider, violations);
 
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
@@ -199,7 +204,7 @@ public class CommentsCreatorTest {
     files.add(new ChangedFile("file2", null));
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(logger, commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(logger, commentsProvider, violations);
 
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
@@ -246,7 +251,7 @@ public class CommentsCreatorTest {
     files.add(file2);
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(logger, commentsProvider, violations, maxCommentSize);
+        new CommentsCreator(logger, commentsProvider, violations);
 
     existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
     existingComments.add(
