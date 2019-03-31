@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.92
+### No issue
+
+**Allow null max comment size**
+
+
+[04a18026524de98](https://github.com/tomasbjerre/violation-comments-lib/commit/04a18026524de98) Tomas Bjerre *2019-03-31 08:45:43*
+
+
 ## 1.91
 ### No issue
 
