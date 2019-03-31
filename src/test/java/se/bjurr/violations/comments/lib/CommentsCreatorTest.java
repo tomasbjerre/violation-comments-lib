@@ -1,6 +1,5 @@
 package se.bjurr.violations.comments.lib;
 
-import static java.lang.Integer.MAX_VALUE;
 import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
@@ -123,7 +122,6 @@ public class CommentsCreatorTest {
     files = new ArrayList<>();
     removeComments = new ArrayList<>();
     violations = new ArrayList<>();
-    maxCommentSize = MAX_VALUE;
   }
 
   private final Violation violation1 =
@@ -314,8 +312,6 @@ public class CommentsCreatorTest {
 
     files.add(new ChangedFile("file1", null));
 
-    maxCommentSize = MAX_VALUE;
-
     createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
@@ -356,8 +352,6 @@ public class CommentsCreatorTest {
             .build());
 
     files.add(new ChangedFile("file1", null));
-
-    maxCommentSize = MAX_VALUE;
 
     Utils.setReporter(violations, "CustomReporter");
 
@@ -456,8 +450,6 @@ public class CommentsCreatorTest {
 
     files.add(new ChangedFile("file1", null));
 
-    maxCommentSize = MAX_VALUE;
-
     createComments(logger, violations, maxCommentSize, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
@@ -489,8 +481,6 @@ public class CommentsCreatorTest {
     shouldCreateCommentWithAllSingleFileComments = false;
 
     files.add(new ChangedFile("file1", null));
-
-    maxCommentSize = MAX_VALUE;
 
     createComments(logger, violations, maxCommentSize, commentsProvider);
 
@@ -530,8 +520,6 @@ public class CommentsCreatorTest {
 
     files.add(new ChangedFile("file1", null));
     files.add(new ChangedFile("file2", null));
-
-    maxCommentSize = MAX_VALUE;
 
     createComments(logger, violations, maxCommentSize, commentsProvider);
 

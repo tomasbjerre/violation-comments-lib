@@ -37,10 +37,12 @@ public class ViolationRenderer {
       final Optional<ChangedFile> changedFile = findChangedFile(files, violation);
       final String singleFileCommentContent =
           createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
-      if (sb.length() + singleFileCommentContent.length() >= maxCommentSize) {
-        sb.append(" *" + FINGERPRINT_ACC + "*");
-        partitions.add(sb.toString());
-        sb = new StringBuilder();
+      if (maxCommentSize != null) {
+        if (sb.length() + singleFileCommentContent.length() >= maxCommentSize) {
+          sb.append(" *" + FINGERPRINT_ACC + "*");
+          partitions.add(sb.toString());
+          sb = new StringBuilder();
+        }
       }
       sb.append(singleFileCommentContent + "\n");
     }
