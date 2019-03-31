@@ -26,7 +26,7 @@ import se.bjurr.violations.lib.util.Utils;
 public class CommentsCreatorTest {
   private List<Comment> existingComments;
   private boolean shouldKeepOldComments = false;
-  private int maxNumberOfComments = MAX_VALUE;
+  private Integer maxNumberOfComments = null;
   private final CommentsProvider commentsProvider =
       new CommentsProvider() {
         @Override
@@ -81,7 +81,7 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public int getMaxNumberOfComments() {
+        public Integer getMaxNumberOfComments() {
           return maxNumberOfComments;
         }
 
@@ -124,7 +124,6 @@ public class CommentsCreatorTest {
     removeComments = new ArrayList<>();
     violations = new ArrayList<>();
     maxCommentSize = MAX_VALUE;
-    maxNumberOfComments = MAX_VALUE;
   }
 
   private final Violation violation1 =
