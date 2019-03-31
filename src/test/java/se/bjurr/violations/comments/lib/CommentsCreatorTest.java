@@ -25,7 +25,7 @@ import se.bjurr.violations.lib.util.Utils;
 public class CommentsCreatorTest {
   private List<Comment> existingComments;
   private boolean shouldKeepOldComments = false;
-  private Integer maxNumberOfComments = null;
+  private Integer maxNumberOfViolations = null;
   private final CommentsProvider commentsProvider =
       new CommentsProvider() {
         @Override
@@ -80,8 +80,8 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public Integer getMaxNumberOfComments() {
-          return maxNumberOfComments;
+        public Integer getMaxNumberOfViolations() {
+          return maxNumberOfViolations;
         }
 
         @Override
@@ -559,21 +559,21 @@ public class CommentsCreatorTest {
 
     createCommentWithAllSingleFileComments.clear();
     createSingleFileComment.clear();
-    this.maxNumberOfComments = 0;
+    this.maxNumberOfViolations = 0;
     createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(0);
 
     createCommentWithAllSingleFileComments.clear();
     createSingleFileComment.clear();
-    this.maxNumberOfComments = 1;
+    this.maxNumberOfViolations = 1;
     createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(1);
 
     createCommentWithAllSingleFileComments.clear();
     createSingleFileComment.clear();
-    this.maxNumberOfComments = 2;
+    this.maxNumberOfViolations = 2;
     createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(2);

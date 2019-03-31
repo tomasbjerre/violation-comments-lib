@@ -50,9 +50,9 @@ public class CommentsCreator {
     this.commentsProvider = commentsProvider;
     files = commentsProvider.getFiles();
     final List<Violation> allViolations = filterChanged(violations);
-    if (commentsProvider.getMaxNumberOfComments() != null
-        && allViolations.size() > commentsProvider.getMaxNumberOfComments()) {
-      this.violations = allViolations.subList(0, commentsProvider.getMaxNumberOfComments());
+    if (commentsProvider.getMaxNumberOfViolations() != null
+        && allViolations.size() > commentsProvider.getMaxNumberOfViolations()) {
+      this.violations = allViolations.subList(0, commentsProvider.getMaxNumberOfViolations());
     } else {
       this.violations = allViolations;
     }

@@ -39,7 +39,7 @@ public interface CommentsProvider {
 
   Optional<String> findCommentTemplate();
 
-  Integer getMaxNumberOfComments();
+  Integer getMaxNumberOfViolations();
 
   Integer getMaxCommentSize();
 }
