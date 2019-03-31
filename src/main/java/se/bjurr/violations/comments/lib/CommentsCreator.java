@@ -28,7 +28,6 @@ public class CommentsCreator {
   public static void createComments(
       final ViolationsLogger violationsLogger,
       final List<Violation> violations,
-      final Integer maxCommentSize,
       final CommentsProvider commentsProvider) {
 
     final CommentsCreator commentsCreator =

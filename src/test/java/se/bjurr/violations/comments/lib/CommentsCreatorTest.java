@@ -294,7 +294,7 @@ public class CommentsCreatorTest {
     shouldCreateCommentWithAllSingleFileComments = true;
     shouldCreateSingleFileComment = true;
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(1);
@@ -312,7 +312,7 @@ public class CommentsCreatorTest {
 
     files.add(new ChangedFile("file1", null));
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
         .isEqualTo(asFile("testMarkdownCommentWithSource.md"));
@@ -355,7 +355,7 @@ public class CommentsCreatorTest {
 
     Utils.setReporter(violations, "CustomReporter");
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
         .isEqualTo(asFile("testMarkdownCustomReporter1.md"));
@@ -398,7 +398,7 @@ public class CommentsCreatorTest {
 
     maxCommentSize = 10;
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(3);
@@ -412,7 +412,7 @@ public class CommentsCreatorTest {
 
   @Test
   public void testWithNoComments() {
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .isEmpty();
@@ -450,7 +450,7 @@ public class CommentsCreatorTest {
 
     files.add(new ChangedFile("file1", null));
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(1);
@@ -482,7 +482,7 @@ public class CommentsCreatorTest {
 
     files.add(new ChangedFile("file1", null));
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(0);
@@ -521,7 +521,7 @@ public class CommentsCreatorTest {
     files.add(new ChangedFile("file1", null));
     files.add(new ChangedFile("file2", null));
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
 
     assertThat(createCommentWithAllSingleFileComments) //
         .hasSize(1);
@@ -553,28 +553,28 @@ public class CommentsCreatorTest {
     commentsProvider.getFiles().add(new ChangedFile("file1", null));
     files.add(new ChangedFile("file2", null));
 
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(2);
 
     createCommentWithAllSingleFileComments.clear();
     createSingleFileComment.clear();
     this.maxNumberOfComments = 0;
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(0);
 
     createCommentWithAllSingleFileComments.clear();
     createSingleFileComment.clear();
     this.maxNumberOfComments = 1;
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(1);
 
     createCommentWithAllSingleFileComments.clear();
     createSingleFileComment.clear();
     this.maxNumberOfComments = 2;
-    createComments(logger, violations, maxCommentSize, commentsProvider);
+    createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(2);
   }
