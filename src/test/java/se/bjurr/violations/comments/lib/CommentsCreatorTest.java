@@ -26,9 +26,9 @@ import se.bjurr.violations.lib.util.Utils;
 public class CommentsCreatorTest {
   private List<Comment> existingComments;
   private boolean shouldKeepOldComments = false;
+  private int maxNumberOfComments = MAX_VALUE;
   private final CommentsProvider commentsProvider =
       new CommentsProvider() {
-
         @Override
         public void createCommentWithAllSingleFileComments(final String string) {
           createCommentWithAllSingleFileComments.add(string);
@@ -79,6 +79,11 @@ public class CommentsCreatorTest {
         public boolean shouldKeepOldComments() {
           return shouldKeepOldComments;
         }
+
+        @Override
+        public int getMaxNumberOfComments() {
+          return maxNumberOfComments;
+        }
       };
   private List<String> createCommentWithAllSingleFileComments;
   private List<String> createSingleFileComment;
@@ -88,7 +93,7 @@ public class CommentsCreatorTest {
   private boolean shouldCreateCommentWithAllSingleFileComments = true;
   private boolean shouldCreateSingleFileComment = true;
   private List<Violation> violations;
-  private ViolationsLogger logger =
+  private final ViolationsLogger logger =
       new ViolationsLogger() {
         @Override
         public void log(final Level level, final String string) {
@@ -114,6 +119,7 @@ public class CommentsCreatorTest {
     removeComments = new ArrayList<>();
     violations = new ArrayList<>();
     maxCommentSize = MAX_VALUE;
+    maxNumberOfComments = MAX_VALUE;
   }
 
   private final Violation violation1 =
@@ -531,5 +537,53 @@ public class CommentsCreatorTest {
         .hasSize(2);
     assertThat(removeComments) //
         .isEmpty();
+  }
+
+  @Test
+  public void testThatNumberOfCommentsCanBeLimited() {
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile("file1") //
+            .setMessage("1111111111") //
+            .build());
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile("file2") //
+            .setMessage("2222222222") //
+            .build());
+
+    commentsProvider.getFiles().add(new ChangedFile("file1", null));
+    files.add(new ChangedFile("file2", null));
+
+    createComments(logger, violations, maxCommentSize, commentsProvider);
+    assertThat(createSingleFileComment) //
+        .hasSize(2);
+
+    createCommentWithAllSingleFileComments.clear();
+    createSingleFileComment.clear();
+    this.maxNumberOfComments = 0;
+    createComments(logger, violations, maxCommentSize, commentsProvider);
+    assertThat(createSingleFileComment) //
+        .hasSize(0);
+
+    createCommentWithAllSingleFileComments.clear();
+    createSingleFileComment.clear();
+    this.maxNumberOfComments = 1;
+    createComments(logger, violations, maxCommentSize, commentsProvider);
+    assertThat(createSingleFileComment) //
+        .hasSize(1);
+
+    createCommentWithAllSingleFileComments.clear();
+    createSingleFileComment.clear();
+    this.maxNumberOfComments = 2;
+    createComments(logger, violations, maxCommentSize, commentsProvider);
+    assertThat(createSingleFileComment) //
+        .hasSize(2);
   }
 }

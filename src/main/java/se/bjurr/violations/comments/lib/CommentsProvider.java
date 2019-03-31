@@ -38,4 +38,6 @@ public interface CommentsProvider {
   boolean shouldKeepOldComments();
 
   Optional<String> findCommentTemplate();
+
+  int getMaxNumberOfComments();
 }

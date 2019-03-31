@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.model.Violation;
@@ -24,7 +22,6 @@ import se.bjurr.violations.lib.model.Violation;
 public class CommentsCreator {
   public static final String FINGERPRINT =
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
-  private static final Logger LOG = LoggerFactory.getLogger(CommentsCreator.class);
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
   private final ViolationsLogger violationsLogger;
 
@@ -46,7 +43,7 @@ public class CommentsCreator {
   private final List<Violation> violations;
 
   CommentsCreator(
-      ViolationsLogger violationsLogger,
+      final ViolationsLogger violationsLogger,
       final CommentsProvider commentsProvider,
       final List<Violation> violations,
       final Integer maxCommentSize) {
@@ -55,7 +52,12 @@ public class CommentsCreator {
     this.violationsLogger = checkNotNull(violationsLogger, "violationsLogger");
     this.commentsProvider = commentsProvider;
     files = commentsProvider.getFiles();
-    this.violations = filterChanged(violations);
+    final List<Violation> allViolations = filterChanged(violations);
+    if (allViolations.size() > commentsProvider.getMaxNumberOfComments()) {
+      this.violations = allViolations.subList(0, commentsProvider.getMaxNumberOfComments());
+    } else {
+      this.violations = allViolations;
+    }
     this.maxCommentSize = maxCommentSize;
   }
 
@@ -154,7 +156,7 @@ public class CommentsCreator {
   }
 
   private List<Violation> filterChanged(final List<Violation> mixedViolations) {
-    String changedFiles =
+    final String changedFiles =
         files //
             .stream() //
             .map((f) -> f.getFilename()) //
@@ -162,7 +164,7 @@ public class CommentsCreator {
             .collect(joining("\n  "));
     violationsLogger.log(INFO, "Files changed:\n  " + changedFiles);
 
-    String violationFiles =
+    final String violationFiles =
         mixedViolations //
             .stream() //
             .map((f) -> f.getFile()) //
@@ -172,12 +174,12 @@ public class CommentsCreator {
     violationsLogger.log(INFO, "Files with violations:\n  " + violationFiles);
 
     final List<Violation> isChanged = new ArrayList<>();
-    Set<String> included = new TreeSet<>();
-    Set<String> notIncludedUntouched = new TreeSet<>();
-    Set<String> notIncludedNotChanged = new TreeSet<>();
+    final Set<String> included = new TreeSet<>();
+    final Set<String> notIncludedUntouched = new TreeSet<>();
+    final Set<String> notIncludedNotChanged = new TreeSet<>();
     for (final Violation violation : mixedViolations) {
       final Optional<ChangedFile> file = findChangedFile(files, violation);
-      String violationFile = violation.getFile() + " " + violation.getStartLine();
+      final String violationFile = violation.getFile() + " " + violation.getStartLine();
       if (file.isPresent()) {
         final boolean shouldComment =
             commentsProvider.shouldComment(file.get(), violation.getStartLine());
