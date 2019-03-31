@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.93
+### No issue
+
+**API Cleanup**
+
+
+[9f76c6ed176266e](https://github.com/tomasbjerre/violation-comments-lib/commit/9f76c6ed176266e) Tomas Bjerre *2019-03-31 09:51:20*
+
+
 ## 1.92
 ### No issue
 
