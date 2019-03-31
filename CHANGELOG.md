@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.91
+### No issue
+
+**Defaulting to infinite max**
+
+
+[bdccdab96cb56f4](https://github.com/tomasbjerre/violation-comments-lib/commit/bdccdab96cb56f4) Tomas Bjerre *2019-03-31 08:34:30*
+
+
 ## 1.90
 ### GitHub [#8](https://github.com/tomasbjerre/violation-comments-lib/issues/8) Please add option to limit number of comments    *enhancement*  
 
