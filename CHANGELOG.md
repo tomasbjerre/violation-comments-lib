@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.95
+### No issue
+
+**Cpplint correction to handle line None**
+
+
+[788b18003cfd78b](https://github.com/tomasbjerre/violation-comments-lib/commit/788b18003cfd78b) Tomas Bjerre *2019-04-24 15:48:00*
+
+
 ## 1.94
 ### No issue
 
