@@ -17,7 +17,7 @@ The context available when the template is rendered is:
 
  * `violation` that is an instance of [Violation](src/main/java/se/bjurr/violations/comments/lib/model/ViolationData.java).
 
-A template may look like:
+The templating language is [Mustache](https://github.com/spullara/mustache.java) and may look like:
 
 ```
 **Reporter**: {{violation.reporter}}{{#violation.rule}}
