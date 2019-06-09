@@ -88,6 +88,11 @@ public class CommentsCreatorTest {
         public Integer getMaxCommentSize() {
           return maxCommentSize;
         }
+
+        @Override
+        public boolean shouldCommentEveryViolation() {
+          return false;
+        }
       };
   private List<String> createCommentWithAllSingleFileComments;
   private List<String> createSingleFileComment;

@@ -37,6 +37,14 @@ public interface CommentsProvider {
 
   boolean shouldKeepOldComments();
 
+  /**
+   * Should every violation that has been found be commented? If false only changed files will be
+   * commented on.
+   *
+   * @return Should every violation that has been found be commented
+   */
+  boolean shouldCommentEveryViolation();
+
   Optional<String> findCommentTemplate();
 
   Integer getMaxNumberOfViolations();

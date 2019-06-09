@@ -48,7 +48,22 @@ public class CommentsCreator {
     checkNotNull(commentsProvider, "commentsProvider");
     this.violationsLogger = checkNotNull(violationsLogger, "violationsLogger");
     this.commentsProvider = commentsProvider;
-    files = commentsProvider.getFiles();
+    if (commentsProvider.shouldCommentEveryViolation()) {
+      ArrayList<ChangedFile> changedFilesThingy = new ArrayList<ChangedFile>();
+      String previousFile = "";
+      for (Violation v : violations) {
+        // Violations from the same file, should be next to each other. If previous was this, the
+        // current, we can skip adding
+        if (v.getFile().equals(previousFile)) {
+          continue;
+        }
+        previousFile = v.getFile();
+        changedFilesThingy.add(new ChangedFile(v.getFile(), new ArrayList<String>()));
+      }
+      files = changedFilesThingy;
+    } else {
+      files = commentsProvider.getFiles();
+    }
     final List<Violation> allViolations = filterChanged(violations);
     if (commentsProvider.getMaxNumberOfViolations() != null
         && allViolations.size() > commentsProvider.getMaxNumberOfViolations()) {
