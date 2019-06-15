@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.model.Violation;
@@ -24,6 +25,9 @@ public class CommentsCreator {
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
   private final ViolationsLogger violationsLogger;
+  private final CommentsProvider commentsProvider;
+  private final List<ChangedFile> files;
+  private final List<Violation> violations;
 
   public static void createComments(
       final ViolationsLogger violationsLogger,
@@ -35,11 +39,6 @@ public class CommentsCreator {
     commentsCreator.createComments();
   }
 
-  private final CommentsProvider commentsProvider;
-  private final List<ChangedFile> files;
-
-  private final List<Violation> violations;
-
   CommentsCreator(
       final ViolationsLogger violationsLogger,
       final CommentsProvider commentsProvider,
@@ -49,7 +48,10 @@ public class CommentsCreator {
     this.violationsLogger = checkNotNull(violationsLogger, "violationsLogger");
     this.commentsProvider = commentsProvider;
     files = commentsProvider.getFiles();
-    final List<Violation> allViolations = filterChanged(violations);
+    List<Violation> allViolations = violations;
+    if (commentsProvider.commentOnlyChangedFiles()) {
+      allViolations = filterChanged(files, violations);
+    }
     if (commentsProvider.getMaxNumberOfViolations() != null
         && allViolations.size() > commentsProvider.getMaxNumberOfViolations()) {
       this.violations = allViolations.subList(0, commentsProvider.getMaxNumberOfViolations());
@@ -63,6 +65,10 @@ public class CommentsCreator {
       createCommentWithAllSingleFileComments();
     }
     if (commentsProvider.shouldCreateSingleFileComment()) {
+      if (!commentsProvider.commentOnlyChangedFiles()) {
+        throw new IllegalStateException(
+            "Cannot comment single files when having commentOnlyChangedFiles set to false");
+      }
       createSingleFileComments();
     }
     if (!commentsProvider.shouldCreateCommentWithAllSingleFileComments()
@@ -99,7 +105,7 @@ public class CommentsCreator {
 
       final boolean commentHasNotBeenMade = alreadyMadeComments.isEmpty();
       if (commentHasNotBeenMade) {
-        commentsProvider.createCommentWithAllSingleFileComments(accumulatedComment);
+        commentsProvider.createComment(accumulatedComment);
       }
     }
   }
@@ -155,7 +161,8 @@ public class CommentsCreator {
     }
   }
 
-  private List<Violation> filterChanged(final List<Violation> mixedViolations) {
+  private List<Violation> filterChanged(
+      final List<ChangedFile> files, final List<Violation> mixedViolations) {
     final String changedFiles =
         files //
             .stream() //

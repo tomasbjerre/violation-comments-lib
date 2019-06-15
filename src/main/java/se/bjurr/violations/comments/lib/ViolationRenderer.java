@@ -34,9 +34,11 @@ public class ViolationRenderer {
     StringBuilder sb = new StringBuilder();
     sb.append("Found " + violations.size() + " violations:\n\n");
     for (final Violation violation : violations) {
-      final Optional<ChangedFile> changedFile = findChangedFile(files, violation);
+      final ChangedFile changedFile =
+          findChangedFile(files, violation)
+              .orElse(new ChangedFile(violation.getFile(), new ArrayList<>()));
       final String singleFileCommentContent =
-          createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
+          createSingleFileCommentContent(changedFile, violation, commentTemplate);
       if (maxCommentSize != null) {
         if (sb.length() + singleFileCommentContent.length() >= maxCommentSize) {
           sb.append(" *" + FINGERPRINT_ACC + "*");

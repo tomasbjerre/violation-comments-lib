@@ -8,11 +8,11 @@ import se.bjurr.violations.comments.lib.model.Comment;
 public interface CommentsProvider {
 
   /**
-   * Create a single comment containing all file comments and violations.
+   * Creates a comment.
    *
-   * @param string The combined comments.
+   * @param string The comment.
    */
-  void createCommentWithAllSingleFileComments(String string);
+  void createComment(String string);
 
   /**
    * Create a discussion on the diff on the line the violation occurred.
@@ -36,6 +36,8 @@ public interface CommentsProvider {
   boolean shouldCreateSingleFileComment();
 
   boolean shouldKeepOldComments();
+
+  boolean commentOnlyChangedFiles();
 
   Optional<String> findCommentTemplate();
 

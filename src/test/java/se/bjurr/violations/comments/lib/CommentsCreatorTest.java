@@ -26,10 +26,12 @@ public class CommentsCreatorTest {
   private List<Comment> existingComments;
   private boolean shouldKeepOldComments = false;
   private Integer maxNumberOfViolations = null;
+  private boolean commentOnlyChangedFiles = true;
   private final CommentsProvider commentsProvider =
       new CommentsProvider() {
+
         @Override
-        public void createCommentWithAllSingleFileComments(final String string) {
+        public void createComment(final String string) {
           createCommentWithAllSingleFileComments.add(string);
         }
 
@@ -88,6 +90,11 @@ public class CommentsCreatorTest {
         public Integer getMaxCommentSize() {
           return maxCommentSize;
         }
+
+        @Override
+        public boolean commentOnlyChangedFiles() {
+          return commentOnlyChangedFiles;
+        }
       };
   private List<String> createCommentWithAllSingleFileComments;
   private List<String> createSingleFileComment;
@@ -122,6 +129,7 @@ public class CommentsCreatorTest {
     files = new ArrayList<>();
     removeComments = new ArrayList<>();
     violations = new ArrayList<>();
+    commentOnlyChangedFiles = true;
   }
 
   private final Violation violation1 =
@@ -577,5 +585,63 @@ public class CommentsCreatorTest {
     createComments(logger, violations, commentsProvider);
     assertThat(createSingleFileComment) //
         .hasSize(2);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testCannotCommentSingleFilesWhenCommentingEverything() {
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile("file1") //
+            .setMessage("1111111111") //
+            .build());
+
+    files.add(new ChangedFile("file1", null));
+
+    commentOnlyChangedFiles = false;
+    shouldCreateSingleFileComment = true;
+    shouldCreateCommentWithAllSingleFileComments = true;
+    createComments(logger, violations, commentsProvider);
+  }
+
+  @Test
+  public void testUsingFileFromViolationWhenCommentingEverything() {
+    final String file1Name = "file1/is/changed.java";
+    final String file2Name = "file2/from/violation.java";
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile(file1Name) //
+            .setMessage("1111111111") //
+            .build());
+    violations.add(
+        violationBuilder() //
+            .setParser(ANDROIDLINT) //
+            .setStartLine(1) //
+            .setSeverity(ERROR) //
+            .setFile(file2Name) //
+            .setMessage("1111111111") //
+            .build());
+
+    files.add(new ChangedFile(file1Name, null));
+
+    commentOnlyChangedFiles = false;
+    shouldCreateSingleFileComment = false;
+    shouldCreateCommentWithAllSingleFileComments = true;
+    createComments(logger, violations, commentsProvider);
+
+    assertThat(createCommentWithAllSingleFileComments) //
+        .hasSize(1);
+    assertThat(createCommentWithAllSingleFileComments.get(0)) //
+        .startsWith("Found 2 violations")
+        .contains(file2Name, file1Name);
+    assertThat(createSingleFileComment) //
+        .isEmpty();
+    assertThat(removeComments) //
+        .isEmpty();
   }
 }
