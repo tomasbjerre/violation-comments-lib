@@ -17,6 +17,7 @@ It uses a template to render each violation comment. There is a default that can
 The context available when the template is rendered is:
 
  * `violation` that is an instance of [Violation](src/main/java/se/bjurr/violations/comments/lib/model/ViolationData.java).
+ * `changedFile` that is an instance of [ChangedFile](src/main/java/se/bjurr/violations/comments/lib/model/ChangedFile.java).
 
 The templating language is [Mustache](https://github.com/spullara/mustache.java) and may look like:
 

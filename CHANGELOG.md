@@ -3,6 +3,23 @@
 
 Changelog of Violation comments lib.
 
+## Unreleased
+### GitHub [#10](https://github.com/tomasbjerre/violation-comments-lib/issues/10) Add reference to templating format in README  
+
+**Documenting template language**
+
+
+[a1ccb7941c2738e](https://github.com/tomasbjerre/violation-comments-lib/commit/a1ccb7941c2738e) Tomas Bjerre *2019-05-01 12:11:56*
+
+
+### No issue
+
+**doc**
+
+
+[3de869f01327e75](https://github.com/tomasbjerre/violation-comments-lib/commit/3de869f01327e75) Tomas Bjerre *2019-06-02 17:08:35*
+
+
 ## 1.95
 ### No issue
 
