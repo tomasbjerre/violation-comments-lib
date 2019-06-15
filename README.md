@@ -26,7 +26,7 @@ The templating language is [Mustache](https://github.com/spullara/mustache.java)
 
 **Rule**: {{violation.rule}}{{/violation.rule}}
 **Severity**: {{violation.severity}}
-**File**: {{violation.file}} L{{violation.startLine}}{{#violation.source}}
+**File**: {{changedFile.filename}} L{{violation.startLine}}{{#violation.source}}
 
 **Source**: {{violation.source}}{{/violation.source}}
 

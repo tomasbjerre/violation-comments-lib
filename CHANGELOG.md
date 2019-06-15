@@ -3,7 +3,7 @@
 
 Changelog of Violation comments lib.
 
-## Unreleased
+## 1.96
 ### GitHub [#10](https://github.com/tomasbjerre/violation-comments-lib/issues/10) Add reference to templating format in README  
 
 **Documenting template language**
@@ -13,6 +13,21 @@ Changelog of Violation comments lib.
 
 
 ### No issue
+
+**Adding commentOnlyChangedFiles**
+
+
+[eec24c36c7028bd](https://github.com/tomasbjerre/violation-comments-lib/commit/eec24c36c7028bd) Tomas Bjerre *2019-06-15 18:00:39*
+
+**Using filename from Git service in comments by default**
+
+
+[9839c344192704b](https://github.com/tomasbjerre/violation-comments-lib/commit/9839c344192704b) Tomas Bjerre *2019-06-15 18:00:22*
+
+**OpenJDK 11 compatible**
+
+
+[c573abca2f4f6a4](https://github.com/tomasbjerre/violation-comments-lib/commit/c573abca2f4f6a4) Tomas Bjerre *2019-06-15 17:13:45*
 
 **doc**
 
