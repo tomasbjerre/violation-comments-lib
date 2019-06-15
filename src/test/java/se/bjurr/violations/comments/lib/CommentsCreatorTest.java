@@ -92,7 +92,7 @@ public class CommentsCreatorTest {
         }
 
         @Override
-        public boolean commentOnlyChangedFiles() {
+        public boolean shouldCommentOnlyChangedFiles() {
           return commentOnlyChangedFiles;
         }
       };

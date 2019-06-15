@@ -37,7 +37,7 @@ public interface CommentsProvider {
 
   boolean shouldKeepOldComments();
 
-  boolean commentOnlyChangedFiles();
+  boolean shouldCommentOnlyChangedFiles();
 
   Optional<String> findCommentTemplate();
 

@@ -48,7 +48,7 @@ public class CommentsCreator {
     this.commentsProvider = commentsProvider;
     files = commentsProvider.getFiles();
     List<Violation> allViolations = violations;
-    if (commentsProvider.commentOnlyChangedFiles()) {
+    if (commentsProvider.shouldCommentOnlyChangedFiles()) {
       allViolations = filterChanged(files, violations);
     }
     if (commentsProvider.getMaxNumberOfViolations() != null
@@ -64,7 +64,7 @@ public class CommentsCreator {
       createCommentWithAllSingleFileComments();
     }
     if (commentsProvider.shouldCreateSingleFileComment()) {
-      if (!commentsProvider.commentOnlyChangedFiles()) {
+      if (!commentsProvider.shouldCommentOnlyChangedFiles()) {
         throw new IllegalStateException(
             "Cannot comment single files when having commentOnlyChangedFiles set to false");
       }
