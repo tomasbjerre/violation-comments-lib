@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.97
+### GitHub [#12](https://github.com/tomasbjerre/violation-comments-lib/pull/12) Adding commentOnlyChangedFiles  
+
+**shouldCommentOnlyChangedFiles**
+
+
+[35fedaeccbbf164](https://github.com/tomasbjerre/violation-comments-lib/commit/35fedaeccbbf164) Tomas Bjerre *2019-06-15 18:13:57*
+
+
 ## 1.96
 ### GitHub [#10](https://github.com/tomasbjerre/violation-comments-lib/issues/10) Add reference to templating format in README  
 
