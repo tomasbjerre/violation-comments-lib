@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.98
+### No issue
+
+**junit**
+
+
+[b5af8c18a112912](https://github.com/tomasbjerre/violation-comments-lib/commit/b5af8c18a112912) Tomas Bjerre *2019-06-16 16:17:30*
+
+
 ## 1.97
 ### GitHub [#12](https://github.com/tomasbjerre/violation-comments-lib/pull/12) Adding commentOnlyChangedFiles  
 
