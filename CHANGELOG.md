@@ -3,6 +3,29 @@
 
 Changelog of Violation comments lib.
 
+## 1.99
+### GitHub [#13](https://github.com/tomasbjerre/violation-comments-lib/issues/13) Remove carriage return  
+
+**enh(ViolationRenderer): remove carriage return**
+
+ * Refs: 
+
+[48e47ef4974844e](https://github.com/tomasbjerre/violation-comments-lib/commit/48e47ef4974844e) Kevin Duret *2019-08-29 07:54:36*
+
+
+### No issue
+
+**fix unit tests**
+
+
+[8a52237f8f0bed7](https://github.com/tomasbjerre/violation-comments-lib/commit/8a52237f8f0bed7) Kevin Duret *2019-08-29 13:23:25*
+
+**fix unit tests**
+
+
+[23f4e4c4853d371](https://github.com/tomasbjerre/violation-comments-lib/commit/23f4e4c4853d371) Kevin Duret *2019-08-29 13:00:32*
+
+
 ## 1.98
 ### No issue
 
