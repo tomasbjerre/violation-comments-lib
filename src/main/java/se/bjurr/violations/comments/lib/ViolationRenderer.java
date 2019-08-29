@@ -71,7 +71,7 @@ public class ViolationRenderer {
     final List<Object> scopes = new ArrayList<>();
     scopes.add(context);
     mustache.execute(writer, scopes);
-    return writer.toString() + "\n\n*" + FINGERPRINT + "* *<" + identifier(violation) + ">*";
+    return writer.toString() + "\n*" + FINGERPRINT + "* *<" + identifier(violation) + ">*";
   }
 
   static String identifier(final Violation violation) {
