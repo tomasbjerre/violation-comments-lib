@@ -46,7 +46,7 @@ public class ViolationRenderer {
           sb = new StringBuilder();
         }
       }
-      sb.append(singleFileCommentContent + "\n");
+      sb.append(singleFileCommentContent + "\n\n");
     }
     sb.append(" *" + FINGERPRINT_ACC + "*");
     partitions.add(sb.toString());
