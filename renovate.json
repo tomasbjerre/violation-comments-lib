@@ -1,0 +1,7 @@
+{
+  "packageRules": [
+    {
+      "packagePatterns": ["^se.bjurr.*"]
+    }
+  ]
+}
