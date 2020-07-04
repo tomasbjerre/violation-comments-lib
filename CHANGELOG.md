@@ -3,8 +3,13 @@
 
 Changelog of Violation comments lib.
 
-## Unreleased
+## 1.100
 ### No issue
+
+**New: logging**
+
+
+[b322c5f897044fd](https://github.com/tomasbjerre/violation-comments-lib/commit/b322c5f897044fd) Tomas Bjerre *2020-07-04 06:14:59*
 
 **doc**
 
