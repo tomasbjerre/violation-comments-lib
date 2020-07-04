@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.model.Violation;
@@ -46,33 +47,45 @@ public class CommentsCreator {
     checkNotNull(commentsProvider, "commentsProvider");
     this.violationsLogger = checkNotNull(violationsLogger, "violationsLogger");
     this.commentsProvider = commentsProvider;
-    files = commentsProvider.getFiles();
+    this.files = commentsProvider.getFiles();
     List<Violation> allViolations = violations;
     if (commentsProvider.shouldCommentOnlyChangedFiles()) {
-      allViolations = filterChanged(files, violations);
+      allViolations = this.filterChanged(this.files, violations);
+      this.violationsLogger.log(
+          Level.INFO,
+          "Found "
+              + this.files.size()
+              + " changed files with "
+              + allViolations.size()
+              + " violations");
+    } else {
+      this.violationsLogger.log(Level.INFO, "Found " + allViolations.size() + " violations");
     }
     if (commentsProvider.getMaxNumberOfViolations() != null
         && allViolations.size() > commentsProvider.getMaxNumberOfViolations()) {
       this.violations = allViolations.subList(0, commentsProvider.getMaxNumberOfViolations());
+      this.violationsLogger.log(
+          Level.INFO,
+          "Reducing violations " + allViolations.size() + " to " + this.violations.size());
     } else {
       this.violations = allViolations;
     }
   }
 
   public void createComments() {
-    if (commentsProvider.shouldCreateCommentWithAllSingleFileComments()) {
-      createCommentWithAllSingleFileComments();
+    if (this.commentsProvider.shouldCreateCommentWithAllSingleFileComments()) {
+      this.createCommentWithAllSingleFileComments();
     }
-    if (commentsProvider.shouldCreateSingleFileComment()) {
-      if (!commentsProvider.shouldCommentOnlyChangedFiles()) {
+    if (this.commentsProvider.shouldCreateSingleFileComment()) {
+      if (!this.commentsProvider.shouldCommentOnlyChangedFiles()) {
         throw new IllegalStateException(
             "Cannot comment single files when having commentOnlyChangedFiles set to false");
       }
-      createSingleFileComments();
+      this.createSingleFileComments();
     }
-    if (!commentsProvider.shouldCreateCommentWithAllSingleFileComments()
-        && !commentsProvider.shouldCreateSingleFileComment()) {
-      violationsLogger.log(
+    if (!this.commentsProvider.shouldCreateCommentWithAllSingleFileComments()
+        && !this.commentsProvider.shouldCreateSingleFileComment()) {
+      this.violationsLogger.log(
           INFO,
           "Will not comment because both 'CreateCommentWithAllSingleFileComments' and 'CreateSingleFileComment' is false.");
     }
@@ -81,57 +94,59 @@ public class CommentsCreator {
   private void createCommentWithAllSingleFileComments() {
     final List<String> accumulatedComments =
         getAccumulatedComments(
-            violations,
-            files,
-            commentsProvider.findCommentTemplate().orElse(null),
-            commentsProvider.getMaxCommentSize());
+            this.violations,
+            this.files,
+            this.commentsProvider.findCommentTemplate().orElse(null),
+            this.commentsProvider.getMaxCommentSize());
     for (final String accumulatedComment : accumulatedComments) {
-      violationsLogger.log(
+      this.violationsLogger.log(
           INFO,
           "Asking "
-              + commentsProvider.getClass().getSimpleName()
+              + this.commentsProvider.getClass().getSimpleName()
               + " to create comment with all single file comments.");
-      List<Comment> oldComments = commentsProvider.getComments();
+      List<Comment> oldComments = this.commentsProvider.getComments();
       oldComments = filterCommentsWithContent(oldComments, FINGERPRINT_ACC);
       final List<Comment> alreadyMadeComments =
           filterCommentsWithContent(oldComments, accumulatedComment);
 
-      removeOldCommentsThatAreNotStillReported(oldComments, alreadyMadeComments);
+      this.removeOldCommentsThatAreNotStillReported(oldComments, alreadyMadeComments);
 
-      if (violations.isEmpty()) {
+      if (this.violations.isEmpty()) {
+        this.violationsLogger.log(Level.INFO, "No violations to comment");
         return;
       }
 
       final boolean commentHasNotBeenMade = alreadyMadeComments.isEmpty();
       if (commentHasNotBeenMade) {
-        commentsProvider.createComment(accumulatedComment);
+        this.commentsProvider.createComment(accumulatedComment);
       }
     }
   }
 
   private void createSingleFileComments() {
-    List<Comment> oldComments = commentsProvider.getComments();
+    List<Comment> oldComments = this.commentsProvider.getComments();
     oldComments = filterCommentsWithContent(oldComments, FINGERPRINT);
     oldComments = filterCommentsWithoutContent(oldComments, FINGERPRINT_ACC);
-    violationsLogger.log(
-        INFO, "Asking " + commentsProvider.getClass().getSimpleName() + " to comment:");
+    this.violationsLogger.log(
+        INFO, "Asking " + this.commentsProvider.getClass().getSimpleName() + " to comment:");
 
-    final ViolationComments alreadyMadeComments = getViolationComments(oldComments, violations);
+    final ViolationComments alreadyMadeComments =
+        getViolationComments(oldComments, this.violations);
 
-    removeOldCommentsThatAreNotStillReported(oldComments, alreadyMadeComments.getComments());
+    this.removeOldCommentsThatAreNotStillReported(oldComments, alreadyMadeComments.getComments());
 
-    for (final Violation violation : violations) {
+    for (final Violation violation : this.violations) {
       final boolean violationCommentExistsSinceBefore =
           alreadyMadeComments.getViolations().contains(violation);
       if (violationCommentExistsSinceBefore) {
         continue;
       }
-      final Optional<ChangedFile> changedFile = findChangedFile(files, violation);
+      final Optional<ChangedFile> changedFile = findChangedFile(this.files, violation);
       if (changedFile.isPresent()) {
-        final String commentTemplate = commentsProvider.findCommentTemplate().orElse(null);
+        final String commentTemplate = this.commentsProvider.findCommentTemplate().orElse(null);
         final String singleFileCommentContent =
             createSingleFileCommentContent(changedFile.get(), violation, commentTemplate);
-        violationsLogger.log(
+        this.violationsLogger.log(
             INFO,
             violation.getReporter()
                 + " "
@@ -144,7 +159,7 @@ public class CommentsCreator {
                 + violation.getStartLine()
                 + " "
                 + violation.getSource());
-        commentsProvider.createSingleFileComment(
+        this.commentsProvider.createSingleFileComment(
             changedFile.get(), violation.getStartLine(), singleFileCommentContent);
       }
     }
@@ -152,11 +167,11 @@ public class CommentsCreator {
 
   private void removeOldCommentsThatAreNotStillReported(
       final List<Comment> oldComments, final List<Comment> comments) {
-    if (!commentsProvider.shouldKeepOldComments()) {
+    if (!this.commentsProvider.shouldKeepOldComments()) {
       final List<Comment> existingWithoutViolation = new ArrayList<>();
       existingWithoutViolation.addAll(oldComments);
       existingWithoutViolation.removeAll(comments);
-      commentsProvider.removeComments(existingWithoutViolation);
+      this.commentsProvider.removeComments(existingWithoutViolation);
     }
   }
 
@@ -168,7 +183,7 @@ public class CommentsCreator {
             .map((f) -> f.getFilename()) //
             .sorted() //
             .collect(joining("\n  "));
-    violationsLogger.log(INFO, "Files changed:\n  " + changedFiles);
+    this.violationsLogger.log(INFO, "Files changed:\n  " + changedFiles);
 
     final String violationFiles =
         mixedViolations //
@@ -177,7 +192,7 @@ public class CommentsCreator {
             .distinct() //
             .sorted() //
             .collect(joining("\n  "));
-    violationsLogger.log(INFO, "Files with violations:\n  " + violationFiles);
+    this.violationsLogger.log(INFO, "Files with violations:\n  " + violationFiles);
 
     final List<Violation> isChanged = new ArrayList<>();
     final Set<String> included = new TreeSet<>();
@@ -188,7 +203,7 @@ public class CommentsCreator {
       final String violationFile = violation.getFile() + " " + violation.getStartLine();
       if (file.isPresent()) {
         final boolean shouldComment =
-            commentsProvider.shouldComment(file.get(), violation.getStartLine());
+            this.commentsProvider.shouldComment(file.get(), violation.getStartLine());
         if (shouldComment) {
           isChanged.add(violation);
           included.add(violationFile);
@@ -201,19 +216,19 @@ public class CommentsCreator {
     }
 
     if (!included.isEmpty()) {
-      violationsLogger.log(
+      this.violationsLogger.log(
           INFO, "Will include violations on:\n  " + included.stream().collect(joining("\n  ")));
     }
 
     if (!notIncludedUntouched.isEmpty()) {
-      violationsLogger.log(
+      this.violationsLogger.log(
           INFO,
           "Will not include violations on changed files because violation reported on untouched lines:\n  "
               + notIncludedUntouched.stream().collect(joining("\n  ")));
     }
 
     if (!notIncludedNotChanged.isEmpty()) {
-      violationsLogger.log(
+      this.violationsLogger.log(
           INFO,
           "Will not include violations on unchanged files:\n  "
               + notIncludedNotChanged.stream().collect(joining("\n  ")));
