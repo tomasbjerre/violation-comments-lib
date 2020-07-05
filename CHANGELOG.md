@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.102
+### No issue
+
+**New: using Set for violations everywhere, to avoid transforming with List**
+
+
+[1bc170e7fde9292](https://github.com/tomasbjerre/violation-comments-lib/commit/1bc170e7fde9292) Tomas Bjerre *2020-07-05 11:10:02*
+
+
 ## 1.101
 ### No issue
 
