@@ -13,12 +13,15 @@ import static se.bjurr.violations.lib.reports.Parser.ANDROIDLINT;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
+import se.bjurr.violations.lib.ViolationsLogger;
 import se.bjurr.violations.lib.model.Violation;
 import se.bjurr.violations.lib.util.Utils;
 
@@ -32,28 +35,28 @@ public class CommentsCreatorTest {
 
         @Override
         public void createComment(final String string) {
-          createCommentWithAllSingleFileComments.add(string);
+          CommentsCreatorTest.this.createCommentWithAllSingleFileComments.add(string);
         }
 
         @Override
         public void createSingleFileComment(
             final ChangedFile file, final Integer line, final String comment) {
-          createSingleFileComment.add(comment);
+          CommentsCreatorTest.this.createSingleFileComment.add(comment);
         }
 
         @Override
         public List<Comment> getComments() {
-          return existingComments;
+          return CommentsCreatorTest.this.existingComments;
         }
 
         @Override
         public List<ChangedFile> getFiles() {
-          return files;
+          return CommentsCreatorTest.this.files;
         }
 
         @Override
         public void removeComments(final List<Comment> comments) {
-          removeComments.addAll(comments);
+          CommentsCreatorTest.this.removeComments.addAll(comments);
         }
 
         @Override
@@ -63,12 +66,12 @@ public class CommentsCreatorTest {
 
         @Override
         public boolean shouldCreateCommentWithAllSingleFileComments() {
-          return shouldCreateCommentWithAllSingleFileComments;
+          return CommentsCreatorTest.this.shouldCreateCommentWithAllSingleFileComments;
         }
 
         @Override
         public boolean shouldCreateSingleFileComment() {
-          return shouldCreateSingleFileComment;
+          return CommentsCreatorTest.this.shouldCreateSingleFileComment;
         }
 
         @Override
@@ -78,22 +81,22 @@ public class CommentsCreatorTest {
 
         @Override
         public boolean shouldKeepOldComments() {
-          return shouldKeepOldComments;
+          return CommentsCreatorTest.this.shouldKeepOldComments;
         }
 
         @Override
         public Integer getMaxNumberOfViolations() {
-          return maxNumberOfViolations;
+          return CommentsCreatorTest.this.maxNumberOfViolations;
         }
 
         @Override
         public Integer getMaxCommentSize() {
-          return maxCommentSize;
+          return CommentsCreatorTest.this.maxCommentSize;
         }
 
         @Override
         public boolean shouldCommentOnlyChangedFiles() {
-          return commentOnlyChangedFiles;
+          return CommentsCreatorTest.this.commentOnlyChangedFiles;
         }
       };
   private List<String> createCommentWithAllSingleFileComments;
@@ -103,7 +106,7 @@ public class CommentsCreatorTest {
   private List<Comment> removeComments;
   private boolean shouldCreateCommentWithAllSingleFileComments = true;
   private boolean shouldCreateSingleFileComment = true;
-  private List<Violation> violations;
+  private Set<Violation> violations;
   private final ViolationsLogger logger =
       new ViolationsLogger() {
         @Override
@@ -123,13 +126,13 @@ public class CommentsCreatorTest {
 
   @Before
   public void before() {
-    createCommentWithAllSingleFileComments = new ArrayList<>();
-    createSingleFileComment = new ArrayList<>();
-    existingComments = new ArrayList<>();
-    files = new ArrayList<>();
-    removeComments = new ArrayList<>();
-    violations = new ArrayList<>();
-    commentOnlyChangedFiles = true;
+    this.createCommentWithAllSingleFileComments = new ArrayList<>();
+    this.createSingleFileComment = new ArrayList<>();
+    this.existingComments = new ArrayList<>();
+    this.files = new ArrayList<>();
+    this.removeComments = new ArrayList<>();
+    this.violations = new TreeSet<>();
+    this.commentOnlyChangedFiles = true;
   }
 
   private final Violation violation1 =
@@ -164,175 +167,184 @@ public class CommentsCreatorTest {
 
   @Test
   public void testShouldKeepOldCommentsFalse() throws Exception {
-    violations.add(violation1);
-    violations.add(violation2);
-    violations.add(violation3);
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
 
-    files.add(new ChangedFile("file1", null));
-    files.add(new ChangedFile("file2", null));
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(logger, commentsProvider, violations);
+        new CommentsCreator(this.logger, this.commentsProvider, this.violations);
 
-    existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
-    existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
-    existingComments.add(new Comment("id3", FINGERPRINT + " " + FINGERPRINT_ACC, type, specifics));
-    existingComments.add(new Comment("id4", "another comment", type, specifics));
+    this.existingComments.add(new Comment("id1", FINGERPRINT, this.type, this.specifics));
+    this.existingComments.add(new Comment("id2", FINGERPRINT, this.type, this.specifics));
+    this.existingComments.add(
+        new Comment("id3", FINGERPRINT + " " + FINGERPRINT_ACC, this.type, this.specifics));
+    this.existingComments.add(new Comment("id4", "another comment", this.type, this.specifics));
 
-    shouldKeepOldComments = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    this.shouldKeepOldComments = false;
+    this.shouldCreateCommentWithAllSingleFileComments = true;
+    this.shouldCreateSingleFileComment = true;
 
     commentsCreator.createComments();
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(1);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(3);
-    assertThat(removeComments.get(0).getIdentifier()) //
+    assertThat(this.removeComments.get(0).getIdentifier()) //
         .isEqualTo("id3");
-    assertThat(removeComments.get(1).getIdentifier()) //
+    assertThat(this.removeComments.get(1).getIdentifier()) //
         .isEqualTo("id1");
-    assertThat(removeComments.get(2).getIdentifier()) //
+    assertThat(this.removeComments.get(2).getIdentifier()) //
         .isEqualTo("id2");
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .hasSize(3);
   }
 
   @Test
   public void testShouldKeepOldCommentsFalseSameAcc() throws Exception {
-    violations.add(violation1);
-    violations.add(violation2);
-    violations.add(violation3);
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
 
-    files.add(new ChangedFile("file1", null));
-    files.add(new ChangedFile("file2", null));
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(logger, commentsProvider, violations);
+        new CommentsCreator(this.logger, this.commentsProvider, this.violations);
 
-    existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
-    existingComments.add(new Comment("id2", FINGERPRINT, type, specifics));
-    existingComments.add(
+    this.existingComments.add(new Comment("id1", FINGERPRINT, this.type, this.specifics));
+    this.existingComments.add(new Comment("id2", FINGERPRINT, this.type, this.specifics));
+    this.existingComments.add(
         new Comment(
             "id3",
             ViolationRenderer.getAccumulatedComments(
-                    violations,
-                    files,
-                    commentsProvider.findCommentTemplate().orElse(null),
-                    maxCommentSize)
+                    this.violations,
+                    this.files,
+                    this.commentsProvider.findCommentTemplate().orElse(null),
+                    this.maxCommentSize)
                 .get(0),
-            type,
-            specifics));
-    existingComments.add(new Comment("id4", "another comment", type, specifics));
+            this.type,
+            this.specifics));
+    this.existingComments.add(new Comment("id4", "another comment", this.type, this.specifics));
 
-    shouldKeepOldComments = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    this.shouldKeepOldComments = false;
+    this.shouldCreateCommentWithAllSingleFileComments = true;
+    this.shouldCreateSingleFileComment = true;
 
     commentsCreator.createComments();
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(0);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(3);
-    assertThat(removeComments.get(0).getIdentifier()) //
+    assertThat(this.removeComments.get(0).getIdentifier()) //
         .isEqualTo("id1");
-    assertThat(removeComments.get(1).getIdentifier()) //
+    assertThat(this.removeComments.get(1).getIdentifier()) //
         .isEqualTo("id2");
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .hasSize(2);
   }
 
   @Test
   public void testShouldKeepOldCommentsFalseOneSameViolation() throws Exception {
-    violations.add(violation1);
-    violations.add(violation2);
-    violations.add(violation3);
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
 
     final ChangedFile file1 = new ChangedFile("file1", null);
-    files.add(file1);
+    this.files.add(file1);
     final ChangedFile file2 = new ChangedFile("file2", null);
-    files.add(file2);
+    this.files.add(file2);
 
     final CommentsCreator commentsCreator =
-        new CommentsCreator(logger, commentsProvider, violations);
+        new CommentsCreator(this.logger, this.commentsProvider, this.violations);
 
-    existingComments.add(new Comment("id1", FINGERPRINT, type, specifics));
-    existingComments.add(
+    this.existingComments.add(new Comment("id1", FINGERPRINT, this.type, this.specifics));
+    this.existingComments.add(
         new Comment(
-            "id2", createSingleFileCommentContent(file1, violation1, null), type, specifics));
-    existingComments.add(new Comment("id3", FINGERPRINT + FINGERPRINT_ACC, type, specifics));
-    existingComments.add(new Comment("id4", "another comment", type, specifics));
+            "id2",
+            createSingleFileCommentContent(file1, this.violation1, null),
+            this.type,
+            this.specifics));
+    this.existingComments.add(
+        new Comment("id3", FINGERPRINT + FINGERPRINT_ACC, this.type, this.specifics));
+    this.existingComments.add(new Comment("id4", "another comment", this.type, this.specifics));
 
-    shouldKeepOldComments = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    this.shouldKeepOldComments = false;
+    this.shouldCreateCommentWithAllSingleFileComments = true;
+    this.shouldCreateSingleFileComment = true;
 
     commentsCreator.createComments();
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(1);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(2);
-    assertThat(removeComments.get(0).getIdentifier()) //
+    assertThat(this.removeComments.get(0).getIdentifier()) //
         .isEqualTo("id3");
-    assertThat(removeComments.get(1).getIdentifier()) //
+    assertThat(this.removeComments.get(1).getIdentifier()) //
         .isEqualTo("id1");
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .hasSize(2);
   }
 
   @Test
   public void testShouldKeepOldCommentsTrue() throws Exception {
-    violations.add(violation1);
-    violations.add(violation2);
-    violations.add(violation3);
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
 
-    files.add(new ChangedFile("file1", null));
-    files.add(new ChangedFile("file2", null));
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
 
-    existingComments.add(new Comment(identifier, FINGERPRINT, type, specifics));
-    existingComments.add(new Comment(identifier, FINGERPRINT, type, specifics));
-    existingComments.add(
-        new Comment(identifier, FINGERPRINT + " " + FINGERPRINT_ACC, type, specifics));
-    existingComments.add(new Comment(identifier, "another comment", type, specifics));
+    this.existingComments.add(new Comment(this.identifier, FINGERPRINT, this.type, this.specifics));
+    this.existingComments.add(new Comment(this.identifier, FINGERPRINT, this.type, this.specifics));
+    this.existingComments.add(
+        new Comment(
+            this.identifier, FINGERPRINT + " " + FINGERPRINT_ACC, this.type, this.specifics));
+    this.existingComments.add(
+        new Comment(this.identifier, "another comment", this.type, this.specifics));
 
-    shouldKeepOldComments = true;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    shouldCreateSingleFileComment = true;
+    this.shouldKeepOldComments = true;
+    this.shouldCreateCommentWithAllSingleFileComments = true;
+    this.shouldCreateSingleFileComment = true;
 
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(1);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(3);
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .hasSize(0);
   }
 
   @Test
   public void testMarkdown() throws Exception {
-    violations.add(violation1);
-    violations.add(violation2);
-    violations.add(violation3);
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
 
-    files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file1", null));
 
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
-        .isEqualTo(asFile("testMarkdownCommentWithSource.md"));
-    assertThat(createSingleFileComment.get(0).trim()) //
-        .isEqualTo(asFile("testMarkdownSingleFileCommentWithSource.md"));
-    assertThat(createSingleFileComment.get(1).trim()) //
-        .isEqualTo(asFile("testMarkdownSingleFileCommentWithoutSource.md"));
+    assertThat(this.createCommentWithAllSingleFileComments.get(0).trim()) //
+        .isEqualTo(this.asFile("testMarkdownCommentWithSource.md"));
+    assertThat(this.createSingleFileComment.get(0).trim())
+        //
+        .isEqualTo(this.asFile("testMarkdownSingleFileCommentWithSource.md"));
+    assertThat(this.createSingleFileComment.get(1).trim())
+        //
+        .isEqualTo(this.asFile("testMarkdownSingleFileCommentWithoutSource.md"));
   }
 
   @Test
   public void testMarkdownCustomReporter() throws Exception {
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setReporter("ToolUsed") //
@@ -342,7 +354,7 @@ public class CommentsCreatorTest {
             .setSource("File") //
             .setMessage("1111111111") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -350,7 +362,7 @@ public class CommentsCreatorTest {
             .setFile("file1") //
             .setMessage("2222222222") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -359,23 +371,23 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file1", null));
 
-    Utils.setReporter(violations, "CustomReporter");
+    Utils.setReporter(this.violations, "CustomReporter");
 
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments.get(0).trim()) //
-        .isEqualTo(asFile("testMarkdownCustomReporter1.md"));
-    assertThat(createSingleFileComment.get(0).trim()) //
-        .isEqualTo(asFile("testMarkdownCustomReporter2.md"));
-    assertThat(createSingleFileComment.get(1).trim()) //
-        .isEqualTo(asFile("testMarkdownCustomReporter3.md"));
+    assertThat(this.createCommentWithAllSingleFileComments.get(0).trim()) //
+        .isEqualTo(this.asFile("testMarkdownCustomReporter1.md"));
+    assertThat(this.createSingleFileComment.get(0).trim()) //
+        .isEqualTo(this.asFile("testMarkdownCustomReporter2.md"));
+    assertThat(this.createSingleFileComment.get(1).trim()) //
+        .isEqualTo(this.asFile("testMarkdownCustomReporter3.md"));
   }
 
   @Test
   public void testWithBigComment() {
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -383,7 +395,7 @@ public class CommentsCreatorTest {
             .setFile("file1") //
             .setMessage("1111111111") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -392,7 +404,7 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -401,42 +413,42 @@ public class CommentsCreatorTest {
             .setMessage("3333333333") //
             .build());
 
-    files.add(new ChangedFile("file1", null));
-    files.add(new ChangedFile("file2", null));
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
 
-    maxCommentSize = 10;
+    this.maxCommentSize = 10;
 
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(3);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(2);
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .isEmpty();
-    assertThat(existingComments) //
+    assertThat(this.existingComments) //
         .isEmpty();
   }
 
   @Test
   public void testWithNoComments() {
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .isEmpty();
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .isEmpty();
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .isEmpty();
-    assertThat(existingComments) //
+    assertThat(this.existingComments) //
         .isEmpty();
-    assertThat(files) //
+    assertThat(this.files) //
         .isEmpty();
   }
 
   @Test
   public void testWithOnlyOne() {
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -444,7 +456,7 @@ public class CommentsCreatorTest {
             .setFile("file1") //
             .setMessage("1111111111") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -453,22 +465,22 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    shouldCreateSingleFileComment = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
+    this.shouldCreateSingleFileComment = false;
+    this.shouldCreateCommentWithAllSingleFileComments = true;
 
-    files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file1", null));
 
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(1);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(0);
   }
 
   @Test
   public void testWithOnlySingle() {
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -476,7 +488,7 @@ public class CommentsCreatorTest {
             .setFile("file1") //
             .setMessage("1111111111") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -485,22 +497,22 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    shouldCreateSingleFileComment = true;
-    shouldCreateCommentWithAllSingleFileComments = false;
+    this.shouldCreateSingleFileComment = true;
+    this.shouldCreateCommentWithAllSingleFileComments = false;
 
-    files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file1", null));
 
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(0);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(2);
   }
 
   @Test
   public void testWithSmallComment() {
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -508,7 +520,7 @@ public class CommentsCreatorTest {
             .setFile("file1") //
             .setMessage("1111111111") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -517,7 +529,7 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -526,22 +538,22 @@ public class CommentsCreatorTest {
             .setMessage("3333333333") //
             .build());
 
-    files.add(new ChangedFile("file1", null));
-    files.add(new ChangedFile("file2", null));
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
 
-    createComments(logger, violations, commentsProvider);
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(1);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .hasSize(2);
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .isEmpty();
   }
 
   @Test
   public void testThatNumberOfCommentsCanBeLimited() {
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -549,7 +561,7 @@ public class CommentsCreatorTest {
             .setFile("file1") //
             .setMessage("1111111111") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -558,38 +570,38 @@ public class CommentsCreatorTest {
             .setMessage("2222222222") //
             .build());
 
-    commentsProvider.getFiles().add(new ChangedFile("file1", null));
-    files.add(new ChangedFile("file2", null));
+    this.commentsProvider.getFiles().add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
 
-    createComments(logger, violations, commentsProvider);
-    assertThat(createSingleFileComment) //
+    createComments(this.logger, this.violations, this.commentsProvider);
+    assertThat(this.createSingleFileComment) //
         .hasSize(2);
 
-    createCommentWithAllSingleFileComments.clear();
-    createSingleFileComment.clear();
+    this.createCommentWithAllSingleFileComments.clear();
+    this.createSingleFileComment.clear();
     this.maxNumberOfViolations = 0;
-    createComments(logger, violations, commentsProvider);
-    assertThat(createSingleFileComment) //
+    createComments(this.logger, this.violations, this.commentsProvider);
+    assertThat(this.createSingleFileComment) //
         .hasSize(0);
 
-    createCommentWithAllSingleFileComments.clear();
-    createSingleFileComment.clear();
+    this.createCommentWithAllSingleFileComments.clear();
+    this.createSingleFileComment.clear();
     this.maxNumberOfViolations = 1;
-    createComments(logger, violations, commentsProvider);
-    assertThat(createSingleFileComment) //
+    createComments(this.logger, this.violations, this.commentsProvider);
+    assertThat(this.createSingleFileComment) //
         .hasSize(1);
 
-    createCommentWithAllSingleFileComments.clear();
-    createSingleFileComment.clear();
+    this.createCommentWithAllSingleFileComments.clear();
+    this.createSingleFileComment.clear();
     this.maxNumberOfViolations = 2;
-    createComments(logger, violations, commentsProvider);
-    assertThat(createSingleFileComment) //
+    createComments(this.logger, this.violations, this.commentsProvider);
+    assertThat(this.createSingleFileComment) //
         .hasSize(2);
   }
 
   @Test(expected = IllegalStateException.class)
   public void testCannotCommentSingleFilesWhenCommentingEverything() {
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -598,19 +610,19 @@ public class CommentsCreatorTest {
             .setMessage("1111111111") //
             .build());
 
-    files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file1", null));
 
-    commentOnlyChangedFiles = false;
-    shouldCreateSingleFileComment = true;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    createComments(logger, violations, commentsProvider);
+    this.commentOnlyChangedFiles = false;
+    this.shouldCreateSingleFileComment = true;
+    this.shouldCreateCommentWithAllSingleFileComments = true;
+    createComments(this.logger, this.violations, this.commentsProvider);
   }
 
   @Test
   public void testUsingFileFromViolationWhenCommentingEverything() {
     final String file1Name = "file1/is/changed.java";
     final String file2Name = "file2/from/violation.java";
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -618,7 +630,7 @@ public class CommentsCreatorTest {
             .setFile(file1Name) //
             .setMessage("1111111111") //
             .build());
-    violations.add(
+    this.violations.add(
         violationBuilder() //
             .setParser(ANDROIDLINT) //
             .setStartLine(1) //
@@ -627,21 +639,22 @@ public class CommentsCreatorTest {
             .setMessage("1111111111") //
             .build());
 
-    files.add(new ChangedFile(file1Name, null));
+    this.files.add(new ChangedFile(file1Name, null));
 
-    commentOnlyChangedFiles = false;
-    shouldCreateSingleFileComment = false;
-    shouldCreateCommentWithAllSingleFileComments = true;
-    createComments(logger, violations, commentsProvider);
+    this.commentOnlyChangedFiles = false;
+    this.shouldCreateSingleFileComment = false;
+    this.shouldCreateCommentWithAllSingleFileComments = true;
+    createComments(this.logger, this.violations, this.commentsProvider);
 
-    assertThat(createCommentWithAllSingleFileComments) //
+    assertThat(this.createCommentWithAllSingleFileComments) //
         .hasSize(1);
-    assertThat(createCommentWithAllSingleFileComments.get(0)) //
+    assertThat(this.createCommentWithAllSingleFileComments.get(0))
+        //
         .startsWith("Found 2 violations")
         .contains(file2Name, file1Name);
-    assertThat(createSingleFileComment) //
+    assertThat(this.createSingleFileComment) //
         .isEmpty();
-    assertThat(removeComments) //
+    assertThat(this.removeComments) //
         .isEmpty();
   }
 }

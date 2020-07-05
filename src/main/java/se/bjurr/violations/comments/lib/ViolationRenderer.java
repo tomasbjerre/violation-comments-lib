@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.ViolationData;
 import se.bjurr.violations.lib.model.Violation;
@@ -26,7 +27,7 @@ public class ViolationRenderer {
       "default-violation-template.mustach";
 
   static List<String> getAccumulatedComments(
-      final List<Violation> violations,
+      final Set<Violation> violations,
       final List<ChangedFile> files,
       final String commentTemplate,
       final Integer maxCommentSize) {

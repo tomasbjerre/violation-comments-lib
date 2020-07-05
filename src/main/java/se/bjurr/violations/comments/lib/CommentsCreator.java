@@ -18,6 +18,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
+import se.bjurr.violations.lib.ViolationsLogger;
 import se.bjurr.violations.lib.model.Violation;
 
 public class CommentsCreator {
@@ -27,11 +28,11 @@ public class CommentsCreator {
   private final ViolationsLogger violationsLogger;
   private final CommentsProvider commentsProvider;
   private final List<ChangedFile> files;
-  private final List<Violation> violations;
+  private final Set<Violation> violations;
 
   public static void createComments(
       final ViolationsLogger violationsLogger,
-      final List<Violation> violations,
+      final Set<Violation> violations,
       final CommentsProvider commentsProvider) {
 
     final CommentsCreator commentsCreator =
@@ -42,13 +43,13 @@ public class CommentsCreator {
   CommentsCreator(
       final ViolationsLogger violationsLogger,
       final CommentsProvider commentsProvider,
-      final List<Violation> violations) {
+      final Set<Violation> violations) {
     checkNotNull(violations, "violations");
     checkNotNull(commentsProvider, "commentsProvider");
     this.violationsLogger = checkNotNull(violationsLogger, "violationsLogger");
     this.commentsProvider = commentsProvider;
     this.files = commentsProvider.getFiles();
-    List<Violation> allViolations = violations;
+    Set<Violation> allViolations = violations;
     if (commentsProvider.shouldCommentOnlyChangedFiles()) {
       allViolations = this.filterChanged(this.files, violations);
       this.violationsLogger.log(
@@ -58,12 +59,12 @@ public class CommentsCreator {
               + " changed files with "
               + allViolations.size()
               + " violations");
-    } else {
-      this.violationsLogger.log(Level.INFO, "Found " + allViolations.size() + " violations");
     }
     if (commentsProvider.getMaxNumberOfViolations() != null
         && allViolations.size() > commentsProvider.getMaxNumberOfViolations()) {
-      this.violations = allViolations.subList(0, commentsProvider.getMaxNumberOfViolations());
+      final List<Violation> list = new ArrayList<>(allViolations);
+      final List<Violation> subList = list.subList(0, commentsProvider.getMaxNumberOfViolations());
+      this.violations = new TreeSet<>(subList);
       this.violationsLogger.log(
           Level.INFO,
           "Reducing violations " + allViolations.size() + " to " + this.violations.size());
@@ -175,8 +176,8 @@ public class CommentsCreator {
     }
   }
 
-  private List<Violation> filterChanged(
-      final List<ChangedFile> files, final List<Violation> mixedViolations) {
+  private Set<Violation> filterChanged(
+      final List<ChangedFile> files, final Set<Violation> mixedViolations) {
     final String changedFiles =
         files //
             .stream() //
@@ -194,7 +195,7 @@ public class CommentsCreator {
             .collect(joining("\n  "));
     this.violationsLogger.log(INFO, "Files with violations:\n  " + violationFiles);
 
-    final List<Violation> isChanged = new ArrayList<>();
+    final Set<Violation> isChanged = new TreeSet<>();
     final Set<String> included = new TreeSet<>();
     final Set<String> notIncludedUntouched = new TreeSet<>();
     final Set<String> notIncludedNotChanged = new TreeSet<>();

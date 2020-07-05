@@ -4,6 +4,7 @@ import static se.bjurr.violations.comments.lib.ViolationRenderer.identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.model.Violation;
 
@@ -32,7 +33,7 @@ public class CommentFilterer {
   }
 
   static ViolationComments getViolationComments(
-      final List<Comment> comments, final List<Violation> violations) {
+      final List<Comment> comments, final Set<Violation> violations) {
     final List<Violation> madeViolations = new ArrayList<>();
     final List<Comment> madeComments = new ArrayList<>();
     for (final Violation violation : violations) {
