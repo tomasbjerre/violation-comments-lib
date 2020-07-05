@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.101
+### No issue
+
+**New: allow custom logger**
+
+
+[68e67f978976447](https://github.com/tomasbjerre/violation-comments-lib/commit/68e67f978976447) Tomas Bjerre *2020-07-05 09:45:19*
+
+
 ## 1.100
 ### No issue
 
