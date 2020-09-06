@@ -3,13 +3,13 @@
 
 Changelog of Violation comments lib.
 
-## Unreleased
+## 1.103
 ### No issue
 
 **Moving PatchParser to violations-lib**
 
 
-[58fdb52a1c86632](https://github.com/tomasbjerre/violation-comments-lib/commit/58fdb52a1c86632) Tomas Bjerre *2020-09-06 05:27:33*
+[279eb548aefda6c](https://github.com/tomasbjerre/violation-comments-lib/commit/279eb548aefda6c) Tomas Bjerre *2020-09-06 05:28:25*
 
 **Moving PatchParser to violations-lib**
 
