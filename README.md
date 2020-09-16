@@ -32,3 +32,9 @@ The templating language is [Mustache](https://github.com/spullara/mustache.java)
 
 {{violation.message}}
 ```
+
+You can avoid escaping (replaces new lines with `&#10;`) by using triple `{` like this:
+
+```
+{{{violation.message}}}
+```
