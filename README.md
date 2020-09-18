@@ -38,3 +38,17 @@ You can avoid escaping (replaces new lines with `&#10;`) by using triple `{` lik
 ```
 {{{violation.message}}}
 ```
+
+When using command line tools you may have problems with the ` (accent) character. You can do:
+
+```bash
+...
+-comment-template "
+message: 
+\\\`\\\`\\\`
+{{{violation.message}}}
+\\\`\\\`\\\`
+"
+```
+
+And it will surround the `message` with triple ```.
