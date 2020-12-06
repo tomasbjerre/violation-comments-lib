@@ -3,6 +3,33 @@
 
 Changelog of Violation comments lib.
 
+## 1.104
+### GitHub #72   
+
+**Making isIgnored public jenkinsci/violation-comments-to-stash-plugin**
+
+
+[e9dfb50ee9187ed](https://github.com/tomasbjerre/violation-comments-lib/commit/e9dfb50ee9187ed) Tomas Bjerre *2020-12-06 08:54:09*
+
+**ignorePaths jenkinsci/violation-comments-to-stash-plugin**
+
+
+[76876634b62389f](https://github.com/tomasbjerre/violation-comments-lib/commit/76876634b62389f) Tomas Bjerre *2020-12-06 08:08:18*
+
+
+### No issue
+
+**doc**
+
+
+[aa09671084e8bd4](https://github.com/tomasbjerre/violation-comments-lib/commit/aa09671084e8bd4) Tomas Bjerre *2020-09-18 16:47:35*
+
+**Doc**
+
+
+[5edf15f4bdf9a4b](https://github.com/tomasbjerre/violation-comments-lib/commit/5edf15f4bdf9a4b) Tomas Bjerre *2020-09-16 16:36:33*
+
+
 ## 1.103
 ### No issue
 
