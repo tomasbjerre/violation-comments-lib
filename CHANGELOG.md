@@ -3,6 +3,15 @@
 
 Changelog of Violation comments lib.
 
+## 1.105
+### GitHub #117   
+
+**Correctings in patchparsing tomasbjerre/violations-lib**
+
+
+[af5a1b61454f31b](https://github.com/tomasbjerre/violation-comments-lib/commit/af5a1b61454f31b) Tomas Bjerre *2020-12-14 15:02:16*
+
+
 ## 1.104
 ### GitHub #72   
 
