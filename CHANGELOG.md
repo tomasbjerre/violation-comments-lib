@@ -1,7 +1,16 @@
 
- # Violation comments lib changelog
+# violation-comments-lib changelog
 
-Changelog of Violation comments lib.
+Changelog of violation-comments-lib.
+
+## 1.106.1
+### No issue
+
+**new build script**
+
+
+[c82f882f46deb98](https://github.com/tomasbjerre/violation-comments-lib/commit/c82f882f46deb98) Tomas Bjerre *2021-04-04 14:23:45*
+
 
 ## 1.105
 ### GitHub #117   
@@ -95,7 +104,7 @@ Changelog of Violation comments lib.
 
 **enh(ViolationRenderer): remove carriage return**
 
- * Refs: 
+* Refs: 
 
 [48e47ef4974844e](https://github.com/tomasbjerre/violation-comments-lib/commit/48e47ef4974844e) Kevin Duret *2019-08-29 07:54:36*
 
@@ -335,7 +344,7 @@ Changelog of Violation comments lib.
 
 **Compile static pattern just once.**
 
- * Signed-off-by: Patrizio Bonzani &lt;bonzani@users.noreply.github.com&gt; 
+* Signed-off-by: Patrizio Bonzani &lt;bonzani@users.noreply.github.com&gt; 
 
 [39c9103988f97c4](https://github.com/tomasbjerre/violation-comments-lib/commit/39c9103988f97c4) Patrizio Bonzani *2018-10-07 14:18:58*
 
@@ -680,8 +689,8 @@ Changelog of Violation comments lib.
 
 **Less comments and allow checkstyle without source**
 
- * Not re-creating comments on same violation. 
- * Allowing source to be absent in checkstyle reports. 
+* Not re-creating comments on same violation. 
+* Allowing source to be absent in checkstyle reports. 
 
 [b153a96e2ce4ffe](https://github.com/tomasbjerre/violation-comments-lib/commit/b153a96e2ce4ffe) Tomas Bjerre *2017-09-01 19:05:07*
 
@@ -718,7 +727,7 @@ Changelog of Violation comments lib.
 
 **Avoiding NPE**
 
- * Also adding Google Java Format Gradle Plugin. 
+* Also adding Google Java Format Gradle Plugin. 
 
 [3748976b1d56dd0](https://github.com/tomasbjerre/violation-comments-lib/commit/3748976b1d56dd0) Tomas Bjerre *2017-06-02 08:17:42*
 
@@ -1061,4 +1070,3 @@ Changelog of Violation comments lib.
 [13a2715ad65011e](https://github.com/tomasbjerre/violation-comments-lib/commit/13a2715ad65011e) Tomas Bjerre *2016-03-04 19:38:29*
 
 
- 
