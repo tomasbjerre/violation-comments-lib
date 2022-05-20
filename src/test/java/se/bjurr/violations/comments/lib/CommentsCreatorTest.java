@@ -357,12 +357,6 @@ public class CommentsCreatorTest {
     this.files.add(new ChangedFile("file1", null));
 
     createComments(this.logger, this.violations, this.commentsProvider);
-    System.out.println("---------------------");
-    System.out.println("---------------------");
-    System.out.println(this.createSingleFileComment.size());
-    System.out.println(this.createSingleFileComment.get(0).trim());
-    System.out.println("---------------------");
-    System.out.println("---------------------");
 
     assertThat(this.createSingleFileComment.get(0).trim())
         //
