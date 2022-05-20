@@ -5,7 +5,6 @@ import static se.bjurr.violations.comments.lib.ChangedFileUtils.findChangedFile;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
 
-import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import java.io.Reader;
@@ -56,7 +55,7 @@ public class ViolationRenderer {
 
   static String createSingleFileCommentContent(
       final ChangedFile changedFile, final Violation violation, final String commentTemplate) {
-    final MustacheFactory mf = new DefaultMustacheFactory();
+    final MustacheFactory mf = new ViolationMustacheFactory();
     Reader templateReader = null;
     final Optional<String> commentTemplateOpt = ofNullable(commentTemplate);
     if (commentTemplateOpt.isPresent() && !commentTemplateOpt.get().isEmpty()) {
