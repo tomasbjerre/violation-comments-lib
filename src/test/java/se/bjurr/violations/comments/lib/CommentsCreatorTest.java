@@ -161,6 +161,14 @@ public class CommentsCreatorTest {
           .setFile("file2") //
           .setMessage("3333333333") //
           .build();
+  private final Violation violation4 =
+      violationBuilder() //
+          .setParser(ANDROIDLINT) //
+          .setStartLine(1) //
+          .setSeverity(ERROR) //
+          .setFile("file1") //
+          .setMessage("one\ntwo") //
+          .build();
   private final List<String> specifics = new ArrayList<>();
   private String type;
   private String identifier;
@@ -340,6 +348,25 @@ public class CommentsCreatorTest {
     assertThat(this.createSingleFileComment.get(1).trim())
         //
         .isEqualTo(this.asFile("testMarkdownSingleFileCommentWithoutSource.md"));
+  }
+
+  @Test
+  public void testNewLine() throws Exception {
+    this.violations.add(this.violation4);
+
+    this.files.add(new ChangedFile("file1", null));
+
+    createComments(this.logger, this.violations, this.commentsProvider);
+    System.out.println("---------------------");
+    System.out.println("---------------------");
+    System.out.println(this.createSingleFileComment.size());
+    System.out.println(this.createSingleFileComment.get(0).trim());
+    System.out.println("---------------------");
+    System.out.println("---------------------");
+
+    assertThat(this.createSingleFileComment.get(0).trim())
+        //
+        .isEqualTo(this.asFile("testMarkdownSingleFileCommentWithNewLine.md"));
   }
 
   @Test
