@@ -1,6 +1,5 @@
 package se.bjurr.violations.comments.lib;
 
-import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
@@ -17,8 +16,10 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.ViolationsLogger;
@@ -76,7 +77,7 @@ public class CommentsCreatorTest {
 
         @Override
         public Optional<String> findCommentTemplate() {
-          return empty();
+          return Optional.ofNullable(CommentsCreatorTest.this.commentTemplate);
         }
 
         @Override
@@ -106,6 +107,7 @@ public class CommentsCreatorTest {
   private List<Comment> removeComments;
   private boolean shouldCreateCommentWithAllSingleFileComments = true;
   private boolean shouldCreateSingleFileComment = true;
+  private String commentTemplate = null;
   private Set<Violation> violations;
   private final ViolationsLogger logger =
       new ViolationsLogger() {
@@ -353,13 +355,12 @@ public class CommentsCreatorTest {
   @Test
   public void testNewLine() throws Exception {
     this.violations.add(this.violation4);
-
     this.files.add(new ChangedFile("file1", null));
+    this.commentTemplate = "{{{violation.message}}}";
 
     createComments(this.logger, this.violations, this.commentsProvider);
 
     assertThat(this.createSingleFileComment.get(0).trim())
-        //
         .isEqualTo(this.asFile("testMarkdownSingleFileCommentWithNewLine.md"));
   }
 
