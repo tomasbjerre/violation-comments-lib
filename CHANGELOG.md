@@ -2,6 +2,12 @@
 
 Changelog of violation-comments-lib.
 
+## 1.107.1 (2023-03-11)
+
+### Bug Fixes
+
+-  expose violations lib as api ([4dc9f](https://github.com/tomasbjerre/violation-comments-lib/commit/4dc9f75ea28a86a) Tomas Bjerre)  
+
 ## 1.107.0 (2023-03-11)
 
 ### Features
