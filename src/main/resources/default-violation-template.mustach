@@ -3,7 +3,7 @@
 **Rule**: {{violation.rule}}{{/violation.rule}}
 **Severity**: {{violation.severity}}
 **File**: {{changedFile.filename}} L{{violation.startLine}}{{#violation.source}}
-
 **Source**: {{violation.source}}{{/violation.source}}
 
 {{violation.message}}
+

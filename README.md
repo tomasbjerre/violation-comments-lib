@@ -54,3 +54,12 @@ message:
 ```
 
 And it will surround the `message` with triple ```.
+
+### Helpers
+
+The Handlebars library comes with [helper methods](https://github.com/jknack/handlebars.java/tree/master/handlebars/src/main/java/com/github/jknack/handlebars/helper), these are registered:
+
+ - `ConditionalHelpers`
+ - `IfHelper`
+ - `StringHelpers`
+ - `UnlessHelper`
