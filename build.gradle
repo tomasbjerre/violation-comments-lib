@@ -12,7 +12,7 @@ buildscript {
 apply from: project.buildscript.classLoader.getResource('main.gradle').toURI()
 
 dependencies {
- implementation 'se.bjurr.violations:violations-lib:1.156.2'
+ api 'se.bjurr.violations:violations-lib:1.156.2'
  implementation 'org.slf4j:slf4j-api:2.0.3'
  implementation 'com.github.jknack:handlebars:4.3.1'
  testImplementation 'junit:junit:4.13.2'
