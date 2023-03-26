@@ -7,23 +7,24 @@ This is a library that helps working with comments from static code analysis.
 It supports the same formats as [Violations Lib](https://github.com/tomasbjerre/violations-lib).
 
 It is used by these libraries:
- * [Violation Comments to GitHub Lib](https://github.com/tomasbjerre/violation-comments-to-github-lib).
- * [Violation Comments to GitLab Lib](https://github.com/tomasbjerre/violation-comments-to-gitlab-lib).
- * [Violation Comments to Bitbucket Server Lib](https://github.com/tomasbjerre/violation-comments-to-bitbucket-server-lib).
- * [Violation Comments to Bitbucket Cloud Lib](https://github.com/tomasbjerre/violation-comments-to-bitbucket-cloud-lib)
+
+* [Violation Comments to GitHub Lib](https://github.com/tomasbjerre/violation-comments-to-github-lib).
+* [Violation Comments to GitLab Lib](https://github.com/tomasbjerre/violation-comments-to-gitlab-lib).
+* [Violation Comments to Bitbucket Server Lib](https://github.com/tomasbjerre/violation-comments-to-bitbucket-server-lib).
+* [Violation Comments to Bitbucket Cloud Lib](https://github.com/tomasbjerre/violation-comments-to-bitbucket-cloud-lib)
 
 ## Template
 
-It uses a template to render each violation comment. There is a default that can be replaced with a custom template. 
+It uses a template to render each violation comment. There is a default that can be replaced with a custom template.
 
 The context available when the template is rendered is:
 
- * `violation` that is an instance of [Violation](src/main/java/se/bjurr/violations/comments/lib/model/ViolationData.java).
- * `changedFile` that is an instance of [ChangedFile](src/main/java/se/bjurr/violations/comments/lib/model/ChangedFile.java).
+* `violation` that is an instance of [Violation](src/main/java/se/bjurr/violations/comments/lib/model/ViolationData.java).
+* `changedFile` that is an instance of [ChangedFile](src/main/java/se/bjurr/violations/comments/lib/model/ChangedFile.java).
 
-The templating language is [Mustache](https://github.com/spullara/mustache.java) and may look like:
+The templating language is [Handlebars](https://github.com/jknack/handlebars.java) and may look like:
 
-```
+```hbs
 **Reporter**: {{violation.reporter}}{{#violation.rule}}
 
 **Rule**: {{violation.rule}}{{/violation.rule}}
@@ -37,7 +38,7 @@ The templating language is [Mustache](https://github.com/spullara/mustache.java)
 
 You can avoid escaping (replaces new lines with `&#10;`) by using triple `{` like this:
 
-```
+```hbs
 {{{violation.message}}}
 ```
 
@@ -59,7 +60,7 @@ And it will surround the `message` with triple ```.
 
 The Handlebars library comes with [helper methods](https://github.com/jknack/handlebars.java/tree/master/handlebars/src/main/java/com/github/jknack/handlebars/helper), these are registered:
 
- - `ConditionalHelpers`
- - `IfHelper`
- - `StringHelpers`
- - `UnlessHelper`
+* `ConditionalHelpers`
+* `IfHelper`
+* `StringHelpers`
+* `UnlessHelper`
