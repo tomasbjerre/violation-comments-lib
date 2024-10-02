@@ -2,6 +2,12 @@
 
 Changelog of violation-comments-lib.
 
+## 1.108.0 (2024-10-02)
+
+### Features
+
+-  new build plugins ([27bd5](https://github.com/tomasbjerre/violation-comments-lib/commit/27bd5e81e16ca2a) Tomas Bjerre)  
+
 ## 1.107.1 (2023-03-11)
 
 ### Bug Fixes
