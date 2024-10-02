@@ -5,6 +5,7 @@ import se.bjurr.violations.comments.lib.CommentsProvider;
 
 public class ChangedFile {
   private final String filename;
+
   /**
    * Things that are specific to the {@link CommentsProvider}. This will be send back to the {@link
    * CommentsProvider} when creating comments.

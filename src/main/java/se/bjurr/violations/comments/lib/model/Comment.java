@@ -6,6 +6,7 @@ import se.bjurr.violations.comments.lib.CommentsProvider;
 public class Comment {
   private final String content;
   private final String identifier;
+
   /**
    * Things that are specific to the {@link CommentsProvider}. This will be send back to the {@link
    * CommentsProvider} when creating comments.
