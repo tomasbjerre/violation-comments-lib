@@ -1,3 +1,8 @@
+## 1.109.1 (2024-11-09)
+
+### Dependency updates
+
+- all the dependencies ([3f447](https://github.com/tomasbjerre/violation-comments-lib/commit/3f4479891152ac6) Tomas Bjerre)  
 # violation-comments-lib changelog
 
 Changelog of violation-comments-lib.
