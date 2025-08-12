@@ -1,3 +1,8 @@
+## 1.109.2 (2025-08-12)
+
+### Dependency updates
+
+- dependencies ([9fad9](https://github.com/tomasbjerre/violation-comments-lib/commit/9fad92aefba3d64) Tomas Bjerre)  
 ## 1.109.1 (2024-11-09)
 
 ### Dependency updates
