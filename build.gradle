@@ -5,9 +5,9 @@ plugins {
 }
 
 dependencies {
-	api 'se.bjurr.violations:violations-lib:1.157.3'
-	implementation 'org.slf4j:slf4j-api:2.0.16'
-	implementation 'com.github.jknack:handlebars:4.4.0'
+	api 'se.bjurr.violations:violations-lib:1.158.1'
+	implementation 'org.slf4j:slf4j-api:2.0.17'
+	implementation 'com.github.jknack:handlebars:4.5.0'
 	testImplementation 'junit:junit:4.13.2'
-	testImplementation 'org.assertj:assertj-core:3.26.3'
+	testImplementation 'org.assertj:assertj-core:3.27.4'
 }
