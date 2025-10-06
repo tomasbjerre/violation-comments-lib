@@ -1,13 +1,19 @@
 plugins {
-	id "se.bjurr.gradle.conventional-release" version "0.+"
-	id "se.bjurr.gradle.update-versions" version "0.+"
-	id "se.bjurr.gradle.java-convention" version "0.+"
+	id "se.bjurr.gradle.bundle-jar" version "1.+"
 }
 
 dependencies {
-	api 'se.bjurr.violations:violations-lib:1.158.1'
+	api "se.bjurr.violations:violations-lib:1.160.2"
 	implementation 'org.slf4j:slf4j-api:2.0.17'
 	implementation 'com.github.jknack:handlebars:4.5.0'
 	testImplementation 'junit:junit:4.13.2'
-	testImplementation 'org.assertj:assertj-core:3.27.4'
+	testImplementation "org.assertj:assertj-core:3.27.6"
+}
+
+javaExtension {
+	javaVersion = 17
+}
+
+staticCodeAnalysisExtension {
+	maxViolations.set(6)
 }
