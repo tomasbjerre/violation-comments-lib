@@ -1,6 +1,7 @@
 package se.bjurr.violations.comments.lib;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
 import static se.bjurr.violations.comments.lib.CommentsCreator.createComments;
@@ -16,8 +17,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.ViolationsLogger;
@@ -124,7 +125,7 @@ public class CommentsCreatorTest {
     return Utils.toString(Utils.getResource(string));
   }
 
-  @Before
+  @BeforeEach
   public void before() {
     this.createCommentWithAllSingleFileComments = new ArrayList<>();
     this.createSingleFileComment = new ArrayList<>();
@@ -619,7 +620,7 @@ public class CommentsCreatorTest {
         .hasSize(2);
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testCannotCommentSingleFilesWhenCommentingEverything() {
     this.violations.add(
         violationBuilder() //
@@ -635,7 +636,9 @@ public class CommentsCreatorTest {
     this.commentOnlyChangedFiles = false;
     this.shouldCreateSingleFileComment = true;
     this.shouldCreateCommentWithAllSingleFileComments = true;
-    createComments(this.logger, this.violations, this.commentsProvider);
+    assertThrows(
+        IllegalStateException.class,
+        () -> createComments(this.logger, this.violations, this.commentsProvider));
   }
 
   @Test
