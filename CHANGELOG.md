@@ -1,3 +1,20 @@
+## 1.109.3 (2026-09-13)
+
+### Dependency updates
+
+- gradle 9 ([22343](https://github.com/tomasbjerre/violation-comments-lib/commit/22343bc4d122f80) Tomas Bjerre)  
+### Other changes
+
+**Fix broken Maven Central badge in README**
+
+* maven-badges.herokuapp.com is down; switch to img.shields.io badge 
+* linking to search.maven.org. 
+* Co-Authored-By: Claude Sonnet 5 &lt;noreply@anthropic.com&gt; 
+* Claude-Session: https://claude.ai/code/session_011PGVf85V1VhJj4oM3rKh7b 
+
+[ae8ba](https://github.com/tomasbjerre/violation-comments-lib/commit/ae8ba5281fe990a) Tomas Bjerre *2026-09-13 08:52:01*
+
+
 ## 1.109.2 (2025-08-12)
 
 ### Dependency updates
