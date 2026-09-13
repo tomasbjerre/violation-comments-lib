@@ -65,20 +65,22 @@ public class ViolationRenderer {
   static String createSingleFileCommentContent(
       final ChangedFile changedFile, final Violation violation, final String commentTemplate) {
 
-    String templateContent = null;
+    final String templateContent;
     final Optional<String> commentTemplateOpt = ofNullable(commentTemplate);
     if (commentTemplateOpt.isPresent() && !commentTemplateOpt.get().isEmpty()) {
       templateContent = commentTemplateOpt.get();
     } else {
       try (InputStream inputStream =
-          ViolationRenderer.class.getResourceAsStream(DEFAULT_VIOLATION_TEMPLATE_MUSTACH)) {
-        if (inputStream == null) {
+              ViolationRenderer.class.getResourceAsStream(DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
+          BufferedReader reader =
+              inputStream == null
+                  ? null
+                  : new BufferedReader(
+                      new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+        if (reader == null) {
           throw new RuntimeException("Did not find " + DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
         }
-        templateContent =
-            new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                .lines()
-                .collect(Collectors.joining("\n"));
+        templateContent = reader.lines().collect(Collectors.joining("\n"));
       } catch (final IOException e) {
         throw new RuntimeException("Cannot read resource " + DEFAULT_VIOLATION_TEMPLATE_MUSTACH, e);
       }
