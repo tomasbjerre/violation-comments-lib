@@ -1,6 +1,6 @@
 # Violation Comments Lib
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.bjurr.violations/violation-comments-lib/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.bjurr.violations/violation-comments-lib)
+[![Maven Central](https://img.shields.io/maven-central/v/se.bjurr.violations/violation-comments-lib.svg?label=Maven%20Central)](https://search.maven.org/artifact/se.bjurr.violations/violation-comments-lib)
 
 This is a library that helps working with comments from static code analysis.
 
