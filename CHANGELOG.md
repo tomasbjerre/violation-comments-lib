@@ -1,3 +1,25 @@
+## 1.110.0 (2026-09-14)
+
+### Features
+
+-  **ci**  add draft/publish release workflow ([9714c](https://github.com/tomasbjerre/violation-comments-lib/commit/9714c7a1b8616ad) Tomas Bjerre)  
+
+### Dependency updates
+
+- update gradle-conventions to 2.2.1 and gradle wrapper to 9.7.1 ([331c3](https://github.com/tomasbjerre/violation-comments-lib/commit/331c3bb738a4d62) Tomas Bjerre)  
+### Other changes
+
+**Superseded by centralized publish-draft-releases.yaml in .github**
+
+
+[d1695](https://github.com/tomasbjerre/violation-comments-lib/commit/d1695fc8a1294a0) Tomas Bjerre *2026-09-14 19:58:53*
+
+**Auto-publish pending draft releases weekly**
+
+
+[74af5](https://github.com/tomasbjerre/violation-comments-lib/commit/74af534e8c6e928) Tomas Bjerre *2026-09-14 19:47:50*
+
+
 ## 1.109.3 (2026-09-13)
 
 ### Dependency updates
