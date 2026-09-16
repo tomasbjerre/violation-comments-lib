@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
+import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_SUMMARY;
 import static se.bjurr.violations.comments.lib.CommentsCreator.createComments;
 import static se.bjurr.violations.comments.lib.ViolationRenderer.createSingleFileCommentContent;
 import static se.bjurr.violations.lib.model.SEVERITY.ERROR;
@@ -98,6 +99,16 @@ public class CommentsCreatorTest {
         public boolean shouldCommentOnlyChangedFiles() {
           return CommentsCreatorTest.this.commentOnlyChangedFiles;
         }
+
+        @Override
+        public boolean shouldCreateSummaryComment() {
+          return CommentsCreatorTest.this.shouldCreateSummaryComment;
+        }
+
+        @Override
+        public Optional<String> findSummaryCommentTemplate() {
+          return Optional.ofNullable(CommentsCreatorTest.this.summaryCommentTemplate);
+        }
       };
   private List<String> createCommentWithAllSingleFileComments;
   private List<String> createSingleFileComment;
@@ -106,7 +117,9 @@ public class CommentsCreatorTest {
   private List<Comment> removeComments;
   private boolean shouldCreateCommentWithAllSingleFileComments = true;
   private boolean shouldCreateSingleFileComment = true;
+  private boolean shouldCreateSummaryComment = false;
   private String commentTemplate = null;
+  private String summaryCommentTemplate = null;
   private Set<Violation> violations;
   private final ViolationsLogger logger =
       new ViolationsLogger() {
@@ -618,6 +631,79 @@ public class CommentsCreatorTest {
     createComments(this.logger, this.violations, this.commentsProvider);
     assertThat(this.createSingleFileComment) //
         .hasSize(2);
+  }
+
+  @Test
+  public void testSummaryCommentIsSeparateFromOtherComments() {
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
+
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
+
+    this.shouldCreateCommentWithAllSingleFileComments = false;
+    this.shouldCreateSingleFileComment = false;
+    this.shouldCreateSummaryComment = true;
+
+    createComments(this.logger, this.violations, this.commentsProvider);
+
+    assertThat(this.createCommentWithAllSingleFileComments) //
+        .hasSize(1);
+    assertThat(this.createCommentWithAllSingleFileComments.get(0)) //
+        .contains("3 violation(s)") //
+        .contains("2 file(s)") //
+        .contains(FINGERPRINT_SUMMARY);
+    assertThat(this.createSingleFileComment) //
+        .isEmpty();
+  }
+
+  @Test
+  public void testAllThreeCommentKindsCanBeCreatedTogether() {
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
+
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
+
+    this.shouldCreateCommentWithAllSingleFileComments = true;
+    this.shouldCreateSingleFileComment = true;
+    this.shouldCreateSummaryComment = true;
+
+    createComments(this.logger, this.violations, this.commentsProvider);
+
+    assertThat(this.createCommentWithAllSingleFileComments) //
+        .hasSize(2);
+    assertThat(this.createSingleFileComment) //
+        .hasSize(3);
+  }
+
+  @Test
+  public void testSummaryCommentIsNotRecreatedWhenUnchanged() {
+    this.violations.add(this.violation1);
+    this.violations.add(this.violation2);
+    this.violations.add(this.violation3);
+
+    this.files.add(new ChangedFile("file1", null));
+    this.files.add(new ChangedFile("file2", null));
+
+    this.shouldCreateCommentWithAllSingleFileComments = false;
+    this.shouldCreateSingleFileComment = false;
+    this.shouldCreateSummaryComment = true;
+
+    createComments(this.logger, this.violations, this.commentsProvider);
+    this.existingComments.add(
+        new Comment(
+            "id1", this.createCommentWithAllSingleFileComments.get(0), this.type, this.specifics));
+    this.createCommentWithAllSingleFileComments.clear();
+
+    createComments(this.logger, this.violations, this.commentsProvider);
+
+    assertThat(this.createCommentWithAllSingleFileComments) //
+        .isEmpty();
+    assertThat(this.removeComments) //
+        .isEmpty();
   }
 
   @Test

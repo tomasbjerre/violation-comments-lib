@@ -1,0 +1,4 @@
+**Summary**: {{summary.violationsCount}} violation(s) found in {{summary.filesCount}} file(s).
+{{#summary.perSeverity}}
+- **{{severity}}**: {{count}}
+{{/summary.perSeverity}}
