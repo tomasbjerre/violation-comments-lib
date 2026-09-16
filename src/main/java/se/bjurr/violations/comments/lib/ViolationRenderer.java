@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 import static se.bjurr.violations.comments.lib.ChangedFileUtils.findChangedFile;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT;
 import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_ACC;
+import static se.bjurr.violations.comments.lib.CommentsCreator.FINGERPRINT_SUMMARY;
 
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Handlebars;
@@ -27,12 +28,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
+import se.bjurr.violations.comments.lib.model.SummaryData;
 import se.bjurr.violations.comments.lib.model.ViolationData;
 import se.bjurr.violations.lib.model.Violation;
 
 public class ViolationRenderer {
   private static final String DEFAULT_VIOLATION_TEMPLATE_MUSTACH =
       "/default-violation-template.mustach";
+  private static final String DEFAULT_SUMMARY_TEMPLATE_MUSTACH =
+      "/default-summary-template.mustach";
 
   static List<String> getAccumulatedComments(
       final Set<Violation> violations,
@@ -65,38 +69,9 @@ public class ViolationRenderer {
   static String createSingleFileCommentContent(
       final ChangedFile changedFile, final Violation violation, final String commentTemplate) {
 
-    final String templateContent;
-    final Optional<String> commentTemplateOpt = ofNullable(commentTemplate);
-    if (commentTemplateOpt.isPresent() && !commentTemplateOpt.get().isEmpty()) {
-      templateContent = commentTemplateOpt.get();
-    } else {
-      try (InputStream inputStream =
-              ViolationRenderer.class.getResourceAsStream(DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
-          BufferedReader reader =
-              inputStream == null
-                  ? null
-                  : new BufferedReader(
-                      new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-        if (reader == null) {
-          throw new RuntimeException("Did not find " + DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
-        }
-        templateContent = reader.lines().collect(Collectors.joining("\n"));
-      } catch (final IOException e) {
-        throw new RuntimeException("Cannot read resource " + DEFAULT_VIOLATION_TEMPLATE_MUSTACH, e);
-      }
-    }
-    final Handlebars handlebars = new Handlebars();
-    handlebars.setPrettyPrint(true);
-    handlebars.registerHelpers(ConditionalHelpers.class);
-    handlebars.registerHelpers(IfHelper.class);
-    handlebars.registerHelpers(StringHelpers.class);
-    handlebars.registerHelpers(UnlessHelper.class);
-    Template template;
-    try {
-      template = handlebars.compileInline(templateContent);
-    } catch (final IOException e) {
-      throw new RuntimeException("Cannot compile template: " + templateContent, e);
-    }
+    final String templateContent =
+        resolveTemplateContent(commentTemplate, DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
+    final Template template = compile(templateContent);
 
     final Writer writer = new StringWriter();
     final Map<String, Object> context = new HashMap<>();
@@ -111,6 +86,65 @@ public class ViolationRenderer {
     }
 
     return writer.toString() + "\n*" + FINGERPRINT + "* *<" + identifier(violation) + ">*";
+  }
+
+  /**
+   * Renders a single comment summarizing all violations, distinct from the per-violation comments.
+   * Kept separate so it can be posted as its own comment (see {@code
+   * CommentsProvider#shouldCreateSummaryComment()}).
+   */
+  static String createSummaryCommentContent(
+      final Set<Violation> violations, final String commentTemplate) {
+    final String templateContent =
+        resolveTemplateContent(commentTemplate, DEFAULT_SUMMARY_TEMPLATE_MUSTACH);
+    final Template template = compile(templateContent);
+
+    final Writer writer = new StringWriter();
+    final Map<String, Object> context = new HashMap<>();
+    context.put("summary", new SummaryData(violations));
+
+    final Context templateContext = Context.newContext(context);
+    try {
+      template.apply(templateContext, writer);
+    } catch (final IOException e) {
+      throw new RuntimeException("Cannot apply template", e);
+    }
+
+    return writer.toString() + "\n*" + FINGERPRINT_SUMMARY + "*";
+  }
+
+  private static String resolveTemplateContent(
+      final String commentTemplate, final String defaultResource) {
+    final Optional<String> commentTemplateOpt = ofNullable(commentTemplate);
+    if (commentTemplateOpt.isPresent() && !commentTemplateOpt.get().isEmpty()) {
+      return commentTemplateOpt.get();
+    }
+    try (InputStream inputStream = ViolationRenderer.class.getResourceAsStream(defaultResource);
+        BufferedReader reader =
+            inputStream == null
+                ? null
+                : new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+      if (reader == null) {
+        throw new RuntimeException("Did not find " + defaultResource);
+      }
+      return reader.lines().collect(Collectors.joining("\n"));
+    } catch (final IOException e) {
+      throw new RuntimeException("Cannot read resource " + defaultResource, e);
+    }
+  }
+
+  private static Template compile(final String templateContent) {
+    final Handlebars handlebars = new Handlebars();
+    handlebars.setPrettyPrint(true);
+    handlebars.registerHelpers(ConditionalHelpers.class);
+    handlebars.registerHelpers(IfHelper.class);
+    handlebars.registerHelpers(StringHelpers.class);
+    handlebars.registerHelpers(UnlessHelper.class);
+    try {
+      return handlebars.compileInline(templateContent);
+    } catch (final IOException e) {
+      throw new RuntimeException("Cannot compile template: " + templateContent, e);
+    }
   }
 
   static String identifier(final Violation violation) {

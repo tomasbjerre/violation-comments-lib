@@ -44,4 +44,21 @@ public interface CommentsProvider {
   Integer getMaxNumberOfViolations();
 
   Integer getMaxCommentSize();
+
+  /**
+   * Whether a separate summary comment, distinct from {@link
+   * #shouldCreateCommentWithAllSingleFileComments()}, should be created. Defaults to {@code false}
+   * so existing implementations keep their current behavior unchanged.
+   */
+  default boolean shouldCreateSummaryComment() {
+    return false;
+  }
+
+  /**
+   * Template used for the summary comment, see {@link #shouldCreateSummaryComment()}. Defaults to
+   * empty, meaning the library's built-in default template is used.
+   */
+  default Optional<String> findSummaryCommentTemplate() {
+    return Optional.empty();
+  }
 }

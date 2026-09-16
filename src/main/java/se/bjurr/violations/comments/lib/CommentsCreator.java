@@ -7,6 +7,7 @@ import static se.bjurr.violations.comments.lib.CommentFilterer.filterCommentsWit
 import static se.bjurr.violations.comments.lib.CommentFilterer.filterCommentsWithoutContent;
 import static se.bjurr.violations.comments.lib.CommentFilterer.getViolationComments;
 import static se.bjurr.violations.comments.lib.ViolationRenderer.createSingleFileCommentContent;
+import static se.bjurr.violations.comments.lib.ViolationRenderer.createSummaryCommentContent;
 import static se.bjurr.violations.comments.lib.ViolationRenderer.getAccumulatedComments;
 import static se.bjurr.violations.lib.util.Utils.checkNotNull;
 
@@ -25,6 +26,7 @@ public class CommentsCreator {
   public static final String FINGERPRINT =
       "<this is a auto generated comment from violation-comments-lib F7F8ASD8123FSDF>";
   public static final String FINGERPRINT_ACC = "<ACCUMULATED-VIOLATIONS>";
+  public static final String FINGERPRINT_SUMMARY = "<SUMMARY-VIOLATIONS>";
   private final ViolationsLogger violationsLogger;
   private final CommentsProvider commentsProvider;
   private final List<ChangedFile> files;
@@ -84,11 +86,15 @@ public class CommentsCreator {
       }
       this.createSingleFileComments();
     }
+    if (this.commentsProvider.shouldCreateSummaryComment()) {
+      this.createSummaryComment();
+    }
     if (!this.commentsProvider.shouldCreateCommentWithAllSingleFileComments()
-        && !this.commentsProvider.shouldCreateSingleFileComment()) {
+        && !this.commentsProvider.shouldCreateSingleFileComment()
+        && !this.commentsProvider.shouldCreateSummaryComment()) {
       this.violationsLogger.log(
           INFO,
-          "Will not comment because both 'CreateCommentWithAllSingleFileComments' and 'CreateSingleFileComment' is false.");
+          "Will not comment because 'CreateCommentWithAllSingleFileComments', 'CreateSingleFileComment' and 'CreateSummaryComment' are all false.");
     }
   }
 
@@ -121,6 +127,34 @@ public class CommentsCreator {
       if (commentHasNotBeenMade) {
         this.commentsProvider.createComment(accumulatedComment);
       }
+    }
+  }
+
+  private void createSummaryComment() {
+    if (this.violations.isEmpty()) {
+      this.violationsLogger.log(Level.INFO, "No violations to comment");
+      return;
+    }
+
+    final String summaryComment =
+        createSummaryCommentContent(
+            this.violations, this.commentsProvider.findSummaryCommentTemplate().orElse(null));
+    this.violationsLogger.log(
+        INFO,
+        "Asking "
+            + this.commentsProvider.getClass().getSimpleName()
+            + " to create summary comment.");
+
+    List<Comment> oldComments = this.commentsProvider.getComments();
+    oldComments = filterCommentsWithContent(oldComments, FINGERPRINT_SUMMARY);
+    final List<Comment> alreadyMadeComments =
+        filterCommentsWithContent(oldComments, summaryComment);
+
+    this.removeOldCommentsThatAreNotStillReported(oldComments, alreadyMadeComments);
+
+    final boolean commentHasNotBeenMade = alreadyMadeComments.isEmpty();
+    if (commentHasNotBeenMade) {
+      this.commentsProvider.createComment(summaryComment);
     }
   }
 
