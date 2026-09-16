@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-	api "se.bjurr.violations:violations-lib:2.0.2"
+	api "se.bjurr.violations:violations-lib:2.2.0"
 	implementation "org.slf4j:slf4j-api:2.0.19"
 	implementation "com.github.jknack:handlebars:4.5.4"
 	testImplementation 'org.junit.jupiter:junit-jupiter:6.1.3'
