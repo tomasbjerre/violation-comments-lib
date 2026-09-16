@@ -1,3 +1,18 @@
+## 1.111.0 (2026-09-16)
+
+### Features
+
+-  add separate summary comment, distinct from per-violation comments ([9a2b6](https://github.com/tomasbjerre/violation-comments-lib/commit/9a2b6d9975dafb6) Tomas Bjerre)  
+
+### Other changes
+
+**Merge pull request #23 from tomasbjerre/feature/summary-comment**
+
+* feat: add separate summary comment, distinct from per-violation comments 
+
+[d8870](https://github.com/tomasbjerre/violation-comments-lib/commit/d887037d78f65cd) Tomas Bjerre *2026-09-16 15:07:19*
+
+
 ## 1.110.0 (2026-09-14)
 
 ### Features
