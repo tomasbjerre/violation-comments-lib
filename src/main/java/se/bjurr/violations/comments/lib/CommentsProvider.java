@@ -63,25 +63,21 @@ public interface CommentsProvider {
   }
 
   /**
-   * Whether comments for violations that are no longer reported should be resolved, rather than
-   * removed, see {@link #resolveComments(List)}. Defaults to {@code false} so existing
-   * implementations keep their current behavior of removing them via {@link #removeComments(List)}.
-   */
-  default boolean shouldCreateResolvableComments() {
-    return false;
-  }
-
-  /**
-   * Called instead of {@link #removeComments(List)}, when {@link #shouldCreateResolvableComments()}
-   * is {@code true}, for comments whose violation is no longer reported. Implementations that
-   * support some form of resolvable/trackable comment (a GitLab discussion, a Bitbucket task, ...)
-   * should mark it resolved here instead of deleting it.
+   * Called, instead of {@link #removeComments(List)} being called directly, for comments whose
+   * violation is no longer reported (when {@link #shouldKeepOldComments()} is {@code false}).
    *
-   * <p>Defaults to calling {@link #removeComments(List)}, so implementations that don't override
-   * this keep today's delete behavior even if {@link #shouldCreateResolvableComments()} were ever
-   * mistakenly set to {@code true}.
+   * <p>Implementations that support some form of resolvable/trackable comment (a GitLab discussion,
+   * a Bitbucket task, ...) should resolve such a comment here instead of removing it - whether the
+   * comment was created as one by this tool, or a user turned it into one afterwards. There is
+   * deliberately no separate "should create resolvable comments" flag to gate this: that would only
+   * describe how comments are created going forward, not what a specific existing comment actually
+   * is right now, which can only be known by looking at each comment's current state on the
+   * platform. A comment that isn't a resolvable/trackable type should still be removed here.
    *
-   * @param comments The comments to resolve.
+   * <p>Defaults to calling {@link #removeComments(List)} for every comment, so implementations that
+   * don't override this keep today's behavior unchanged.
+   *
+   * @param comments The comments to resolve or remove.
    */
   default void resolveComments(final List<Comment> comments) {
     this.removeComments(comments);

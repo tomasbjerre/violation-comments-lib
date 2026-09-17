@@ -109,16 +109,6 @@ public class CommentsCreatorTest {
         public Optional<String> findSummaryCommentTemplate() {
           return Optional.ofNullable(CommentsCreatorTest.this.summaryCommentTemplate);
         }
-
-        @Override
-        public boolean shouldCreateResolvableComments() {
-          return CommentsCreatorTest.this.shouldCreateResolvableComments;
-        }
-
-        @Override
-        public void resolveComments(final List<Comment> comments) {
-          CommentsCreatorTest.this.resolveComments.addAll(comments);
-        }
       };
   private List<String> createCommentWithAllSingleFileComments;
   private List<String> createSingleFileComment;
@@ -128,8 +118,6 @@ public class CommentsCreatorTest {
   private boolean shouldCreateCommentWithAllSingleFileComments = true;
   private boolean shouldCreateSingleFileComment = true;
   private boolean shouldCreateSummaryComment = false;
-  private boolean shouldCreateResolvableComments = false;
-  private List<Comment> resolveComments;
   private String commentTemplate = null;
   private String summaryCommentTemplate = null;
   private Set<Violation> violations;
@@ -157,7 +145,6 @@ public class CommentsCreatorTest {
     this.existingComments = new ArrayList<>();
     this.files = new ArrayList<>();
     this.removeComments = new ArrayList<>();
-    this.resolveComments = new ArrayList<>();
     this.violations = new TreeSet<>();
     this.commentOnlyChangedFiles = true;
   }
@@ -327,16 +314,13 @@ public class CommentsCreatorTest {
   }
 
   @Test
-  public void testShouldCreateResolvableCommentsResolvesInsteadOfRemoving() throws Exception {
+  public void testResolveCommentsIsCalledForOldCommentsInsteadOfRemoveComments() throws Exception {
     this.violations.add(this.violation1);
     this.violations.add(this.violation2);
     this.violations.add(this.violation3);
 
     this.files.add(new ChangedFile("file1", null));
     this.files.add(new ChangedFile("file2", null));
-
-    final CommentsCreator commentsCreator =
-        new CommentsCreator(this.logger, this.commentsProvider, this.violations);
 
     this.existingComments.add(new Comment("id1", FINGERPRINT, this.type, this.specifics));
     this.existingComments.add(new Comment("id2", FINGERPRINT, this.type, this.specifics));
@@ -345,13 +329,26 @@ public class CommentsCreatorTest {
     this.existingComments.add(new Comment("id4", "another comment", this.type, this.specifics));
 
     this.shouldKeepOldComments = false;
-    this.shouldCreateResolvableComments = true;
     this.shouldCreateCommentWithAllSingleFileComments = true;
     this.shouldCreateSingleFileComment = true;
 
+    // A provider that overrides resolveComments() - e.g. because it looked at each comment's
+    // current state on the platform and decided some of them are resolvable - should have that
+    // override honored by CommentsCreator, instead of it ever calling removeComments() directly.
+    final List<Comment> resolved = new ArrayList<>();
+    final CommentsProvider resolvingProvider =
+        new ForwardingCommentsProvider(this.commentsProvider) {
+          @Override
+          public void resolveComments(final List<Comment> comments) {
+            resolved.addAll(comments);
+          }
+        };
+
+    final CommentsCreator commentsCreator =
+        new CommentsCreator(this.logger, resolvingProvider, this.violations);
     commentsCreator.createComments();
 
-    assertThat(this.resolveComments) //
+    assertThat(resolved) //
         .hasSize(3);
     assertThat(this.removeComments) //
         .isEmpty();

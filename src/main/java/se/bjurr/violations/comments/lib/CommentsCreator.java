@@ -206,11 +206,7 @@ public class CommentsCreator {
       final List<Comment> existingWithoutViolation = new ArrayList<>();
       existingWithoutViolation.addAll(oldComments);
       existingWithoutViolation.removeAll(comments);
-      if (this.commentsProvider.shouldCreateResolvableComments()) {
-        this.commentsProvider.resolveComments(existingWithoutViolation);
-      } else {
-        this.commentsProvider.removeComments(existingWithoutViolation);
-      }
+      this.commentsProvider.resolveComments(existingWithoutViolation);
     }
   }
 
