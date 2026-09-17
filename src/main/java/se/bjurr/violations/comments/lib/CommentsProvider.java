@@ -61,4 +61,29 @@ public interface CommentsProvider {
   default Optional<String> findSummaryCommentTemplate() {
     return Optional.empty();
   }
+
+  /**
+   * Whether comments for violations that are no longer reported should be resolved, rather than
+   * removed, see {@link #resolveComments(List)}. Defaults to {@code false} so existing
+   * implementations keep their current behavior of removing them via {@link #removeComments(List)}.
+   */
+  default boolean shouldCreateResolvableComments() {
+    return false;
+  }
+
+  /**
+   * Called instead of {@link #removeComments(List)}, when {@link #shouldCreateResolvableComments()}
+   * is {@code true}, for comments whose violation is no longer reported. Implementations that
+   * support some form of resolvable/trackable comment (a GitLab discussion, a Bitbucket task, ...)
+   * should mark it resolved here instead of deleting it.
+   *
+   * <p>Defaults to calling {@link #removeComments(List)}, so implementations that don't override
+   * this keep today's delete behavior even if {@link #shouldCreateResolvableComments()} were ever
+   * mistakenly set to {@code true}.
+   *
+   * @param comments The comments to resolve.
+   */
+  default void resolveComments(final List<Comment> comments) {
+    this.removeComments(comments);
+  }
 }
