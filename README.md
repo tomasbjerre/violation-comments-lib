@@ -13,6 +13,10 @@ It is used by these libraries:
 * [Violation Comments to Bitbucket Server Lib](https://github.com/tomasbjerre/violation-comments-to-bitbucket-server-lib).
 * [Violation Comments to Bitbucket Cloud Lib](https://github.com/tomasbjerre/violation-comments-to-bitbucket-cloud-lib)
 
+It is also used directly by:
+
+* [Violation Comments to Gitea Command Line](https://github.com/tomasbjerre/violation-comments-to-gitea-command-line).
+
 ## Template
 
 It uses a template to render each violation comment. There is a default that can be replaced with a custom template.
