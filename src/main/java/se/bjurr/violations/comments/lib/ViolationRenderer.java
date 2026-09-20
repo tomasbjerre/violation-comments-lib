@@ -33,10 +33,8 @@ import se.bjurr.violations.comments.lib.model.ViolationData;
 import se.bjurr.violations.lib.model.Violation;
 
 public class ViolationRenderer {
-  private static final String DEFAULT_VIOLATION_TEMPLATE_MUSTACH =
-      "/default-violation-template.mustach";
-  private static final String DEFAULT_SUMMARY_TEMPLATE_MUSTACH =
-      "/default-summary-template.mustach";
+  private static final String DEFAULT_VIOLATION_TEMPLATE_HBS = "/default-violation-template.hbs";
+  private static final String DEFAULT_SUMMARY_TEMPLATE_HBS = "/default-summary-template.hbs";
 
   static List<String> getAccumulatedComments(
       final Set<Violation> violations,
@@ -70,7 +68,7 @@ public class ViolationRenderer {
       final ChangedFile changedFile, final Violation violation, final String commentTemplate) {
 
     final String templateContent =
-        resolveTemplateContent(commentTemplate, DEFAULT_VIOLATION_TEMPLATE_MUSTACH);
+        resolveTemplateContent(commentTemplate, DEFAULT_VIOLATION_TEMPLATE_HBS);
     final Template template = compile(templateContent);
 
     final Writer writer = new StringWriter();
@@ -96,7 +94,7 @@ public class ViolationRenderer {
   static String createSummaryCommentContent(
       final Set<Violation> violations, final String commentTemplate) {
     final String templateContent =
-        resolveTemplateContent(commentTemplate, DEFAULT_SUMMARY_TEMPLATE_MUSTACH);
+        resolveTemplateContent(commentTemplate, DEFAULT_SUMMARY_TEMPLATE_HBS);
     final Template template = compile(templateContent);
 
     final Writer writer = new StringWriter();
