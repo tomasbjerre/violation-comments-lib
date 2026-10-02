@@ -8,7 +8,9 @@ import java.util.Set;
 import se.bjurr.violations.comments.lib.model.Comment;
 import se.bjurr.violations.lib.model.Violation;
 
-public class CommentFilterer {
+public final class CommentFilterer {
+
+  private CommentFilterer() {}
 
   static List<Comment> filterCommentsWithContent(
       final List<Comment> unfilteredComments, final String containing) {
