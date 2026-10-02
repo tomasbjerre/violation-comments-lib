@@ -32,7 +32,10 @@ import se.bjurr.violations.comments.lib.model.SummaryData;
 import se.bjurr.violations.comments.lib.model.ViolationData;
 import se.bjurr.violations.lib.model.Violation;
 
-public class ViolationRenderer {
+public final class ViolationRenderer {
+
+  private ViolationRenderer() {}
+
   private static final String DEFAULT_VIOLATION_TEMPLATE_HBS = "/default-violation-template.hbs";
   private static final String DEFAULT_SUMMARY_TEMPLATE_HBS = "/default-summary-template.hbs";
 

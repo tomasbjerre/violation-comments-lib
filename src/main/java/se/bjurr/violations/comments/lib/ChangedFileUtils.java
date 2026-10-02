@@ -8,7 +8,9 @@ import java.util.Optional;
 import se.bjurr.violations.comments.lib.model.ChangedFile;
 import se.bjurr.violations.lib.model.Violation;
 
-public class ChangedFileUtils {
+public final class ChangedFileUtils {
+
+  private ChangedFileUtils() {}
 
   /**
    * When creating comment, the call should use the file as it is specified by the comments

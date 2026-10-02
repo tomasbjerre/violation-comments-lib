@@ -215,7 +215,7 @@ public class CommentsCreator {
     final String changedFiles =
         files //
             .stream() //
-            .map((f) -> f.getFilename()) //
+            .map(ChangedFile::getFilename) //
             .sorted() //
             .collect(joining("\n  "));
     this.violationsLogger.log(INFO, "Files changed:\n  " + changedFiles);
@@ -223,7 +223,7 @@ public class CommentsCreator {
     final String violationFiles =
         mixedViolations //
             .stream() //
-            .map((f) -> f.getFile()) //
+            .map(Violation::getFile) //
             .distinct() //
             .sorted() //
             .collect(joining("\n  "));
