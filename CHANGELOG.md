@@ -1,3 +1,11 @@
+## 1.111.2 (2026-10-03)
+
+### Dependency updates
+
+- update dependency se.bjurr.violations:violations-lib to v3.0.2 (#36) ([8f57c](https://github.com/tomasbjerre/violation-comments-lib/commit/8f57cbf0360ccc5) renovate[bot])  
+- update plugin se.bjurr.gradle.bundle-jar to v2.4.4 (#35) ([9908d](https://github.com/tomasbjerre/violation-comments-lib/commit/9908d0f1874131d) renovate[bot])  
+- update plugin se.bjurr.gradle.bundle-jar to v2.4.3 (#34) ([10c73](https://github.com/tomasbjerre/violation-comments-lib/commit/10c735155d678d7) renovate[bot])  
+- update plugin se.bjurr.gradle.bundle-jar to v2.4.1 (#33) ([0df16](https://github.com/tomasbjerre/violation-comments-lib/commit/0df16046a486235) renovate[bot])  
 ## 1.111.0 (2026-09-16)
 
 ### Features
