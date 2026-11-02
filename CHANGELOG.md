@@ -1,3 +1,12 @@
+## 1.111.3 (2026-10-30)
+
+### Dependency updates
+
+- update dependency com.github.jknack:handlebars to v4.5.7 (#42) ([b2839](https://github.com/tomasbjerre/violation-comments-lib/commit/b2839337ac7b19f) renovate[bot])  
+- update dependency com.github.jknack:handlebars to v4.5.6 (#41) ([ea5ee](https://github.com/tomasbjerre/violation-comments-lib/commit/ea5ee680d1c06d9) renovate[bot])  
+- update dependency se.bjurr.violations:violations-lib to v3.0.3 (#40) ([1f72b](https://github.com/tomasbjerre/violation-comments-lib/commit/1f72b757d9cd544) renovate[bot])  
+- update dependency gradle to v9.8.2 (#39) ([6bea7](https://github.com/tomasbjerre/violation-comments-lib/commit/6bea78a13b6cfb6) renovate[bot])  
+- update dependency gradle to v9.8.1 (#38) ([be936](https://github.com/tomasbjerre/violation-comments-lib/commit/be936dfe5ce629b) renovate[bot])  
 ## 1.111.2 (2026-10-03)
 
 ### Dependency updates
